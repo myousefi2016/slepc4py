@@ -1,0 +1,72 @@
+Installation
+============
+
+
+Requirements
+------------
+
+* PETSc_ 2.4.0, built with shared libraries.
+
+* SLEPc_ 2.4.0, built with shared libraries.
+
+* Python_ 2.4/2.5/2.6.
+
+* NumPy_ package.
+
+* petsc4py_ package.
+
+
+Building
+--------
+
+Download and unpack the source distribution::
+
+   $ tar -zxf slepc4py-X.X.X.tar.gz
+   $ cd slepc4py-X.X.X
+
+Some environmental configuration is needed to inform the location of
+PETSc and SLEPc. You can set (using ``setenv``, ``export`` or what
+applies to you shell or system) the environmental variables
+``SLEPC_DIR``, ``PETSC_DIR``, and ``PETSC_ARCH`` indicating where you
+have built/installed SLEPc and PETSc::
+
+   $ export SLEPC_DIR=/usr/local/slepc/2.4.0
+   $ export PETSC_DIR=/usr/local/petsc/2.4.0
+   $ export PETSC_ARCH=linux-gnu
+
+Alternatively, you can edit the file ``setup.cfg`` and provide the
+required information below ``[config]`` section::
+
+   [config]
+   slepc_dir  = /usr/local/slepc/2.4.0
+   petsc_dir  = /usr/local/petsc/2.4.0
+   petsc_arch = linux-gnu
+   ...
+
+Finally, you can build this distribution by typing::
+
+   $ python setup.py build
+
+
+Installing
+----------
+
+After building, this distribution is ready for installation. For a
+site install type::
+
+   $ python setup.py install
+
+or, in case you need root privileges::
+
+   $ su -c 'python setup.py install'
+
+This will install the ``slepc4py`` package in the standard location
+``<prefix>/lib/pythonX.X/site-packages``.
+
+You can also do a user install at your home directory::
+
+   $ python setup.py install --home=$HOME
+
+This will install the ``slepc4py`` package in the standard location
+``$HOME/lib/python``. This location should be listed in the
+``PYTHONPATH`` environmental variable.

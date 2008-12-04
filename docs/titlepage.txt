@@ -1,0 +1,15 @@
+================
+SLEPc for Python
+================
+
+:Authors:      Lisandro Dalcín, Jose Roman
+:Organization: CIMEC_, GRyCAP_
+:Contact:      dalcinl@gmail.com, jroman@dsic.upv.es
+
+:Date:         $Date$
+:Revision:     $Revision$
+:Copyright:    This document has been placed in the public domain.
+
+:Abstract:
+	       This document describes a Python_ port to SLEPc_
+	       libraries. 
