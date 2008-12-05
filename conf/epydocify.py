@@ -2,8 +2,8 @@
 
 # --------------------------------------------------------------------
 
+from slepc4py import SLEPc
 try:
-    from petsc4py import PETSc
     from signal import signal, SIGPIPE, SIG_IGN
     signal(SIGPIPE, SIG_IGN)
 except ImportError:

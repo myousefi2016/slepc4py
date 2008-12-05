@@ -1,6 +1,7 @@
-.PHONY: default src config build test install \
-	uninstall clean distclean srcclean fullclean \
-	sdist cython epydoc
+.PHONY: default src \
+	config build test install \
+	clean distclean srcclean fullclean uninstall \
+	cython epydoc sdist
 
 PYTHON = python
 
@@ -20,13 +21,10 @@ test:
 install: build
 	${PYTHON} setup.py install ${INSTALLOPT} --home=${HOME}
 
-uninstall:
-	-${RM} -r ${HOME}/lib/python/slepc4py
-	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
-
 clean:
 	${PYTHON} setup.py clean --all
 	-${RM} _configtest.* *.py[co]
+	-${MAKE} -C docs clean
 
 distclean: clean 
 	-${RM} -r build  *.py[co]
@@ -41,9 +39,9 @@ srcclean:
 
 fullclean: distclean srcclean
 
-
-sdist:
-	${PYTHON} setup.py sdist ${SDISTOPT}
+uninstall:
+	-${RM} -r ${HOME}/lib/python/slepc4py
+	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
 
 CY_SRC_PXD = $(wildcard src/include/slepc4py/*.pxd)
 CY_SRC_PXI = $(wildcard src/SLEPc/*.pxi)
@@ -54,5 +52,9 @@ src/slepc4py_SLEPc.c: ${CY_SRC_PXD} ${CY_SRC_PXI} ${CY_SRC_PYX}
 
 cython:
 	${PYTHON} ./conf/cythonize.py
+
 epydoc:
 	${PYTHON} ./conf/epydocify.py -o /tmp/slepc4py-api-doc
+
+sdist:
+	${PYTHON} setup.py sdist ${SDISTOPT}
