@@ -1,3 +1,15 @@
+cdef extern from "petsc.h":
+    enum: PETSC_DECIDE
+    enum: PETSC_DEFAULT
+    enum: PETSC_DETERMINE
+    enum: PETSC_IGNORE
+
+cdef extern from "petsc.h":
+    ctypedef int PetscCookie
+    int PetscObjectReference(PetscObject)
+    int PetscObjectDereference(PetscObject)
+    int PetscObjectDestroy(PetscObject)
+
 cdef extern from "slepc.h":
 
     enum: SLEPC_VERSION_MAJOR
@@ -12,17 +24,6 @@ cdef extern from "slepc.h":
     int SlepcInitialize(int*,char***,char[],char[])
     int SlepcFinalize()
     int SlepcInitializeCalled
-
-cdef extern from "petsc.h":
-    enum: PETSC_DECIDE
-    enum: PETSC_DEFAULT
-    enum: PETSC_DETERMINE
-    enum: PETSC_IGNORE
-
-cdef extern from "petsc.h":
-    int PetscObjectReference(PetscObject)
-    int PetscObjectDereference(PetscObject)
-    int PetscObjectDestroy(PetscObject)
 
 cdef inline int SlepcIncref(PetscObject obj):
     if obj != NULL:

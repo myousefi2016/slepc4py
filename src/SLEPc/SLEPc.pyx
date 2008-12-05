@@ -110,8 +110,7 @@ cdef int initialize(object args) except -1:
                           "SlepcFinalize() with Py_AtExit()")
     return 1 # and we are done, enjoy !!
 
-from petsc4py.PETSc cimport PetscCookie
-from petsc4py.PETSc cimport RegisterPyType
+from petsc4py.PETSc cimport TypeRegistryAdd
 
 cdef extern from *:
     PetscCookie SLEPC_ST_COOKIE  "ST_COOKIE"
@@ -121,10 +120,10 @@ cdef extern from *:
 
 cdef int register(char path[]) except -1:
     # register Python types
-    RegisterPyType(SLEPC_ST_COOKIE,  ST)
-    RegisterPyType(SLEPC_IP_COOKIE,  IP)
-    RegisterPyType(SLEPC_EPS_COOKIE, EPS)
-    RegisterPyType(SLEPC_SVD_COOKIE, SVD)
+    TypeRegistryAdd(SLEPC_ST_COOKIE,  ST)
+    TypeRegistryAdd(SLEPC_IP_COOKIE,  IP)
+    TypeRegistryAdd(SLEPC_EPS_COOKIE, EPS)
+    TypeRegistryAdd(SLEPC_SVD_COOKIE, SVD)
     return 0
 
 cdef void finalize():

@@ -94,7 +94,7 @@ cdef class EPS(Object):
         return self
 
     def create(self, comm=None):
-        cdef MPI_Comm ccomm = def_Comm(comm, PETSC_COMM_DEFAULT)
+        cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcEPS neweps = NULL
         CHKERR( EPSCreate(ccomm, &neweps) )
         self.dec_ref(); self.eps = neweps

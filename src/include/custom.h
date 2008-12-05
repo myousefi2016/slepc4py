@@ -1,3 +1,13 @@
+#if !defined(SLEPC_VERSION_)
+#define SLEPC_VERSION_(MAJOR,MINOR,SUBMINOR) \
+  ((SLEPC_VERSION_MAJOR == (MAJOR)) &&       \
+   (SLEPC_VERSION_MINOR == (MINOR)) &&       \
+   (SLEPC_VERSION_SUBMINOR == (SUBMINOR)) && \
+   (SLEPC_VERSION_RELEASE  == 1))
+#endif
+
+
+#if SLEPC_VERSION_(2,3,3)
 #undef __FUNCT__  
 #define __FUNCT__ "IPGetOptionsPrefix"
 PETSC_STATIC_INLINE 
@@ -10,7 +20,9 @@ PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
   ierr = PetscObjectGetOptionsPrefix((PetscObject)ip, prefix);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
+#endif
 
+#if SLEPC_VERSION_(2,3,3)
 #undef __FUNCT__  
 #define __FUNCT__ "EPSGetOperators"
 PETSC_STATIC_INLINE 
@@ -26,3 +38,4 @@ PetscErrorCode EPSGetOperators(EPS eps, Mat *A, Mat *B)
   ierr = STGetOperators(st,A,B);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
+#endif

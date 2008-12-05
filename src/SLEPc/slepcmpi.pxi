@@ -11,13 +11,14 @@ cdef extern from "petsc.h":
     MPI_Comm PETSC_COMM_SELF
     MPI_Comm PETSC_COMM_WORLD
 
-    MPI_Comm PETSC_COMM_DEFAULT "PETSC_COMM_WORLD"
-
 # --------------------------------------------------------------------
 
-cdef inline MPI_Comm def_Comm(object comm,
-                              MPI_Comm deft) except *:
-    if comm is None: return deft
-    return (<Comm?>comm).comm
+from petsc4py.PETSc cimport GetComm
+cdef inline MPI_Comm def_Comm(object comm, MPI_Comm defv) except *:
+     return GetComm(comm, defv)
+
+from petsc4py.PETSc cimport GetCommDefault
+cdef inline MPI_Comm SLEPC_COMM_DEFAULT():
+     return GetCommDefault()
 
 # --------------------------------------------------------------------

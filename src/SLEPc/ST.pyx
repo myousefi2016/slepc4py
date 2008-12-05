@@ -44,7 +44,7 @@ cdef class ST(Object):
         return self
 
     def create(self, comm=None):
-        cdef MPI_Comm ccomm = def_Comm(comm, PETSC_COMM_DEFAULT)
+        cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcST newst = NULL
         CHKERR( STCreate(ccomm, &newst) )
         self.dec_ref(); self.st = newst

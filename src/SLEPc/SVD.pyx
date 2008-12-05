@@ -61,7 +61,7 @@ cdef class SVD(Object):
         return self
 
     def create(self, comm=None):
-        cdef MPI_Comm ccomm = def_Comm(comm, PETSC_COMM_DEFAULT)
+        cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcSVD newsvd = NULL
         CHKERR( SVDCreate(ccomm, &newsvd) )
         self.dec_ref(); self.svd = newsvd

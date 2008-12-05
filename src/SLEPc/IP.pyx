@@ -46,7 +46,7 @@ cdef class IP(Object):
         return self
 
     def create(self, comm=None):
-        cdef MPI_Comm ccomm = def_Comm(comm, PETSC_COMM_DEFAULT)
+        cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcIP newip = NULL
         CHKERR( IPCreate(ccomm, &newip) )
         self.dec_ref(); self.ip = newip
