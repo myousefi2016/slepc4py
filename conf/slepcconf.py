@@ -42,21 +42,28 @@ class SlepcConfig(PetscConfig):
         self.configdict['SLEPC_DIR'] = slepc_dir
         self.SLEPC_DIR = self['SLEPC_DIR']
 
-    def _configure_extension(self, extension):
-        PetscConfig._configure_extension(self, extension)
+    def configure_extension(self, extension):
+        PetscConfig.configure_extension(self, extension)
         # define macros
         macros = [('SLEPC_DIR', self.SLEPC_DIR)]
         extension.define_macros.extend(macros)
         # includes and libraries
-        if os.path.exists(os.path.join(self.SLEPC_DIR, 'conf')):
-            SLEPC_INCLUDE = os.path.join(self.SLEPC_DIR, 'include')
-            SLEPC_LIB_DIR = os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'lib')
+        if (os.path.exists(os.path.join(self.SLEPC_DIR, 'conf')) or
+            os.path.exists(os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'conf'))):
+            SLEPC_INCLUDE = [
+                os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'include'),
+                os.path.join(self.SLEPC_DIR, 'include'),
+                ]
+            SLEPC_LIB_DIR = [
+                os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'lib'),
+                os.path.join(self.SLEPC_DIR, 'lib'),
+                ]
         else:
-            SLEPC_INCLUDE = os.path.join(self.SLEPC_DIR, 'include')
-            SLEPC_LIB_DIR = os.path.join(self.SLEPC_DIR, 'lib', self.PETSC_ARCH)
+            SLEPC_INCLUDE = [os.path.join(self.SLEPC_DIR, 'include'), self.SLEPC_DIR]
+            SLEPC_LIB_DIR = [os.path.join(self.SLEPC_DIR, 'lib', self.PETSC_ARCH)]
         slepc_cfg = { }
-        slepc_cfg['include_dirs'] = [SLEPC_INCLUDE, self.SLEPC_DIR]
-        slepc_cfg['library_dirs'] = [SLEPC_LIB_DIR]
+        slepc_cfg['include_dirs'] = SLEPC_INCLUDE
+        slepc_cfg['library_dirs'] = SLEPC_LIB_DIR
         slepc_cfg['libraries']    = ['slepc']
         slepc_cfg['runtime_library_dirs'] = slepc_cfg['library_dirs']
         self._configure_ext(extension, slepc_cfg)
@@ -152,6 +159,9 @@ class build_py(_build_py):
         petsc_arch = self.petsc_arch
         pathsep    = os.path.pathsep
         #
+        bmake_dir = os.path.join(petsc_dir, 'bmake')
+        have_bmake = os.path.isdir(bmake_dir)
+        #
         if '%(SLEPC_DIR)s' not in config_data:
             return # already configured
         if not slepc_dir:
@@ -163,6 +173,8 @@ class build_py(_build_py):
             PETSC_DIR  = petsc_dir
         if petsc_arch:
             PETSC_ARCH = pathsep.join(petsc_arch)
+        elif not have_bmake:
+            PETSC_ARCH = 'default'
         log.info('writing %s' % py_file)
         config_py = open(py_file, 'w')
         config_py.write(config_data % vars())
