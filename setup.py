@@ -69,7 +69,7 @@ def get_ext_modules(Extension):
 # --------------------------------------------------------------------
 
 from conf.slepcconf import setup, Extension
-from conf.slepcconf import config, build, build_py, build_ext
+from conf.slepcconf import config, build, build_src, build_ext
 
 def main():
     setup(packages     = ['slepc4py',
@@ -85,7 +85,7 @@ def main():
           ext_modules  = get_ext_modules(Extension),
           cmdclass     = {'config'     : config,
                           'build'      : build,
-                          'build_py'   : build_py,
+                          'build_src'  : build_src,
                           'build_ext'  : build_ext},
           **metadata)
 

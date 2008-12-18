@@ -4,7 +4,6 @@ __all__ = ['setup',
            'Extension',
            'config',
            'build',
-           'build_py',
            'build_ext',
            ]
 
@@ -19,12 +18,12 @@ if not hasattr(sys, 'version_info') or \
 
 # --------------------------------------------------------------------
 
-from core import PetscConfig
-from core import setup, Extension, log
-from core import config     as _config
-from core import build      as _build
-from core import build_py   as _build_py
-from core import build_ext  as _build_ext
+from conf.core import PetscConfig
+from conf.core import setup, Extension, log
+from conf.core import config     as _config
+from conf.core import build      as _build
+from conf.core import build_src  as _build_src
+from conf.core import build_ext  as _build_ext
 
 from distutils.errors import DistutilsError
 
@@ -133,52 +132,8 @@ class build(_build):
         self.slepc_dir = config.get_slepc_dir(self.slepc_dir)
 
 
-class build_py(_build_py):
-
-    config_file = 'slepc.cfg'
-
-    def initialize_options(self):
-        _build_py.initialize_options(self)
-        self.slepc_dir = None
-
-    def finalize_options(self):
-        _build_py.finalize_options(self)
-        self.set_undefined_options('build',
-                                   ('slepc_dir',  'slepc_dir'),)
-
-    def _config(self, py_file):
-        SLEPC_DIR  = '$SLEPC_DIR'
-        PETSC_DIR  = '$PETSC_DIR'
-        PETSC_ARCH = '$PETSC_ARCH'
-        config_py = open(py_file, 'r')
-        config_data = config_py.read()
-        config_py.close()
-        #
-        slepc_dir  = self.slepc_dir
-        petsc_dir  = self.petsc_dir
-        petsc_arch = self.petsc_arch
-        pathsep    = os.path.pathsep
-        #
-        bmake_dir = os.path.join(petsc_dir, 'bmake')
-        have_bmake = os.path.isdir(bmake_dir)
-        #
-        if '%(SLEPC_DIR)s' not in config_data:
-            return # already configured
-        if not slepc_dir:
-            return # nothing known to put
-        #
-        if slepc_dir:
-            SLEPC_DIR  = slepc_dir
-        if petsc_dir:
-            PETSC_DIR  = petsc_dir
-        if petsc_arch:
-            PETSC_ARCH = pathsep.join(petsc_arch)
-        elif not have_bmake:
-            PETSC_ARCH = 'default'
-        log.info('writing %s' % py_file)
-        config_py = open(py_file, 'w')
-        config_py.write(config_data % vars())
-        config_py.close()
+class build_src(_build_src):
+    pass
 
 
 class build_ext(_build_ext):
@@ -195,5 +150,16 @@ class build_ext(_build_ext):
     def _get_config(self, petsc_dir, petsc_arch):
         return SlepcConfig(petsc_dir, petsc_arch, self.slepc_dir)
 
+
+    def get_config_data(self, arch_list):
+        template = """\
+SLEPC_DIR  = %(SLEPC_DIR)s
+PETSC_DIR  = %(PETSC_DIR)s
+PETSC_ARCH = %(PETSC_ARCH)s
+"""
+        variables = {'SLEPC_DIR'  : self.slepc_dir,
+                     'PETSC_DIR'  : self.petsc_dir,
+                     'PETSC_ARCH' : os.path.pathsep.join(arch_list)}
+        return template, variables
 
 # --------------------------------------------------------------------
