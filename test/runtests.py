@@ -47,8 +47,45 @@ def test_cases():
         test_list.append(test)
     return test_list
 
-for test in test_cases():
-    try:
-        unittest.main(test)
-    except SystemExit:
-        pass
+def runtests(*args, **kargs):
+    SLEPc.COMM_WORLD.barrier()
+    sys.stderr.flush()
+    sys.stderr.write("slepc4py imported from '%s'\n" % slepc4py.__path__[0])
+    sys.stderr.flush()
+    SLEPc.COMM_WORLD.barrier()
+
+    for test in test_cases():
+        try:
+            if SLEPc.COMM_WORLD.getRank() == 0:
+                sys.stderr.flush()
+                sys.stderr.write("\nrunning %s\n" % test.__name__)
+                sys.stderr.flush()
+            SLEPc.COMM_WORLD.barrier()
+            unittest.main(test, *args, **kargs)
+            SLEPc.COMM_WORLD.barrier()
+        except SystemExit:
+            pass
+
+def runtestsleak(repeats, *args, **kargs):
+    import gc
+    alltests = test_cases()
+    gc.collect()
+    for i in xrange(repeats):
+        gc.collect()
+        r1 = sys.gettotalrefcount()
+        for test in alltests:
+            try: unittest.main(test, *args, **kargs)
+            except SystemExit: pass
+        gc.collect()
+        r2 = sys.gettotalrefcount()
+        sys.stderr.flush()
+        sys.stderr.write('\nREF LEAKS -- before: %d, after: %d, diff: [%d]\n' % (r1, r2, r2-r1))
+        sys.stderr.flush()
+
+if __name__ == '__main__':
+    runtests()
+    if hasattr(sys, 'gettotalrefcount'):
+        def dummy_write(self,*args): pass
+        unittest._WritelnDecorator.write   = dummy_write
+        unittest._WritelnDecorator.writeln = dummy_write
+        runtestsleak(5)
