@@ -25,9 +25,6 @@ cdef extern from "slepcst.h":
     int STGetShift(SlepcST,PetscScalar*)
     int STSetShift(SlepcST,PetscScalar)
 
-    int STCayleySetAntishift(SlepcST,PetscScalar)
-    int STFoldSetLeftSide(SlepcST,PetscTruth)
-
     int STGetKSP(SlepcST,PetscKSP*)
     int STSetKSP(SlepcST,PetscKSP)
 
@@ -40,3 +37,6 @@ cdef extern from "slepcst.h":
     int STGetMatMode(SlepcST,SlepcSTMatMode*)
     int STSetMatMode(SlepcST,SlepcSTMatMode)
 
+    int STSetUp(SlepcST)
+    int STApply(SlepcST,PetscVec,PetscVec)
+    int STApplyTranspose(SlepcST,PetscVec,PetscVec)

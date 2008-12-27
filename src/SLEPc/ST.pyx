@@ -69,4 +69,55 @@ cdef class ST(Object):
     def setFromOptions(self):
         CHKERR( STSetFromOptions(self.st) )
 
+    #
+
+    def setShift(self, shift):
+        cdef PetscScalar cshift = shift
+        CHKERR( STSetShift(self.st, cshift) )
+
+    def getShift(self):
+        cdef PetscScalar cshift = 0
+        CHKERR( STGetShift(self.st, &cshift) )
+        return cshift
+
+    def setMatMode(self, mode):
+        cdef SlepcSTMatMode cmode = mode
+        CHKERR( STSetMatMode(self.st, cmode) )
+
+    def getMatMode(self):
+        cdef SlepcSTMatMode cmode = STMATMODE_INPLACE
+        CHKERR( STGetMatMode(self.st, &cmode) )
+        return cmode
+
+    def setOperators(self, Mat A not None, Mat B=None):
+        cdef PetscMat Bmat = NULL
+        if B is not None: Bmat = B.mat
+        CHKERR( STSetOperators(self.st, A.mat, Bmat) )
+
+    def getOperators(self):
+        cdef Mat A = Mat()
+        cdef Mat B = Mat()
+        CHKERR( STGetOperators(self.st, &A.mat, &B.mat) )
+        A.inc_ref(); B.inc_ref(); return (A, B)
+
+    def setKSP(self, KSP ksp not None):
+        CHKERR( STSetKSP(self.st, ksp.ksp) )
+
+    def getKSP(self):
+        cdef KSP ksp = KSP()
+        CHKERR( STGetKSP(self.st, &ksp.ksp) )
+        ksp.inc_ref(); return ksp
+
+    #
+
+    def setUp(self):
+        CHKERR( STSetUp(self.st) )
+
+    def apply(self, Vec x not None, Vec y not None):
+        CHKERR( STApply(self.st, x.vec, y.vec) )
+
+    def applyTranspose(self, Vec x not None, Vec y not None):
+        CHKERR( STApplyTranspose(self.st, x.vec, y.vec) )
+
+
 # --------------------------------------------------------------------
