@@ -22,11 +22,13 @@ PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
 }
 #endif
 
+
 #if SLEPC_VERSION_(2,3,3)
-#undef __FUNCT__  
-#define __FUNCT__ "EPSGetOperators"
+
+#undef __FUNCT__
+#define __FUNCT__ "EPSGetOperators_233"
 PETSC_STATIC_INLINE 
-PetscErrorCode EPSGetOperators(EPS eps, Mat *A, Mat *B)
+PetscErrorCode EPSGetOperators_233(EPS eps, Mat *A, Mat *B)
 {
   ST st;
   PetscErrorCode ierr;
@@ -38,4 +40,76 @@ PetscErrorCode EPSGetOperators(EPS eps, Mat *A, Mat *B)
   ierr = STGetOperators(st,A,B);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
+#define EPSGetOperators EPSGetOperators_233
+
+#undef __FUNCT__
+#define __FUNCT__ "EPSSetOperators_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode EPSSetOperators_233(EPS eps, Mat A, Mat B)
+{
+  ST st;
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  if (A) PetscValidPointer(A,2);
+  if (B) PetscValidPointer(B,3);
+  ierr = EPSSetOperators(eps,A,B);CHKERRQ(ierr);
+  ierr = EPSGetST(eps,&st);CHKERRQ(ierr);
+  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_A__",(PetscObject)A);CHKERRQ(ierr);
+  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_B__",(PetscObject)B);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+#define EPSSetOperators EPSSetOperators_233
+
+#undef __FUNCT__
+#define __FUNCT__ "STSetOperators_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode STSetOperators_233(ST st, Mat A, Mat B)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(st,ST_COOKIE,1);
+  if (A) PetscValidPointer(A,2);
+  if (B) PetscValidPointer(B,3);
+  ierr = STSetOperators(st,A,B);CHKERRQ(ierr);
+  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_A__",(PetscObject)A);CHKERRQ(ierr);
+  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_B__",(PetscObject)B);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+#define STSetOperators STSetOperators_233
+
+#endif
+
+
+#if SLEPC_VERSION_(2,3,3)
+
+typedef enum { 
+  EPS_RITZ=1,
+  EPS_HARMONIC,
+  EPS_REFINED,
+  EPS_REFINED_HARMONIC
+} EPSExtraction;
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSSetExtraction"
+PETSC_STATIC_INLINE 
+PetscErrorCode EPSSetExtraction(EPS eps, EPSExtraction ext)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSGetExtraction"
+PETSC_STATIC_INLINE 
+PetscErrorCode EPSGetExtraction(EPS eps, EPSExtraction *ext)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+
 #endif

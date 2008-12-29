@@ -20,7 +20,7 @@ class EPSType:
 
 class EPSProblemType:
     """
-    EPS ProblemType
+    EPS problem type
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
@@ -28,15 +28,21 @@ class EPSProblemType:
     GNHEP  = EPS_GNHEP
     PGNHEP = EPS_PGNHEP
 
-class EPSConvergedReason:
+class EPSExtraction:
     """
-    EPS convergence reasons
+    EPS extraction technique
     """
-    CONVERGED_TOL         = EPS_CONVERGED_TOL
-    DIVERGED_ITS          = EPS_DIVERGED_ITS
-    DIVERGED_BREAKDOWN    = EPS_DIVERGED_BREAKDOWN
-    DIVERGED_NONSYMMETRIC = EPS_DIVERGED_NONSYMMETRIC
-    CONVERGED_ITERATING   = EPS_CONVERGED_ITERATING
+    RITZ             = EPS_RITZ
+    HARMONIC         = EPS_HARMONIC
+    REFINED          = EPS_REFINED
+    REFINED_HARMONIC = EPS_REFINED_HARMONIC
+
+class EPSClass:
+    """
+    EPS class of method
+    """
+    ONE_SIDE  = EPS_ONE_SIDE
+    TWO_SIDE  = EPS_TWO_SIDE
 
 class EPSWhich:
     """
@@ -49,12 +55,15 @@ class EPSWhich:
     LARGEST_IMAGINARY  = EPS_LARGEST_IMAGINARY
     SMALLEST_IMAGINARY = EPS_SMALLEST_IMAGINARY
 
-class EPSClass:
+class EPSConvergedReason:
     """
-    EPS class of method
+    EPS convergence reasons
     """
-    ONE_SIDE  = EPS_ONE_SIDE
-    TWO_SIDE  = EPS_TWO_SIDE
+    CONVERGED_TOL         = EPS_CONVERGED_TOL
+    DIVERGED_ITS          = EPS_DIVERGED_ITS
+    DIVERGED_BREAKDOWN    = EPS_DIVERGED_BREAKDOWN
+    DIVERGED_NONSYMMETRIC = EPS_DIVERGED_NONSYMMETRIC
+    CONVERGED_ITERATING   = EPS_CONVERGED_ITERATING
 
 class EPSPowerShiftType:
     """
@@ -74,9 +83,11 @@ cdef class EPS(Object):
 
     Type            = EPSType
     ProblemType     = EPSProblemType
-    ConvergedReason = EPSConvergedReason
-    Which           = EPSWhich
+    Extraction      = EPSExtraction
     Class           = EPSClass
+    Which           = EPSWhich
+    ConvergedReason = EPSConvergedReason
+
     PowerShiftType  = EPSPowerShiftType
 
     def __cinit__(self):
@@ -138,6 +149,15 @@ cdef class EPS(Object):
     def setClass(self, klass):
         cdef SlepcEPSClass val = klass
         CHKERR( EPSSetClass(self.eps, val) )
+
+    def getExtraction(self):
+        cdef SlepcEPSExtraction val = EPS_RITZ
+        CHKERR( EPSGetExtraction(self.eps, &val) )
+        return val
+
+    def setExtraction(self, extraction):
+        cdef SlepcEPSExtraction val = extraction
+        CHKERR( EPSSetExtraction(self.eps, val) )
 
     def getWhichEigenpairs(self):
         cdef SlepcEPSWhich val
@@ -312,6 +332,12 @@ cdef class EPS(Object):
             return self.getProblemType()
         def __set__(self, value):
             self.setProblemType(value)
+
+    property extraction:
+        def __get__(self):
+            return self.getExtraction()
+        def __set__(self, value):
+            self.setExtraction(value)
 
     property which:
         def __get__(self):

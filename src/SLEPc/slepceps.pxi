@@ -20,6 +20,12 @@ cdef extern from "slepceps.h":
         EPS_GNHEP
         EPS_PGNHEP
 
+    ctypedef enum SlepcEPSExtraction "EPSExtraction":
+        EPS_RITZ
+        EPS_HARMONIC
+        EPS_REFINED
+        EPS_REFINED_HARMONIC
+
     ctypedef enum SlepcEPSWhich "EPSWhich":
         EPS_LARGEST_MAGNITUDE, EPS_SMALLEST_MAGNITUDE,
         EPS_LARGEST_REAL,      EPS_SMALLEST_REAL,
@@ -29,17 +35,17 @@ cdef extern from "slepceps.h":
          EPS_ONE_SIDE
          EPS_TWO_SIDE
 
-    ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
-        EPSPOWER_SHIFT_CONSTANT
-        EPSPOWER_SHIFT_RAYLEIGH
-        EPSPOWER_SHIFT_WILKINSON
-
     ctypedef enum SlepcEPSConvergedReason "EPSConvergedReason":
         EPS_CONVERGED_ITERATING
         EPS_CONVERGED_TOL
         EPS_DIVERGED_ITS
         EPS_DIVERGED_BREAKDOWN
         EPS_DIVERGED_NONSYMMETRIC
+
+    ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
+        EPSPOWER_SHIFT_CONSTANT
+        EPSPOWER_SHIFT_RAYLEIGH
+        EPSPOWER_SHIFT_WILKINSON
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS)
@@ -53,6 +59,8 @@ cdef extern from "slepceps.h":
 
     int EPSSetProblemType(SlepcEPS,SlepcEPSProblemType)
     int EPSGetProblemType(SlepcEPS,SlepcEPSProblemType*)
+    int EPSSetExtraction(SlepcEPS,SlepcEPSExtraction)
+    int EPSGetExtraction(SlepcEPS,SlepcEPSExtraction*)
     int EPSSetClass(SlepcEPS,SlepcEPSClass)
     int EPSGetClass(SlepcEPS,SlepcEPSClass*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
