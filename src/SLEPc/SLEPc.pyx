@@ -90,6 +90,11 @@ __doc__ = \
 Scalable Library for Eigenvalue Problem Computations.
 """
 
+DECIDE    = PETSC_DECIDE
+IGNORE    = PETSC_IGNORE
+DEFAULT   = PETSC_DEFAULT
+DETERMINE = PETSC_DETERMINE
+
 include "ST.pyx"
 include "IP.pyx"
 include "EPS.pyx"
