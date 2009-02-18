@@ -31,7 +31,7 @@ cdef extern from "slepcst.h":
     int STGetOperators(SlepcST,PetscMat*,PetscMat*)
     int STSetOperators(SlepcST,PetscMat,PetscMat)
 
-    int STGetOperationCounters(SlepcST,int*,int*)
+    int STGetOperationCounters(SlepcST,PetscInt*,PetscInt*)
     int STResetOperationCounters(SlepcST)
 
     int STGetMatMode(SlepcST,SlepcSTMatMode*)

@@ -1,3 +1,7 @@
+#if !defined(SLEPC_COMPAT_H)
+#define SLEPC_COMPAT_H
+
+
 #if !defined(SLEPC_VERSION_)
 #define SLEPC_VERSION_(MAJOR,MINOR,SUBMINOR) \
   ((SLEPC_VERSION_MAJOR == (MAJOR)) &&       \
@@ -8,6 +12,7 @@
 
 
 #if SLEPC_VERSION_(2,3,3)
+
 #undef __FUNCT__  
 #define __FUNCT__ "IPGetOptionsPrefix"
 PETSC_STATIC_INLINE 
@@ -20,6 +25,7 @@ PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
   ierr = PetscObjectGetOptionsPrefix((PetscObject)ip, prefix);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
+
 #endif
 
 
@@ -113,3 +119,65 @@ PetscErrorCode EPSGetExtraction(EPS eps, EPSExtraction *ext)
 }
 
 #endif
+
+
+#if SLEPC_VERSION_(2,3,3)
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSSetDimensions_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode EPSSetDimensions_233(EPS eps,PetscInt nev,PetscInt ncv,PetscInt mpd)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  ierr = EPSSetDimensions(eps,nev,ncv);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+#define EPSSetDimensions EPSSetDimensions_233
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSGetDimensions_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode EPSGetDimensions_233(EPS eps, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  ierr = EPSGetDimensions(eps,nev,ncv);CHKERRQ(ierr);
+  if (mpd) mpd = 0;
+  PetscFunctionReturn(0);
+}
+#define EPSGetDimensions EPSGetDimensions_233
+
+#undef __FUNCT__  
+#define __FUNCT__ "SVDSetDimensions_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode SVDSetDimensions_233(SVD svd,PetscInt nev,PetscInt ncv,PetscInt mpd)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(svd,SVD_COOKIE,1);
+  ierr = SVDSetDimensions(svd,nev,ncv);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+#define SVDSetDimensions SVDSetDimensions_233
+
+#undef __FUNCT__  
+#define __FUNCT__ "SVDGetDimensions_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(svd,SVD_COOKIE,1);
+  ierr = SVDGetDimensions(svd,nev,ncv);CHKERRQ(ierr);
+  if (mpd) mpd = 0;
+  PetscFunctionReturn(0);
+}
+#define SVDGetDimensions SVDGetDimensions_233
+
+#endif
+
+
+#endif /* !SLEPC_COMPAT_H */

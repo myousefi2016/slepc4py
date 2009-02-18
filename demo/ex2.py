@@ -27,7 +27,7 @@ def solve_eigensystem(A, problem_type=EPS.ProblemType.HEP):
     print "Number of iterations of the method: %i" % its
     sol_type = E.getType()
     print "Solution method: %s" % sol_type
-    nev, ncv = E.getDimensions()
+    nev, ncv, mpd = E.getDimensions()
     print "Number of requested eigenvalues: %i" % nev
     tol, maxit = E.getTolerances()
     print "Stopping condition: tol=%.4g, maxit=%d" % (tol, maxit)

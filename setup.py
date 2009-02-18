@@ -49,8 +49,11 @@ def get_ext_modules(Extension):
     depends = []
     for pth, dirs, files in walk('src'):
         depends += glob(path.join(pth, '*.h'))
-    import petsc4py
-    petsc4py_inc = petsc4py.get_include()
+    try:
+        import petsc4py
+        petsc4py_inc = petsc4py.get_include()
+    except ImportError:
+        petsc4py_inc = 'src/include'
     return [Extension('slepc4py.lib.SLEPc',
                       sources=['src/SLEPc.c',],
                       include_dirs=['src/include',

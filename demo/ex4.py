@@ -44,7 +44,7 @@ Print( "Solution method: %s" % svd_type )
 its = S.getIterationNumber()
 Print( "Number of iterations of the method: %d" % its )
 
-nsv, ncv = S.getDimensions()
+nsv, ncv, mpd = S.getDimensions()
 Print( "Number of requested singular values: %d" % nsv )
 
 tol, maxit = S.getTolerances()

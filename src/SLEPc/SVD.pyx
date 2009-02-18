@@ -109,29 +109,32 @@ cdef class SVD(Object):
 
     def getTolerances(self):
         cdef PetscReal ctol = 0
-        cdef int cmaxit = 0
+        cdef PetscInt cmaxit = 0
         CHKERR( SVDGetTolerances(self.svd, &ctol, &cmaxit) )
         return (ctol, cmaxit)
 
     def setTolerances(self, tol=None, max_it=None):
         cdef PetscReal ctol = PETSC_IGNORE
-        cdef int cmaxit = PETSC_IGNORE
+        cdef PetscInt cmaxit = PETSC_IGNORE
         if tol    is not None: ctol   = tol
         if max_it is not None: cmaxit = max_it
         CHKERR( SVDSetTolerances(self.svd, ctol, cmaxit) )
 
     def getDimensions(self):
-        cdef int nev = 0
-        cdef int ncv = 0
-        CHKERR( SVDGetDimensions(self.svd, &nev, &ncv) )
-        return (nev, ncv)
+        cdef PetscInt nev = 0
+        cdef PetscInt ncv = 0
+        cdef PetscInt mpd = 0
+        CHKERR( SVDGetDimensions(self.svd, &nev, &ncv, &mpd) )
+        return (nev, ncv, mpd)
 
-    def setDimensions(self, nev=None, ncv=None):
-        cdef int cnev = PETSC_IGNORE
-        cdef int cncv = PETSC_IGNORE
+    def setDimensions(self, nev=None, ncv=None, mpd=None):
+        cdef PetscInt cnev = PETSC_IGNORE
+        cdef PetscInt cncv = PETSC_IGNORE
+        cdef PetscInt cmpd = PETSC_IGNORE
         if nev is not None: cnev = nev
         if ncv is not None: cncv = ncv
-        CHKERR( SVDSetDimensions(self.svd, cnev, cncv) )
+        if mpd is not None: cmpd = mpd
+        CHKERR( SVDSetDimensions(self.svd, cnev, cncv, cmpd) )
 
     def getIP(self):
         cdef IP ip = IP()
@@ -168,7 +171,7 @@ cdef class SVD(Object):
         CHKERR( SVDSolve(self.svd) )
 
     def getIterationNumber(self):
-        cdef int its = 0
+        cdef PetscInt its = 0
         CHKERR( SVDGetIterationNumber(self.svd, &its) )
         return its
 
@@ -179,7 +182,7 @@ cdef class SVD(Object):
         return reason
 
     def getConverged(self):
-        cdef int nconv = 0
+        cdef PetscInt nconv = 0
         CHKERR( SVDGetConverged(self.svd, &nconv) )
         return nconv
 

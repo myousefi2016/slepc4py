@@ -72,13 +72,13 @@ cdef class ST(Object):
     #
 
     def setShift(self, shift):
-        cdef PetscScalar cshift = shift
-        CHKERR( STSetShift(self.st, cshift) )
+        cdef PetscScalar sval = asScalar(shift)
+        CHKERR( STSetShift(self.st, sval) )
 
     def getShift(self):
-        cdef PetscScalar cshift = 0
-        CHKERR( STGetShift(self.st, &cshift) )
-        return cshift
+        cdef PetscScalar sval = 0
+        CHKERR( STGetShift(self.st, &sval) )
+        return toScalar(sval)
 
     def setMatMode(self, mode):
         cdef SlepcSTMatMode cmode = mode

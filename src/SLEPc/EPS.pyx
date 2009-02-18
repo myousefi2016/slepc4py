@@ -172,29 +172,32 @@ cdef class EPS(Object):
 
     def getTolerances(self):
         cdef PetscReal ctol = 0
-        cdef int cmaxit = 0
+        cdef PetscInt cmaxit = 0
         CHKERR( EPSGetTolerances(self.eps, &ctol, &cmaxit) )
         return (ctol, cmaxit)
 
     def setTolerances(self, tol=None, max_it=None):
         cdef PetscReal ctol = PETSC_IGNORE
-        cdef int cmaxit = PETSC_IGNORE
+        cdef PetscInt cmaxit = PETSC_IGNORE
         if tol    is not None: ctol   = tol
         if max_it is not None: cmaxit = max_it
         CHKERR( EPSSetTolerances(self.eps, ctol, cmaxit) )
 
     def getDimensions(self):
-        cdef int nev = 0
-        cdef int ncv = 0
-        CHKERR( EPSGetDimensions(self.eps, &nev, &ncv) )
-        return (nev, ncv)
+        cdef PetscInt nev = 0
+        cdef PetscInt ncv = 0
+        cdef PetscInt mpd = 0
+        CHKERR( EPSGetDimensions(self.eps, &nev, &ncv, &mpd) )
+        return (nev, ncv, mpd)
 
-    def setDimensions(self, nev=None, ncv=None):
-        cdef int cnev = PETSC_IGNORE
-        cdef int cncv = PETSC_IGNORE
+    def setDimensions(self, nev=None, ncv=None, mpd=None):
+        cdef PetscInt cnev = PETSC_IGNORE
+        cdef PetscInt cncv = PETSC_IGNORE
+        cdef PetscInt cmpd = PETSC_IGNORE
         if nev is not None: cnev = nev
         if ncv is not None: cncv = ncv
-        CHKERR( EPSSetDimensions(self.eps, cnev, cncv) )
+        if mpd is not None: cmpd = mpd
+        CHKERR( EPSSetDimensions(self.eps, cnev, cncv, cmpd) )
 
     def getST(self):
         cdef ST st = ST()
@@ -250,7 +253,7 @@ cdef class EPS(Object):
         CHKERR( EPSSolve(self.eps) )
 
     def getIterationNumber(self):
-        cdef int val = 0
+        cdef PetscInt val = 0
         CHKERR( EPSGetIterationNumber(self.eps, &val) )
         return val
 
@@ -260,15 +263,15 @@ cdef class EPS(Object):
         return val
 
     def getConverged(self):
-        cdef int val = 0
+        cdef PetscInt val = 0
         CHKERR( EPSGetConverged(self.eps, &val) )
         return val
 
     def getValue(self, int i):
-        cdef PetscScalar valr = 0
-        cdef PetscScalar vali = 0
-        CHKERR( EPSGetValue(self.eps, i, &valr, &vali) )
-        return complex(valr, vali)
+        cdef PetscScalar sval1 = 0
+        cdef PetscScalar sval2 = 0
+        CHKERR( EPSGetValue(self.eps, i, &sval1, &sval2) )
+        return complex(toScalar(sval1), toScalar(sval2))
 
     def getVector(self, int i, Vec Vr not None, Vec Vi=None):
         cdef PetscVec vecr = NULL
@@ -285,14 +288,14 @@ cdef class EPS(Object):
         CHKERR( EPSGetLeftVector(self.eps, i, vecr, veci) )
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
-        cdef PetscScalar valr = 0
-        cdef PetscScalar vali = 0
+        cdef PetscScalar sval1 = 0
+        cdef PetscScalar sval2 = 0
         cdef PetscVec vecr = NULL
         cdef PetscVec veci = NULL
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
-        CHKERR( EPSGetEigenpair(self.eps, i, &valr, &vali, vecr, veci) )
-        return complex(valr, vali)
+        CHKERR( EPSGetEigenpair(self.eps, i, &sval1, &sval2, vecr, veci) )
+        return complex(toScalar(sval1), toScalar(sval2))
 
     #
 

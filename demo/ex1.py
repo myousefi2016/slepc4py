@@ -58,7 +58,7 @@ Print( "Number of iterations of the method: %d" % its )
 eps_type = E.getType()
 Print( "Solution method: %s" % eps_type )
 
-nev, ncv = E.getDimensions()
+nev, ncv, mpd = E.getDimensions()
 Print( "Number of requested eigenvalues: %d" % nev )
 
 tol, maxit = E.getTolerances()
