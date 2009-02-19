@@ -2,7 +2,7 @@
 
 class EPSType(object):
     """
-    EPS Types
+    EPS types
     """
     # provided implementations
     KRYLOVSCHUR = EPSKRYLOVSCHUR
@@ -67,7 +67,7 @@ class EPSConvergedReason(object):
 
 class EPSPowerShiftType(object):
     """
-    EPS type of power shift
+    EPS Power shift type
     """
     CONSTANT  = EPSPOWER_SHIFT_CONSTANT
     RAYLEIGH  = EPSPOWER_SHIFT_RAYLEIGH
@@ -75,9 +75,8 @@ class EPSPowerShiftType(object):
 
 class EPSLanczosReorthogType(object):
     """
-    EPS type of power shift
+    EPS Lanczos reorthogonalization type
     """
-
     LOCAL     =  EPSLANCZOS_REORTHOG_LOCAL
     FULL      =  EPSLANCZOS_REORTHOG_FULL
     SELECTIVE =  EPSLANCZOS_REORTHOG_SELECTIVE

@@ -2,20 +2,23 @@
 
 class IPOrthoType(object):
     """
-    IP Orthogonalization Types.
+    IP orthogonalization types
     """
     CGS = IP_CGS_ORTH
     MGS = IP_MGS_ORTH
 
 class IPRefineType(object):
     """
-    IP Orthogonalization Refinement Types.
+    IP orthogonalization refinement types
     """
     NEVER    = IP_ORTH_REFINE_NEVER
     IFNEEDED = IP_ORTH_REFINE_IFNEEDED
     ALWAYS   = IP_ORTH_REFINE_ALWAYS
 
 class IPBilinearForm(object):
+    """
+    IP bilinear form types
+    """
     HERMITIAN = IPINNER_HERMITIAN
     SYMMETRIC = IPINNER_SYMMETRIC
 

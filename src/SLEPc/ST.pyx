@@ -2,7 +2,7 @@
 
 class STType(object):
     """
-    ST Types
+    ST types
     """
     SHELL  = STSHELL
     SHIFT  = STSHIFT
@@ -12,7 +12,7 @@ class STType(object):
 
 class STMatMode(object):
     """
-    ST Matrix Mode
+    ST matrix mode
     """
     COPY    = STMATMODE_COPY
     INPLACE = STMATMODE_INPLACE

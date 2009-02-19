@@ -2,7 +2,7 @@
 
 class SVDType(object):
     """
-    SVD Types
+    SVD types
     """
     CROSS     = SVDCROSS
     CYCLIC    = SVDCYCLIC
