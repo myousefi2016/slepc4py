@@ -42,11 +42,6 @@ cdef extern from "slepceps.h" nogil:
         EPS_DIVERGED_BREAKDOWN
         EPS_DIVERGED_NONSYMMETRIC
 
-    ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
-        EPSPOWER_SHIFT_CONSTANT
-        EPSPOWER_SHIFT_RAYLEIGH
-        EPSPOWER_SHIFT_WILKINSON
-
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS)
     int EPSCreate(MPI_Comm,SlepcEPS*)
@@ -111,6 +106,27 @@ cdef extern from "slepceps.h" nogil:
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSGetOperationCounters(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
+
+
+    ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
+        EPSPOWER_SHIFT_CONSTANT
+        EPSPOWER_SHIFT_RAYLEIGH
+        EPSPOWER_SHIFT_WILKINSON
+    int EPSPowerSetShiftType(SlepcEPS,SlepcEPSPowerShiftType)
+    int EPSPowerGetShiftType(SlepcEPS,SlepcEPSPowerShiftType*)
+
+    int EPSArnoldiSetDelayed(SlepcEPS,PetscTruth)
+    int EPSArnoldiGetDelayed(SlepcEPS,PetscTruth*)
+
+    ctypedef enum SlepcEPSLanczosReorthogType "EPSLanczosReorthogType":
+        EPSLANCZOS_REORTHOG_LOCAL
+        EPSLANCZOS_REORTHOG_FULL
+        EPSLANCZOS_REORTHOG_SELECTIVE
+        EPSLANCZOS_REORTHOG_PERIODIC
+        EPSLANCZOS_REORTHOG_PARTIAL
+        EPSLANCZOS_REORTHOG_DELAYED
+    int EPSLanczosSetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType)
+    int EPSLanczosGetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType*)
 
 
 cdef extern from * nogil:

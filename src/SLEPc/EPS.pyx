@@ -73,6 +73,18 @@ class EPSPowerShiftType:
     RAYLEIGH  = EPSPOWER_SHIFT_RAYLEIGH
     WILKINSON = EPSPOWER_SHIFT_WILKINSON
 
+class EPSLanczosReorthogType:
+    """
+    EPS type of power shift
+    """
+
+    LOCAL     =  EPSLANCZOS_REORTHOG_LOCAL
+    FULL      =  EPSLANCZOS_REORTHOG_FULL
+    SELECTIVE =  EPSLANCZOS_REORTHOG_SELECTIVE
+    PERIODIC  =  EPSLANCZOS_REORTHOG_PERIODIC
+    PARTIAL   =  EPSLANCZOS_REORTHOG_PARTIAL
+    DELAYED   =  EPSLANCZOS_REORTHOG_DELAYED
+
 # --------------------------------------------------------------------
 
 cdef class EPS(Object):
@@ -403,6 +415,35 @@ cdef class EPS(Object):
 
     #
 
+    def setPowerShiftType(self, shift):
+        cdef SlepcEPSPowerShiftType val = shift
+        CHKERR( EPSPowerSetShiftType(self.eps, val) )
+
+    def getPowerShiftType(self):
+        cdef SlepcEPSPowerShiftType val = EPSPOWER_SHIFT_CONSTANT
+        CHKERR( EPSPowerGetShiftType(self.eps, &val) )
+        return val
+
+    def setArnoldiDelayed(self, delayed):
+        cdef PetscTruth val = PETSC_FALSE
+        if delayed: val = PETSC_TRUE
+        CHKERR( EPSArnoldiSetDelayed(self.eps, val) )
+
+    def getArnoldiDelayed(self):
+        cdef PetscTruth val = PETSC_FALSE
+        CHKERR( EPSArnoldiGetDelayed(self.eps, &val) )
+        return val
+
+    def setLanczosReorthogType(self, reorthog):
+        cdef SlepcEPSLanczosReorthogType val = reorthog
+        CHKERR( EPSLanczosSetReorthog(self.eps, val) )
+
+    def getLanczosReorthogType(self):
+        cdef SlepcEPSLanczosReorthogType val = EPSLANCZOS_REORTHOG_LOCAL
+        CHKERR( EPSLanczosGetReorthog(self.eps, &val) )
+        return val
+
+    #
     property problem_type:
         def __get__(self):
             return self.getProblemType()
