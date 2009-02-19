@@ -383,6 +383,14 @@ cdef class EPS(Object):
         cdef PetscReal val = 0
         CHKERR( EPSComputeResidualNormLeft(self.eps, i, &val) )
         return val
+
+    def getOperationCounters(self):
+        cdef PetscInt ops  = 0
+        cdef PetscInt dots = 0
+        cdef PetscInt lits = 0
+        CHKERR( EPSGetOperationCounters(self.eps, &ops, &dots, &lits) )
+        return (ops, dots, lits)
+
     #
 
     property problem_type:

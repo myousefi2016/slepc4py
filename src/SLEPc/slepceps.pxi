@@ -108,6 +108,7 @@ cdef extern from "slepceps.h" nogil:
     int EPSComputeRelativeErrorLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
+    int EPSGetOperationCounters(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
 
 cdef extern from * nogil:
