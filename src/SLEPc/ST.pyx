@@ -130,6 +130,25 @@ cdef class ST(Object):
         if left: tval = PETSC_TRUE
         CHKERR( STFoldSetLeftSide(self.st, tval) )
 
+    #
+
+    property shift:
+        def __get__(self):
+            return self.getShift()
+        def __set__(self, value):
+            self.setShift(value)
+
+    property mat_mode:
+        def __get__(self):
+            return self.getMatMode()
+        def __set__(self, value):
+            self.setMatMode(value)
+
+    property ksp:
+        def __get__(self):
+            return self.getKSP()
+        def __set__(self, value):
+            self.setKSP(value)
 
 
 # --------------------------------------------------------------------
