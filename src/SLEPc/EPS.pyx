@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------
 
-class EPSType:
+class EPSType(object):
     """
     EPS Types
     """
@@ -18,7 +18,7 @@ class EPSType:
     BLOPEX      = EPSBLOPEX
     PRIMME      = EPSPRIMME
 
-class EPSProblemType:
+class EPSProblemType(object):
     """
     EPS problem type
     """
@@ -28,7 +28,7 @@ class EPSProblemType:
     GNHEP  = EPS_GNHEP
     PGNHEP = EPS_PGNHEP
 
-class EPSExtraction:
+class EPSExtraction(object):
     """
     EPS extraction technique
     """
@@ -37,14 +37,14 @@ class EPSExtraction:
     REFINED          = EPS_REFINED
     REFINED_HARMONIC = EPS_REFINED_HARMONIC
 
-class EPSClass:
+class EPSClass(object):
     """
     EPS class of method
     """
     ONE_SIDE  = EPS_ONE_SIDE
     TWO_SIDE  = EPS_TWO_SIDE
 
-class EPSWhich:
+class EPSWhich(object):
     """
     EPS desired piece of spectrum
     """
@@ -55,7 +55,7 @@ class EPSWhich:
     LARGEST_IMAGINARY  = EPS_LARGEST_IMAGINARY
     SMALLEST_IMAGINARY = EPS_SMALLEST_IMAGINARY
 
-class EPSConvergedReason:
+class EPSConvergedReason(object):
     """
     EPS convergence reasons
     """
@@ -65,7 +65,7 @@ class EPSConvergedReason:
     DIVERGED_NONSYMMETRIC = EPS_DIVERGED_NONSYMMETRIC
     CONVERGED_ITERATING   = EPS_CONVERGED_ITERATING
 
-class EPSPowerShiftType:
+class EPSPowerShiftType(object):
     """
     EPS type of power shift
     """
@@ -73,7 +73,7 @@ class EPSPowerShiftType:
     RAYLEIGH  = EPSPOWER_SHIFT_RAYLEIGH
     WILKINSON = EPSPOWER_SHIFT_WILKINSON
 
-class EPSLanczosReorthogType:
+class EPSLanczosReorthogType(object):
     """
     EPS type of power shift
     """

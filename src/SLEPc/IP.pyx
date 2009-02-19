@@ -1,13 +1,13 @@
 # --------------------------------------------------------------------
 
-class IPOrthoType:
+class IPOrthoType(object):
     """
     IP Orthogonalization Types.
     """
     CGS = IP_CGS_ORTH
     MGS = IP_MGS_ORTH
 
-class IPRefineType:
+class IPRefineType(object):
     """
     IP Orthogonalization Refinement Types.
     """
@@ -15,7 +15,7 @@ class IPRefineType:
     IFNEEDED = IP_ORTH_REFINE_IFNEEDED
     ALWAYS   = IP_ORTH_REFINE_ALWAYS
 
-class IPBilinearForm:
+class IPBilinearForm(object):
     HERMITIAN = IPINNER_HERMITIAN
     SYMMETRIC = IPINNER_SYMMETRIC
 

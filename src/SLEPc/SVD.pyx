@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------
 
-class SVDType:
+class SVDType(object):
     """
     SVD Types
     """
@@ -10,21 +10,21 @@ class SVDType:
     LANCZOS   = SVDLANCZOS
     TRLANCZOS = SVDTRLANCZOS
 
-class SVDWhich:
+class SVDWhich(object):
     """
     SVD desired piece of spectrum
     """
     LARGEST  = SVD_LARGEST
     SMALLEST = SVD_SMALLEST
 
-class SVDTransposeMode:
+class SVDTransposeMode(object):
     """
     SVD handling of the transpose of the matrix
     """
     EXPLICIT = SVD_TRANSPOSE_EXPLICIT
     IMPLICIT = SVD_TRANSPOSE_IMPLICIT
 
-class SVDConvergedReason:
+class SVDConvergedReason(object):
     """
     SVD convergence reasons
     """

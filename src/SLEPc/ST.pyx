@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------
 
-class STType:
+class STType(object):
     """
     ST Types
     """
@@ -10,7 +10,7 @@ class STType:
     CAYLEY = STCAYLEY
     FOLD   = STFOLD
 
-class STMatMode:
+class STMatMode(object):
     """
     ST Matrix Mode
     """
