@@ -108,6 +108,11 @@ cdef extern from "Python.h":
     int Py_AtExit(void (*)())
     void PySys_WriteStderr(char*,...)
 
+cdef extern from "stdio.h" nogil:
+    ctypedef struct FILE
+    FILE *stderr
+    int fprintf(FILE *, char *, ...)
+
 cdef int initialize(object args) except -1:
     if (<int>SlepcInitializeCalled):
         return 1
@@ -135,13 +140,13 @@ cdef int register(char path[]) except -1:
     TypeRegistryAdd(SLEPC_SVD_COOKIE, SVD)
     return 0
 
-cdef void finalize():
+cdef void finalize() nogil:
     # finalize SLEPc
     cdef int ierr = 0
     ierr = SlepcFinalize()
     if ierr != 0:
-        PySys_WriteStderr("SlepcFinalize() failed "
-                          "[error code: %d]\n", ierr)
+        fprintf(stderr, "SlepcFinalize() failed "
+                "[error code: %d]\n", ierr)
     # and we are done, see you later !!
 
 # --------------------------------------------------------------------
