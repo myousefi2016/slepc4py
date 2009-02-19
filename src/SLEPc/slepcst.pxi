@@ -1,4 +1,4 @@
-cdef extern from "slepcst.h":
+cdef extern from "slepcst.h" nogil:
 
     ctypedef char* SlepcSTType "const char*"
     SlepcSTType STSHELL

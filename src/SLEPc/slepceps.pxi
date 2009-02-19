@@ -1,4 +1,4 @@
-cdef extern from "slepceps.h":
+cdef extern from "slepceps.h" nogil:
 
     ctypedef char* SlepcEPSType "const char*"
     SlepcEPSType EPSPOWER

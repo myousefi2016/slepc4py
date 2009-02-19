@@ -4,13 +4,13 @@ cdef extern from "petsc.h":
     enum: PETSC_DETERMINE
     enum: PETSC_IGNORE
 
-cdef extern from "petsc.h":
+cdef extern from "petsc.h" nogil:
     ctypedef int PetscCookie
     int PetscObjectReference(PetscObject)
     int PetscObjectDereference(PetscObject)
     int PetscObjectDestroy(PetscObject)
 
-cdef extern from "slepc.h":
+cdef extern from "slepc.h" nogil:
 
     enum: SLEPC_VERSION_MAJOR
     enum: SLEPC_VERSION_MINOR

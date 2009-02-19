@@ -1,4 +1,4 @@
-cdef extern from "slepcsvd.h":
+cdef extern from "slepcsvd.h" nogil:
 
     ctypedef char* SlepcSVDType "const char*"
     SlepcSVDType SVDCROSS

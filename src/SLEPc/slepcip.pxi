@@ -1,4 +1,4 @@
-cdef extern from "slepcip.h":
+cdef extern from "slepcip.h" nogil:
 
     ctypedef enum SlepcIPOrthogonalizationType "IPOrthogonalizationType":
         IP_MGS_ORTH
