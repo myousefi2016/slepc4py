@@ -59,6 +59,8 @@ cdef extern from "slepceps.h" nogil:
 
     int EPSSetProblemType(SlepcEPS,SlepcEPSProblemType)
     int EPSGetProblemType(SlepcEPS,SlepcEPSProblemType*)
+    int EPSIsGeneralized(SlepcEPS,PetscTruth*)
+    int EPSIsHermitian(SlepcEPS,PetscTruth*)
     int EPSSetExtraction(SlepcEPS,SlepcEPSExtraction)
     int EPSGetExtraction(SlepcEPS,SlepcEPSExtraction*)
     int EPSSetClass(SlepcEPS,SlepcEPSClass)

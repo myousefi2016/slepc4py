@@ -141,6 +141,16 @@ cdef class EPS(Object):
         cdef SlepcEPSProblemType val = problem_type
         CHKERR( EPSSetProblemType(self.eps, val) )
 
+    def isGeneralized(self):
+        cdef PetscTruth flag = PETSC_FALSE
+        CHKERR( EPSIsGeneralized(self.eps, &flag) )
+        return <bint> flag
+
+    def isHermitian(self):
+        cdef PetscTruth flag = PETSC_FALSE
+        CHKERR( EPSIsHermitian(self.eps, &flag) )
+        return <bint> flag
+
     def getClass(self):
         cdef SlepcEPSClass val
         CHKERR( EPSGetClass(self.eps, &val) )
