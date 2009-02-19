@@ -40,3 +40,6 @@ cdef extern from "slepcst.h" nogil:
     int STSetUp(SlepcST)
     int STApply(SlepcST,PetscVec,PetscVec)
     int STApplyTranspose(SlepcST,PetscVec,PetscVec)
+
+    int STCayleySetAntishift(SlepcST,PetscScalar)
+    int STFoldSetLeftSide(SlepcST,PetscTruth)

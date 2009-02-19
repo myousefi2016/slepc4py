@@ -119,5 +119,17 @@ cdef class ST(Object):
     def applyTranspose(self, Vec x not None, Vec y not None):
         CHKERR( STApplyTranspose(self.st, x.vec, y.vec) )
 
+    #
+
+    def setCayleyAntishift(self, tau):
+        cdef PetscScalar sval = asScalar(tau)
+        CHKERR( STCayleySetAntishift(self.st, sval) )
+
+    def setFoldLeftSide(self, left):
+        cdef PetscTruth tval = PETSC_FALSE
+        if left: tval = PETSC_TRUE
+        CHKERR( STFoldSetLeftSide(self.st, tval) )
+
+
 
 # --------------------------------------------------------------------
