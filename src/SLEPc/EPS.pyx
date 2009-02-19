@@ -292,6 +292,36 @@ cdef class EPS(Object):
         CHKERR( EPSGetConverged(self.eps, &val) )
         return val
 
+    def getInvariantSubspace(self):
+        cdef PetscInt i = 0, ncv = 0
+        cdef PetscVec v = NULL, *isp = NULL
+        CHKERR( EPSGetConverged(self.eps, &ncv) )
+        CHKERR( EPSGetInitialVector(self.eps, &v) )
+        cdef Vec V = None
+        cdef list subspace = []
+        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+        for i in range(ncv):
+            V = Vec(); subspace.append(V)
+            CHKERR( VecDuplicate(v, &isp[i]) )
+            V.vec = isp[i]
+        CHKERR( EPSGetInvariantSubspace(self.eps, isp) )
+        return subspace
+
+    def getInvariantSubspaceLeft(self):
+        cdef PetscInt i = 0, ncv = 0
+        cdef PetscVec w = NULL, *isp = NULL
+        CHKERR( EPSGetConverged(self.eps, &ncv) )
+        CHKERR( EPSGetLeftInitialVector(self.eps, &w) )
+        cdef Vec W = None
+        cdef list subspace = []
+        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+        for i in range(ncv):
+            W = Vec(); subspace.append(W)
+            CHKERR( VecDuplicate(w, &isp[i]) )
+            W.vec = isp[i]
+        CHKERR( EPSGetLeftInvariantSubspace(self.eps, isp) )
+        return subspace
+
     def getValue(self, int i):
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0

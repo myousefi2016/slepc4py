@@ -95,6 +95,8 @@ cdef extern from "slepceps.h" nogil:
     int EPSGetIterationNumber(SlepcEPS,PetscInt*)
     int EPSGetConvergedReason(SlepcEPS,SlepcEPSConvergedReason*)
     int EPSGetConverged(SlepcEPS,PetscInt*)
+    int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
+    int EPSGetLeftInvariantSubspace(SlepcEPS,PetscVec*)
     int EPSGetValue(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*)
     int EPSGetRightVector(SlepcEPS,PetscInt,PetscVec,PetscVec)
     int EPSGetLeftVector(SlepcEPS,PetscInt,PetscVec,PetscVec)
@@ -106,3 +108,7 @@ cdef extern from "slepceps.h" nogil:
     int EPSComputeRelativeErrorLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
+
+
+cdef extern from * nogil:
+    int VecDuplicate(PetscVec,PetscVec*)
