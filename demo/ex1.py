@@ -76,8 +76,7 @@ if nconv > 0:
   Print("        k          ||Ax-kx||/||kx|| ")
   Print("----------------- ------------------")
   for i in range(nconv):
-    k = E.getValue(i)
-    E.getVector(i, vr, vi)
+    k = E.getEigenpair(i, vr, vi)
     error = E.computeRelativeError(i)
     if k.imag != 0.0:
       Print( " %9f%+9f j %12g" % (k.real, k.imag, error) )
