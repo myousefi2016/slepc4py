@@ -79,6 +79,9 @@ cdef extern from "slepceps.h" nogil:
     int EPSSetOperators(SlepcEPS,PetscMat,PetscMat)
     int EPSGetOperators(SlepcEPS,PetscMat*,PetscMat*)
 
+    int EPSAttachDeflationSpace(SlepcEPS,PetscInt,PetscVec*,PetscTruth)
+    int EPSRemoveDeflationSpace(SlepcEPS)
+
     int EPSSetInitialVector(SlepcEPS,PetscVec)
     int EPSGetInitialVector(SlepcEPS,PetscVec*)
     int EPSSetLeftInitialVector(SlepcEPS,PetscVec)

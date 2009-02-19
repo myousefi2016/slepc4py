@@ -226,6 +226,22 @@ cdef class EPS(Object):
         if B is not None: Bmat = B.mat
         CHKERR( EPSSetOperators(self.eps, A.mat, Bmat) )
 
+    def attachDeflationSpace(self, space, ortho=False):
+        cdef PetscInt i = 0
+        cdef PetscInt nds = 0
+        cdef PetscVec* vds = NULL
+        cdef PetscTruth flag = PETSC_FALSE
+        cdef object tmp = None
+        if isinstance(space, Vec): space = [space]
+        nds = len(space)
+        tmp = allocate(nds*sizeof(Vec),<void**>&vds)
+        if ortho: flag = PETSC_TRUE
+        for i in range(nds): vds[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSAttachDeflationSpace(self.eps, nds, vds, flag) )
+
+    def removeDeflationSpace(self):
+        CHKERR( EPSRemoveDeflationSpace(self.eps) )
+
     #
 
     def getInitialVector(self):

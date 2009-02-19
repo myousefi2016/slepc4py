@@ -4,6 +4,16 @@ cdef extern from "petsc.h":
     enum: PETSC_DETERMINE
     enum: PETSC_IGNORE
 
+    ctypedef enum PetscTruth:
+        PETSC_TRUE,  PETSC_YES,
+        PETSC_FALSE, PETSC_NO,
+
+cdef extern from "petsc.h" nogil:
+    int PetscMalloc(size_t,void*)
+    int PetscFree(void*)
+    int PetscMemcpy(void*,void*,size_t)
+    int PetscMemzero(void*,size_t)
+
 cdef extern from "petsc.h" nogil:
     ctypedef int PetscCookie
     int PetscObjectReference(PetscObject)

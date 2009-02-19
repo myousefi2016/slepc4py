@@ -37,6 +37,8 @@ cdef inline char_p str2cp(object s) except ? NULL:
     if s is None: return NULL
     else:         return s
 
+include "allocate.pxi"
+
 # --------------------------------------------------------------------
 
 # Vile hack for raising a exception and not contaminating traceback
