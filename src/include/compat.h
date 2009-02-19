@@ -99,7 +99,7 @@ typedef enum {
 #undef __FUNCT__  
 #define __FUNCT__ "EPSSetExtraction"
 PETSC_STATIC_INLINE 
-PetscErrorCode EPSSetExtraction(EPS eps, EPSExtraction ext)
+PetscErrorCode EPSSetExtraction(EPS eps,EPSExtraction ext)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -110,7 +110,29 @@ PetscErrorCode EPSSetExtraction(EPS eps, EPSExtraction ext)
 #undef __FUNCT__  
 #define __FUNCT__ "EPSGetExtraction"
 PETSC_STATIC_INLINE 
-PetscErrorCode EPSGetExtraction(EPS eps, EPSExtraction *ext)
+PetscErrorCode EPSGetExtraction(EPS eps,EPSExtraction *ext)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSSetTarget"
+PETSC_STATIC_INLINE
+PetscErrorCode EPSSetTarget(EPS eps,PetscScalar target)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+
+#undef __FUNCT__  
+#define __FUNCT__ "EPSGetTarget"
+PETSC_STATIC_INLINE
+PetscErrorCode EPSGetTarget(EPS eps,PetscScalar *target)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);

@@ -65,6 +65,8 @@ cdef extern from "slepceps.h" nogil:
     int EPSGetClass(SlepcEPS,SlepcEPSClass*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
     int EPSGetWhichEigenpairs(SlepcEPS,SlepcEPSWhich*)
+    int EPSSetTarget(SlepcEPS,PetscScalar)
+    int EPSGetTarget(SlepcEPS,PetscScalar*)
 
     int EPSSetTolerances(SlepcEPS,PetscReal,PetscInt)
     int EPSGetTolerances(SlepcEPS,PetscReal*,PetscInt*)

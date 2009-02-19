@@ -168,6 +168,15 @@ cdef class EPS(Object):
         cdef SlepcEPSWhich val = which
         CHKERR( EPSSetWhichEigenpairs(self.eps, val) )
 
+    def getTarget(self):
+        cdef PetscScalar sval = 0
+        CHKERR( EPSGetTarget(self.eps, &sval) )
+        return toScalar(sval)
+
+    def setTarget(self, target):
+        cdef PetscScalar sval = asScalar(target)
+        CHKERR( EPSSetTarget(self.eps, sval) )
+
     #
 
     def getTolerances(self):
@@ -363,6 +372,12 @@ cdef class EPS(Object):
             return self.getWhichEigenpairs()
         def __set__(self, value):
             self.setWhichEigenpairs(value)
+
+    property target:
+        def __get__(self):
+            return self.getTarget()
+        def __set__(self, value):
+            self.setTarget(value)
 
     property tol:
         def __get__(self):
