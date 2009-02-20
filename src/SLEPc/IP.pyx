@@ -66,4 +66,89 @@ cdef class IP(Object):
     def setFromOptions(self):
         CHKERR( IPSetFromOptions(self.ip) )
 
+    #
+
+    def getOrthogonalization(self):
+        cdef SlepcIPOrthogonalizationType otype= IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType rtype = IP_ORTH_REFINE_IFNEEDED
+        cdef PetscReal rval = PETSC_DEFAULT
+        CHKERR( IPGetOrthogonalization(self.ip, &otype, &rtype, &rval) )
+        return (otype, rtype, rval)
+
+    def setOrthogonalization(self, type=None, refine=None, eta=None):
+        cdef SlepcIPOrthogonalizationType otype= IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType rtype = IP_ORTH_REFINE_IFNEEDED
+        cdef PetscReal rval = PETSC_DEFAULT
+        if type   is not None: otype= type
+        if refine is not None: rtype= refine
+        if eta    is not None: rval = eta
+        CHKERR( IPSetOrthogonalization(self.ip, otype, rtype, rval) )
+
+    #
+
+    def getBilinearForm(self):
+        cdef Mat mat = Mat()
+        cdef PetscMat m = NULL
+        cdef SlepcIPBilinearForm f = IPINNER_HERMITIAN
+        CHKERR( IPGetBilinearForm(self.ip, &m, &f) )
+        mat.mat = m; mat.inc_ref()
+        return (mat, f)
+
+    def setBilinearForm(self, Mat mat=None, form=None):
+        cdef PetscMat m = NULL
+        cdef SlepcIPBilinearForm f = IPINNER_HERMITIAN
+        if mat  is not None: m = mat.mat
+        if form is not None: f = form
+        CHKERR( IPSetBilinearForm(self.ip, m, f) )
+
+    def applyMatrix(self, Vec x not None, Vec y not None):
+        CHKERR( IPApplyMatrix(self.ip, x.vec, y.vec) )
+
+    #
+
+    def norm(self, Vec x not None):
+        cdef PetscReal rval = 0
+        CHKERR( IPNorm(self.ip, x.vec, &rval) )
+        return rval
+
+    def innerProduct(self, Vec x not None, Vec y not None):
+        cdef PetscReal rval = 0
+        CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &rval) )
+        return rval
+
+    def orthogonalize(self, VS, Vec v not None, Vec work=None):
+        cdef PetscInt i = 0
+        cdef PetscInt n = 0
+        cdef PetscTruth* which = NULL
+        cdef PetscVec* V = NULL
+        cdef PetscScalar* H = NULL, h = 0
+        cdef PetscReal norm = 0
+        cdef PetscTruth lindep = PETSC_FALSE
+        cdef PetscVec w = NULL
+        cdef PetscScalar* sw = NULL
+        cdef object tmp1 = None, tmp2 = None
+        if isinstance(VS, Vec):
+            n = 1
+            V = &((<Vec>VS).vec)
+            H = &h
+        else:
+            n = len(VS)
+            tmp1 = allocate(n*sizeof(Vec),<void**>&V)
+            tmp2 = allocate(n*sizeof(PetscScalar),<void**>&H)
+            for i in range(n):
+                V[i] = (<Vec?>VS[i]).vec
+                H[i] = 0
+        if work is not None: w = work.vec
+        CHKERR( IPOrthogonalize(self.ip,
+                                n, which, V, v.vec,
+                                H, &norm, &lindep,
+                                w, sw) )
+        cdef object coefs = None
+        if isinstance(VS, Vec):
+            coefs = toScalar(H[0])
+        else:
+            coefs = [toScalar(H[i]) for i in range(n)]
+        return (coefs, norm, <bint>lindep)
+
+
 # --------------------------------------------------------------------

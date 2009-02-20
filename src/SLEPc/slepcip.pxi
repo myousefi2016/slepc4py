@@ -21,3 +21,15 @@ cdef extern from "slepcip.h" nogil:
     int IPGetOptionsPrefix(SlepcIP,char*[])
     int IPAppendOptionsPrefix(SlepcIP,char[])
     int IPSetFromOptions(SlepcIP)
+
+    int IPSetOrthogonalization(SlepcIP,SlepcIPOrthogonalizationType,SlepcIPOrthogonalizationRefinementType,PetscReal)
+    int IPGetOrthogonalization(SlepcIP,SlepcIPOrthogonalizationType*,SlepcIPOrthogonalizationRefinementType*,PetscReal*)
+
+    int IPSetBilinearForm(SlepcIP,PetscMat,SlepcIPBilinearForm)
+    int IPGetBilinearForm(SlepcIP,PetscMat*,SlepcIPBilinearForm*)
+    int IPApplyMatrix(SlepcIP,PetscVec,PetscVec)
+
+    int IPNorm(SlepcIP,PetscVec,PetscReal*)
+    int IPInnerProduct(SlepcIP,PetscVec,PetscVec,PetscReal*)
+
+    int IPOrthogonalize(SlepcIP,PetscInt,PetscTruth*,PetscVec*,PetscVec,PetscScalar*,PetscReal*,PetscTruth*,PetscVec,PetscScalar*)
