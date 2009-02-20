@@ -217,6 +217,12 @@ cdef class SVD(Object):
         CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
         return (rval1, rval2)
 
+    def getOperationCounters(self):
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        CHKERR( SVDGetOperationCounters(self.svd, &ival1, &ival2) )
+        return (ival1, ival2)
+
     #
 
     property transpose_mode:
