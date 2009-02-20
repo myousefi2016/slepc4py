@@ -59,3 +59,15 @@ cdef extern from "slepcsvd.h" nogil:
     int SVDComputeResidualNorms(SlepcSVD,PetscInt,PetscReal*,PetscReal*)
     int SVDComputeRelativeError(SlepcSVD,PetscInt,PetscReal*)
     int SVDGetOperationCounters(SlepcSVD,PetscInt*,PetscInt*)
+
+    int SVDCrossSetEPS(SlepcSVD,SlepcEPS)
+    int SVDCrossGetEPS(SlepcSVD,SlepcEPS*)
+
+    int SVDCyclicSetExplicitMatrix(SlepcSVD,PetscTruth)
+    int SVDCyclicGetExplicitMatrix(SlepcSVD,PetscTruth*)
+    int SVDCyclicSetEPS(SlepcSVD,SlepcEPS)
+    int SVDCyclicGetEPS(SlepcSVD,SlepcEPS*)
+
+    int SVDLanczosSetOneSide(SlepcSVD,PetscTruth)
+
+    int SVDTRLanczosSetOneSide(SlepcSVD,PetscTruth)

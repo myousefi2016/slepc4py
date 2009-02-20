@@ -225,6 +225,44 @@ cdef class SVD(Object):
 
     #
 
+    def setCrossEPS(self, EPS eps not None):
+        CHKERR( SVDCrossSetEPS(self.svd, eps.eps) )
+
+    def getCrossEPS(self):
+        cdef EPS eps = EPS()
+        CHKERR( SVDCrossGetEPS(self.svd, &eps.eps) )
+        eps.inc_ref(); return eps
+
+    def setCyclicEPS(self, EPS eps not None):
+        CHKERR( SVDCyclicSetEPS(self.svd, eps.eps) )
+
+    def getCyclicEPS(self):
+        cdef EPS eps = EPS()
+        CHKERR( SVDCyclicGetEPS(self.svd, &eps.eps) )
+        eps.inc_ref(); return eps
+
+    def setCyclicExplicitMatrix(self, flag=True):
+        cdef PetscTruth tval = PETSC_FALSE
+        if flag: tval = PETSC_TRUE
+        CHKERR( SVDCyclicSetExplicitMatrix(self.svd, tval) )
+
+    def getCyclicExplicitMatrix(self):
+        cdef PetscTruth tval = PETSC_FALSE
+        CHKERR( SVDCyclicGetExplicitMatrix(self.svd, &tval) )
+        return <bint>tval
+
+    def setLanczosOneSide(self, flag=True):
+        cdef PetscTruth tval = PETSC_FALSE
+        if flag: tval = PETSC_TRUE
+        CHKERR( SVDLanczosSetOneSide(self.svd, tval) )
+
+    def setTRLanczosOneSide(self, flag=True):
+        cdef PetscTruth tval = PETSC_FALSE
+        if flag: tval = PETSC_TRUE
+        CHKERR( SVDLanczosSetOneSide(self.svd, tval) )
+
+    #
+
     property transpose_mode:
         def __get__(self):
             return self.getTransposeMode()
