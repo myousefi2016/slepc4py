@@ -100,6 +100,7 @@ cdef class EPS(Object):
     ConvergedReason = EPSConvergedReason
 
     PowerShiftType  = EPSPowerShiftType
+    LanczosReorthogType = EPSLanczosReorthogType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.eps
