@@ -8,7 +8,7 @@ from petsc4py.PETSc import COMM_SELF
 from petsc4py.PETSc import COMM_WORLD
 
 from petsc4py.PETSc import Options
-from petsc4py.PETSc import Object, Viewer
+#from petsc4py.PETSc import Object, Viewer
 from petsc4py.PETSc import Vec, Mat
 from petsc4py.PETSc import KSP, PC
 

@@ -202,4 +202,25 @@ PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscIn
 #endif
 
 
+#if SLEPC_VERSION_(2,3,3)
+
+#undef __FUNCT__  
+#define __FUNCT__ "IPOrthogonalize_233"
+PETSC_STATIC_INLINE 
+PetscErrorCode IPOrthogonalize_233(IP ip,PetscInt n,PetscTruth *which,Vec *V,Vec v,
+				   PetscScalar *H,PetscReal *norm,PetscTruth *lindep,
+				   Vec work,PetscScalar* swork)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,work);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+#define IPOrthogonalize IPOrthogonalize_233
+
+
+#endif
+
+
+
 #endif /* !SLEPC_COMPAT_H */

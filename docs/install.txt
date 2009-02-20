@@ -5,13 +5,13 @@ Installation
 Requirements
 ------------
 
-* PETSc_ 2.4.0, built with shared libraries.
+* PETSc_ 2.3.3/3.0.0 distribution, built with shared libraries.
 
-* SLEPc_ 2.4.0, built with shared libraries.
+* SLEPc_ 2.3.3/3.0.0 distribution, built with shared libraries.
 
 * Python_ 2.4/2.5/2.6.
 
-* NumPy_ package.
+* NumPy_ package (latest version).
 
 * petsc4py_ package.
 
@@ -30,16 +30,16 @@ applies to you shell or system) the environmental variables
 ``SLEPC_DIR``, ``PETSC_DIR``, and ``PETSC_ARCH`` indicating where you
 have built/installed SLEPc and PETSc::
 
-   $ export SLEPC_DIR=/usr/local/slepc/2.4.0
-   $ export PETSC_DIR=/usr/local/petsc/2.4.0
+   $ export SLEPC_DIR=/usr/local/slepc/3.0.0
+   $ export PETSC_DIR=/usr/local/petsc/3.0.0
    $ export PETSC_ARCH=linux-gnu
 
 Alternatively, you can edit the file ``setup.cfg`` and provide the
 required information below ``[config]`` section::
 
    [config]
-   slepc_dir  = /usr/local/slepc/2.4.0
-   petsc_dir  = /usr/local/petsc/2.4.0
+   slepc_dir  = /usr/local/slepc/3.0.0
+   petsc_dir  = /usr/local/petsc/3.0.0
    petsc_arch = linux-gnu
    ...
 

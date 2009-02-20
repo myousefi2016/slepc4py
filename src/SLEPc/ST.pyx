@@ -18,6 +18,8 @@ class STMatMode(object):
     INPLACE = STMATMODE_INPLACE
     SHELL   = STMATMODE_SHELL
 
+STMatStructure = Mat.Structure
+
 # --------------------------------------------------------------------
 
 cdef class ST(Object):
@@ -26,8 +28,9 @@ cdef class ST(Object):
     ST
     """
 
-    Type    = STType
-    MatMode = STMatMode
+    Type         = STType
+    MatMode      = STMatMode
+    MatStructure = STMatStructure
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.st
@@ -81,13 +84,13 @@ cdef class ST(Object):
         return toScalar(sval)
 
     def setMatMode(self, mode):
-        cdef SlepcSTMatMode cmode = mode
-        CHKERR( STSetMatMode(self.st, cmode) )
+        cdef SlepcSTMatMode val = mode
+        CHKERR( STSetMatMode(self.st, val) )
 
     def getMatMode(self):
-        cdef SlepcSTMatMode cmode = STMATMODE_INPLACE
-        CHKERR( STGetMatMode(self.st, &cmode) )
-        return cmode
+        cdef SlepcSTMatMode val = STMATMODE_INPLACE
+        CHKERR( STGetMatMode(self.st, &val) )
+        return val
 
     def setOperators(self, Mat A not None, Mat B=None):
         cdef PetscMat Bmat = NULL
@@ -99,6 +102,10 @@ cdef class ST(Object):
         cdef Mat B = Mat()
         CHKERR( STGetOperators(self.st, &A.mat, &B.mat) )
         A.inc_ref(); B.inc_ref(); return (A, B)
+
+    def setMatStructure(self, structure):
+        cdef PetscMatStructure val = structure
+        CHKERR( STSetMatStructure(self.st, val) )
 
     def setKSP(self, KSP ksp not None):
         CHKERR( STSetKSP(self.st, ksp.ksp) )

@@ -1,12 +1,48 @@
 Introduction
 ============
 
-To be written ...
+slepc4py is a Python_ module that provides convenient access to the
+functionality of SLEPc_.
+
+SLEPc implements algorithms and tools for the numerical solution of
+large, sparse eigenvalue problems on parallel computers. It covers both
+standard and generalized eigenproblems (either symmetric or non-symmetric)
+as well as the singular value decomposition (SVD).
+
+SLEPc is intended for computing a subset of the spectrum of a matrix (or
+matrix pair). One can for instance approximate the largest magnitude
+eigenvalues, or the smallest ones, or even those eigenvalues located
+near a given region of the complex plane. Interior eigenvalues are harder
+to compute, so SLEPc provides different methodologies. One such method
+is to use a spectral transformation. Cheaper alternatives are also available.
 
 Features
 --------
 
-To be written ...
+Currently, the following types of eigenproblems can be addressed:
+
+* Standard eigenvalue problem, *Ax=kx*, either for Hermitian or non-Hermitian
+  matrices.
+
+* Generalized eigenvalue problem, *Ax=kBx*, either Hermitian positive-definite
+  or not.
+
+* Partial singular value decomposition of a rectangular matrix, *Au=sv*.
+
+For the eigenvalue problem, the following methods are available:
+
+* Krylov eigensolvers, particularly Krylov-Schur, Arnoldi, and Lanczos.
+
+* Subspace iteration and single vector iterations (inverse iteration, RQI).
+
+For singular value computations, the following alternatives can be used:
+
+* Use an eigensolver via the cross-product matrix *A'A* or the cyclic
+  matrix *[ 0 A; A' 0 ]*.
+
+* Explicitly restarted Lanczos bidiagonalization.
+
+* Implicitly restarted Lanczos bidiagonalization (thick-restart Lanczos).
 
 Components
 ----------
