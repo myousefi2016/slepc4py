@@ -89,7 +89,7 @@ cdef class SVD(Object):
     #
 
     def getTransposeMode(self):
-        cdef SlepcSVDTransposeMode val
+        cdef SlepcSVDTransposeMode val = SVD_TRANSPOSE_IMPLICIT
         CHKERR( SVDGetTransposeMode(self.svd, &val) )
         return val
 
@@ -98,7 +98,7 @@ cdef class SVD(Object):
         CHKERR( SVDSetTransposeMode(self.svd, val) )
 
     def getWhichSingularTriplets(self):
-        cdef SlepcSVDWhich val
+        cdef SlepcSVDWhich val = SVD_LARGEST
         CHKERR( SVDGetWhichSingularTriplets(self.svd, &val) )
         return val
 
@@ -176,10 +176,9 @@ cdef class SVD(Object):
         return ival
 
     def getConvergedReason(self):
-        cdef SlepcSVDConvergedReason reason
-        reason = SVD_CONVERGED_ITERATING
-        CHKERR( SVDGetConvergedReason(self.svd, &reason) )
-        return reason
+        cdef SlepcSVDConvergedReason val = SVD_CONVERGED_ITERATING
+        CHKERR( SVDGetConvergedReason(self.svd, &val) )
+        return val
 
     def getConverged(self):
         cdef PetscInt ival = 0

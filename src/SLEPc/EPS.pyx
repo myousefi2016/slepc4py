@@ -144,7 +144,7 @@ cdef class EPS(Object):
     #
 
     def getProblemType(self):
-        cdef SlepcEPSProblemType val
+        cdef SlepcEPSProblemType val = EPS_NHEP
         CHKERR( EPSGetProblemType(self.eps, &val) )
         return val
 
@@ -153,17 +153,17 @@ cdef class EPS(Object):
         CHKERR( EPSSetProblemType(self.eps, val) )
 
     def isGeneralized(self):
-        cdef PetscTruth flag = PETSC_FALSE
-        CHKERR( EPSIsGeneralized(self.eps, &flag) )
-        return <bint> flag
+        cdef PetscTruth tval = PETSC_FALSE
+        CHKERR( EPSIsGeneralized(self.eps, &tval) )
+        return <bint> tval
 
     def isHermitian(self):
-        cdef PetscTruth flag = PETSC_FALSE
-        CHKERR( EPSIsHermitian(self.eps, &flag) )
-        return <bint> flag
+        cdef PetscTruth tval = PETSC_FALSE
+        CHKERR( EPSIsHermitian(self.eps, &tval) )
+        return <bint> tval
 
     def getClass(self):
-        cdef SlepcEPSClass val
+        cdef SlepcEPSClass val = EPS_ONE_SIDE
         CHKERR( EPSGetClass(self.eps, &val) )
         return val
 
@@ -181,7 +181,7 @@ cdef class EPS(Object):
         CHKERR( EPSSetExtraction(self.eps, val) )
 
     def getWhichEigenpairs(self):
-        cdef SlepcEPSWhich val
+        cdef SlepcEPSWhich val = EPS_LARGEST_MAGNITUDE
         CHKERR( EPSGetWhichEigenpairs(self.eps, &val) )
         return val
 
@@ -259,14 +259,14 @@ cdef class EPS(Object):
     def attachDeflationSpace(self, space, ortho=False):
         cdef PetscInt i = 0, nds = 0
         cdef PetscVec* vds = NULL
-        cdef PetscTruth flag = PETSC_FALSE
+        cdef PetscTruth tval = PETSC_FALSE
         cdef object tmp = None
         if isinstance(space, Vec): space = [space]
         nds = len(space)
         tmp = allocate(nds*sizeof(Vec),<void**>&vds)
-        if ortho: flag = PETSC_TRUE
+        if ortho: tval = PETSC_TRUE
         for i in range(nds): vds[i] = (<Vec?>space[i]).vec
-        CHKERR( EPSAttachDeflationSpace(self.eps, nds, vds, flag) )
+        CHKERR( EPSAttachDeflationSpace(self.eps, nds, vds, tval) )
 
     def removeDeflationSpace(self):
         CHKERR( EPSRemoveDeflationSpace(self.eps) )

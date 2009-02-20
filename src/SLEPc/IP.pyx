@@ -69,37 +69,37 @@ cdef class IP(Object):
     #
 
     def getOrthogonalization(self):
-        cdef SlepcIPOrthogonalizationType otype= IP_CGS_ORTH
-        cdef SlepcIPOrthogonalizationRefinementType rtype = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
-        CHKERR( IPGetOrthogonalization(self.ip, &otype, &rtype, &rval) )
-        return (otype, rtype, rval)
+        CHKERR( IPGetOrthogonalization(self.ip, &val1, &val2, &rval) )
+        return (val1, val2, rval)
 
     def setOrthogonalization(self, type=None, refine=None, eta=None):
-        cdef SlepcIPOrthogonalizationType otype= IP_CGS_ORTH
-        cdef SlepcIPOrthogonalizationRefinementType rtype = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
-        if type   is not None: otype= type
-        if refine is not None: rtype= refine
+        if type   is not None: val1= type
+        if refine is not None: val2= refine
         if eta    is not None: rval = eta
-        CHKERR( IPSetOrthogonalization(self.ip, otype, rtype, rval) )
+        CHKERR( IPSetOrthogonalization(self.ip, val1, val2, rval) )
 
     #
 
     def getBilinearForm(self):
         cdef Mat mat = Mat()
         cdef PetscMat m = NULL
-        cdef SlepcIPBilinearForm f = IPINNER_HERMITIAN
-        CHKERR( IPGetBilinearForm(self.ip, &m, &f) )
+        cdef SlepcIPBilinearForm val = IPINNER_HERMITIAN
+        CHKERR( IPGetBilinearForm(self.ip, &m, &val) )
         mat.mat = m; mat.inc_ref()
-        return (mat, f)
+        return (mat, val)
 
     def setBilinearForm(self, Mat mat=None, form=None):
         cdef PetscMat m = NULL
-        cdef SlepcIPBilinearForm f = IPINNER_HERMITIAN
+        cdef SlepcIPBilinearForm val = IPINNER_HERMITIAN
         if mat  is not None: m = mat.mat
-        if form is not None: f = form
-        CHKERR( IPSetBilinearForm(self.ip, m, f) )
+        if form is not None: val = form
+        CHKERR( IPSetBilinearForm(self.ip, m, val) )
 
     def applyMatrix(self, Vec x not None, Vec y not None):
         CHKERR( IPApplyMatrix(self.ip, x.vec, y.vec) )
@@ -122,7 +122,7 @@ cdef class IP(Object):
         cdef PetscVec* V = NULL
         cdef PetscScalar* H = NULL, h = 0
         cdef PetscReal rval = 0
-        cdef PetscTruth lindep = PETSC_FALSE
+        cdef PetscTruth tval = PETSC_FALSE
         cdef PetscVec w = NULL
         cdef PetscScalar* sw = NULL
         cdef object tmp1 = None, tmp2 = None
@@ -140,14 +140,14 @@ cdef class IP(Object):
         if work is not None: w = work.vec
         CHKERR( IPOrthogonalize(self.ip,
                                 n, which, V, v.vec,
-                                H, &rval, &lindep,
+                                H, &rval, &tval,
                                 w, sw) )
         cdef object coefs = None
         if isinstance(VS, Vec):
             coefs = toScalar(H[0])
         else:
             coefs = [toScalar(H[i]) for i in range(n)]
-        return (coefs, rval, <bint>lindep)
+        return (coefs, rval, <bint>tval)
 
 
 # --------------------------------------------------------------------

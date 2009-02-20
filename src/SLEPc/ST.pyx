@@ -81,13 +81,13 @@ cdef class ST(Object):
         return toScalar(sval)
 
     def setMatMode(self, mode):
-        cdef SlepcSTMatMode cmode = mode
-        CHKERR( STSetMatMode(self.st, cmode) )
+        cdef SlepcSTMatMode val = mode
+        CHKERR( STSetMatMode(self.st, val) )
 
     def getMatMode(self):
-        cdef SlepcSTMatMode cmode = STMATMODE_INPLACE
-        CHKERR( STGetMatMode(self.st, &cmode) )
-        return cmode
+        cdef SlepcSTMatMode val = STMATMODE_INPLACE
+        CHKERR( STGetMatMode(self.st, &val) )
+        return val
 
     def setOperators(self, Mat A not None, Mat B=None):
         cdef PetscMat Bmat = NULL
