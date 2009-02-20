@@ -40,8 +40,6 @@ E = SLEPc.EPS(); E.create()
 
 E.setOperators(A)
 E.setProblemType(SLEPc.EPS.ProblemType.HEP)
-E.setType(SLEPc.EPS.Type.LANCZOS)
-E.setLanczosReorthogType(SLEPc.EPS.LanczosReorthogType.FULL)
 E.setFromOptions()
 
 E.solve()
