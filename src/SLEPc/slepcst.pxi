@@ -12,6 +12,12 @@ cdef extern from "slepcst.h" nogil:
         STMATMODE_INPLACE
         STMATMODE_SHELL
 
+    ctypedef enum  PetscMatStructure "MatStructure":
+        MAT_SAME_NONZERO_PATTERN      "SAME_NONZERO_PATTERN"
+        MAT_DIFFERENT_NONZERO_PATTERN "DIFFERENT_NONZERO_PATTERN"
+        MAT_SUBSET_NONZERO_PATTERN    "SUBSET_NONZERO_PATTERN"
+        MAT_SAME_PRECONDITIONER       "SAME_PRECONDITIONER"
+
     int STView(SlepcST,PetscViewer)
     int STDestroy(SlepcST)
     int STCreate(MPI_Comm,SlepcST*)
@@ -30,6 +36,7 @@ cdef extern from "slepcst.h" nogil:
 
     int STGetOperators(SlepcST,PetscMat*,PetscMat*)
     int STSetOperators(SlepcST,PetscMat,PetscMat)
+    int STSetMatStructure(SlepcST,PetscMatStructure)
 
     int STGetOperationCounters(SlepcST,PetscInt*,PetscInt*)
     int STResetOperationCounters(SlepcST)
