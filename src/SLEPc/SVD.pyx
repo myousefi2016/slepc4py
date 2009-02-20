@@ -108,33 +108,33 @@ cdef class SVD(Object):
     #
 
     def getTolerances(self):
-        cdef PetscReal ctol = 0
-        cdef PetscInt cmaxit = 0
-        CHKERR( SVDGetTolerances(self.svd, &ctol, &cmaxit) )
-        return (ctol, cmaxit)
+        cdef PetscReal rval = 0
+        cdef PetscInt  ival = 0
+        CHKERR( SVDGetTolerances(self.svd, &rval, &ival) )
+        return (rval, ival)
 
     def setTolerances(self, tol=None, max_it=None):
-        cdef PetscReal ctol = PETSC_IGNORE
-        cdef PetscInt cmaxit = PETSC_IGNORE
-        if tol    is not None: ctol   = tol
-        if max_it is not None: cmaxit = max_it
-        CHKERR( SVDSetTolerances(self.svd, ctol, cmaxit) )
+        cdef PetscReal rval = PETSC_IGNORE
+        cdef PetscInt  ival = PETSC_IGNORE
+        if tol    is not None: rval = tol
+        if max_it is not None: ival = max_it
+        CHKERR( SVDSetTolerances(self.svd, rval, ival) )
 
     def getDimensions(self):
-        cdef PetscInt nev = 0
-        cdef PetscInt ncv = 0
-        cdef PetscInt mpd = 0
-        CHKERR( SVDGetDimensions(self.svd, &nev, &ncv, &mpd) )
-        return (nev, ncv, mpd)
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        cdef PetscInt ival3 = 0
+        CHKERR( SVDGetDimensions(self.svd, &ival1, &ival2, &ival3) )
+        return (ival1, ival2, ival3)
 
     def setDimensions(self, nev=None, ncv=None, mpd=None):
-        cdef PetscInt cnev = PETSC_IGNORE
-        cdef PetscInt cncv = PETSC_IGNORE
-        cdef PetscInt cmpd = PETSC_IGNORE
-        if nev is not None: cnev = nev
-        if ncv is not None: cncv = ncv
-        if mpd is not None: cmpd = mpd
-        CHKERR( SVDSetDimensions(self.svd, cnev, cncv, cmpd) )
+        cdef PetscInt ival1 = PETSC_IGNORE
+        cdef PetscInt ival2 = PETSC_IGNORE
+        cdef PetscInt ival3 = PETSC_IGNORE
+        if nev is not None: ival1 = nev
+        if ncv is not None: ival2 = ncv
+        if mpd is not None: ival3 = mpd
+        CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival2) )
 
     def getIP(self):
         cdef IP ip = IP()
@@ -171,9 +171,9 @@ cdef class SVD(Object):
         CHKERR( SVDSolve(self.svd) )
 
     def getIterationNumber(self):
-        cdef PetscInt its = 0
-        CHKERR( SVDGetIterationNumber(self.svd, &its) )
-        return its
+        cdef PetscInt ival = 0
+        CHKERR( SVDGetIterationNumber(self.svd, &ival) )
+        return ival
 
     def getConvergedReason(self):
         cdef SlepcSVDConvergedReason reason
@@ -182,40 +182,40 @@ cdef class SVD(Object):
         return reason
 
     def getConverged(self):
-        cdef PetscInt nconv = 0
-        CHKERR( SVDGetConverged(self.svd, &nconv) )
-        return nconv
+        cdef PetscInt ival = 0
+        CHKERR( SVDGetConverged(self.svd, &ival) )
+        return ival
 
     def getValue(self, int i):
-        cdef PetscReal sigma = 0
-        CHKERR( SVDGetSingularTriplet(self.svd, i, &sigma, NULL, NULL) )
-        return sigma
+        cdef PetscReal rval = 0
+        CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, NULL, NULL) )
+        return rval
 
     def getVectors(self, int i, Vec U not None, Vec V not None):
-        cdef PetscReal sigma = 0
-        CHKERR( SVDGetSingularTriplet(self.svd, i, &sigma, U.vec, V.vec) )
+        cdef PetscReal rval = 0
+        CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, U.vec, V.vec) )
 
-    def getSingularTriplet(self, i, Vec U=None, Vec V=None):
-        cdef PetscReal sigma=0
+    def getSingularTriplet(self, int i, Vec U=None, Vec V=None):
+        cdef PetscReal rval = 0
         cdef PetscVec Uvec = NULL
         cdef PetscVec Vvec = NULL
         if U is not None: Uvec = U.vec
         if V is not None: Vvec = V.vec
-        CHKERR( SVDGetSingularTriplet(self.svd, i, &sigma, Uvec, Vvec) )
-        return sigma
+        CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, Uvec, Vvec) )
+        return rval
 
     #
 
     def computeRelativeError(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( SVDComputeRelativeError(self.svd, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( SVDComputeRelativeError(self.svd, i, &rval) )
+        return rval
 
     def computeResidualNorms(self, int i):
-        cdef PetscReal val1=0,
-        cdef PetscReal val2=0
-        CHKERR( SVDComputeResidualNorms(self.svd, i, &val1, &val2) )
-        return (val1, val2)
+        cdef PetscReal rval1 = 0
+        cdef PetscReal rval2 = 0
+        CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
+        return (rval1, rval2)
 
     #
 

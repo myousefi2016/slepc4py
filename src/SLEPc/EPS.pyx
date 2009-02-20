@@ -201,33 +201,33 @@ cdef class EPS(Object):
     #
 
     def getTolerances(self):
-        cdef PetscReal ctol = 0
-        cdef PetscInt cmaxit = 0
-        CHKERR( EPSGetTolerances(self.eps, &ctol, &cmaxit) )
-        return (ctol, cmaxit)
+        cdef PetscReal rval = 0
+        cdef PetscInt  ival = 0
+        CHKERR( EPSGetTolerances(self.eps, &rval, &ival) )
+        return (rval, ival)
 
     def setTolerances(self, tol=None, max_it=None):
-        cdef PetscReal ctol = PETSC_IGNORE
-        cdef PetscInt cmaxit = PETSC_IGNORE
-        if tol    is not None: ctol   = tol
-        if max_it is not None: cmaxit = max_it
-        CHKERR( EPSSetTolerances(self.eps, ctol, cmaxit) )
+        cdef PetscReal rval = PETSC_IGNORE
+        cdef PetscInt  ival = PETSC_IGNORE
+        if tol    is not None: rval = tol
+        if max_it is not None: ival = max_it
+        CHKERR( EPSSetTolerances(self.eps, rval, ival) )
 
     def getDimensions(self):
-        cdef PetscInt nev = 0
-        cdef PetscInt ncv = 0
-        cdef PetscInt mpd = 0
-        CHKERR( EPSGetDimensions(self.eps, &nev, &ncv, &mpd) )
-        return (nev, ncv, mpd)
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        cdef PetscInt ival3 = 0
+        CHKERR( EPSGetDimensions(self.eps, &ival1, &ival2, &ival3) )
+        return (ival1, ival2, ival3)
 
     def setDimensions(self, nev=None, ncv=None, mpd=None):
-        cdef PetscInt cnev = PETSC_IGNORE
-        cdef PetscInt cncv = PETSC_IGNORE
-        cdef PetscInt cmpd = PETSC_IGNORE
-        if nev is not None: cnev = nev
-        if ncv is not None: cncv = ncv
-        if mpd is not None: cmpd = mpd
-        CHKERR( EPSSetDimensions(self.eps, cnev, cncv, cmpd) )
+        cdef PetscInt ival1 = PETSC_IGNORE
+        cdef PetscInt ival2 = PETSC_IGNORE
+        cdef PetscInt ival3 = PETSC_IGNORE
+        if nev is not None: ival1 = nev
+        if ncv is not None: ival2 = ncv
+        if mpd is not None: ival3 = mpd
+        CHKERR( EPSSetDimensions(self.eps, ival1, ival2, ival3) )
 
     def getST(self):
         cdef ST st = ST()
@@ -257,8 +257,7 @@ cdef class EPS(Object):
         CHKERR( EPSSetOperators(self.eps, A.mat, Bmat) )
 
     def attachDeflationSpace(self, space, ortho=False):
-        cdef PetscInt i = 0
-        cdef PetscInt nds = 0
+        cdef PetscInt i = 0, nds = 0
         cdef PetscVec* vds = NULL
         cdef PetscTruth flag = PETSC_FALSE
         cdef object tmp = None
@@ -299,9 +298,9 @@ cdef class EPS(Object):
         CHKERR( EPSSolve(self.eps) )
 
     def getIterationNumber(self):
-        cdef PetscInt val = 0
-        CHKERR( EPSGetIterationNumber(self.eps, &val) )
-        return val
+        cdef PetscInt ival = 0
+        CHKERR( EPSGetIterationNumber(self.eps, &ival) )
+        return ival
 
     def getConvergedReason(self):
         cdef SlepcEPSConvergedReason val = EPS_CONVERGED_ITERATING
@@ -309,9 +308,9 @@ cdef class EPS(Object):
         return val
 
     def getConverged(self):
-        cdef PetscInt val = 0
-        CHKERR( EPSGetConverged(self.eps, &val) )
-        return val
+        cdef PetscInt ival = 0
+        CHKERR( EPSGetConverged(self.eps, &ival) )
+        return ival
 
     def getInvariantSubspace(self):
         cdef PetscInt i = 0, ncv = 0
@@ -376,41 +375,41 @@ cdef class EPS(Object):
     #
 
     def getErrorEstimate(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSGetErrorEstimate(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
+        return rval
 
     def getErrorEstimateLeft(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &rval) )
+        return rval
 
     def computeRelativeError(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSComputeRelativeError(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
+        return rval
 
     def computeRelativeErrorLeft(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
+        return rval
 
     def computeResidualNorm(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSComputeResidualNorm(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
+        return rval
 
     def computeResidualNormLeft(self, int i):
-        cdef PetscReal val = 0
-        CHKERR( EPSComputeResidualNormLeft(self.eps, i, &val) )
-        return val
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
+        return rval
 
     def getOperationCounters(self):
-        cdef PetscInt ops  = 0
-        cdef PetscInt dots = 0
-        cdef PetscInt lits = 0
-        CHKERR( EPSGetOperationCounters(self.eps, &ops, &dots, &lits) )
-        return (ops, dots, lits)
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        cdef PetscInt ival3 = 0
+        CHKERR( EPSGetOperationCounters(self.eps, &ival1, &ival2, &ival3) )
+        return (ival1, ival2, ival3)
 
     #
 

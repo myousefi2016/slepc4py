@@ -117,12 +117,11 @@ cdef class IP(Object):
         return rval
 
     def orthogonalize(self, VS, Vec v not None, Vec work=None):
-        cdef PetscInt i = 0
-        cdef PetscInt n = 0
+        cdef PetscInt i = 0, n = 0
         cdef PetscTruth* which = NULL
         cdef PetscVec* V = NULL
         cdef PetscScalar* H = NULL, h = 0
-        cdef PetscReal norm = 0
+        cdef PetscReal rval = 0
         cdef PetscTruth lindep = PETSC_FALSE
         cdef PetscVec w = NULL
         cdef PetscScalar* sw = NULL
@@ -141,14 +140,14 @@ cdef class IP(Object):
         if work is not None: w = work.vec
         CHKERR( IPOrthogonalize(self.ip,
                                 n, which, V, v.vec,
-                                H, &norm, &lindep,
+                                H, &rval, &lindep,
                                 w, sw) )
         cdef object coefs = None
         if isinstance(VS, Vec):
             coefs = toScalar(H[0])
         else:
             coefs = [toScalar(H[i]) for i in range(n)]
-        return (coefs, norm, <bint>lindep)
+        return (coefs, rval, <bint>lindep)
 
 
 # --------------------------------------------------------------------
