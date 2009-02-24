@@ -18,7 +18,15 @@ class STMatMode(object):
     INPLACE = STMATMODE_INPLACE
     SHELL   = STMATMODE_SHELL
 
-STMatStructure = Mat.Structure
+class STMatStructure(object):
+    # native
+    SAME_NONZERO_PATTERN      = MAT_SAME_NONZERO_PATTERN
+    DIFFERENT_NONZERO_PATTERN = MAT_DIFFERENT_NONZERO_PATTERN
+    SUBSET_NONZERO_PATTERN    = MAT_SUBSET_NONZERO_PATTERN
+    # aliases
+    SAME      = SAME_NZ      = SAME_NONZERO_PATTERN
+    SUBSET    = SUBSET_NZ    = SUBSET_NONZERO_PATTERN
+    DIFFERENT = DIFFERENT_NZ = DIFFERENT_NONZERO_PATTERN
 
 # --------------------------------------------------------------------
 
@@ -157,5 +165,10 @@ cdef class ST(Object):
         def __set__(self, value):
             self.setKSP(value)
 
+# --------------------------------------------------------------------
+
+del STType
+del STMatMode
+del STMatStructure
 
 # --------------------------------------------------------------------

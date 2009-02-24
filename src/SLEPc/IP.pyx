@@ -149,5 +149,10 @@ cdef class IP(Object):
             coefs = [toScalar(H[i]) for i in range(n)]
         return (coefs, rval, <bint>tval)
 
+# --------------------------------------------------------------------
+
+del IPOrthoType
+del IPRefineType
+del IPBilinearForm
 
 # --------------------------------------------------------------------

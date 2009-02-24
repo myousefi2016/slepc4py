@@ -293,3 +293,10 @@ cdef class SVD(Object):
             self.setIP(value)
 
 # --------------------------------------------------------------------
+
+del SVDType
+del SVDWhich
+del SVDTransposeMode
+del SVDConvergedReason
+
+# --------------------------------------------------------------------

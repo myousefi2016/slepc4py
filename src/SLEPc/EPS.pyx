@@ -99,7 +99,7 @@ cdef class EPS(Object):
     Which           = EPSWhich
     ConvergedReason = EPSConvergedReason
 
-    PowerShiftType  = EPSPowerShiftType
+    PowerShiftType      = EPSPowerShiftType
     LanczosReorthogType = EPSLanczosReorthogType
 
     def __cinit__(self):
@@ -490,5 +490,16 @@ cdef class EPS(Object):
             return self.getIP()
         def __set__(self, value):
             self.setIP(value)
+
+# --------------------------------------------------------------------
+
+del EPSType
+del EPSProblemType
+del EPSExtraction
+del EPSClass
+del EPSWhich
+del EPSConvergedReason
+del EPSPowerShiftType
+del EPSLanczosReorthogType
 
 # --------------------------------------------------------------------
