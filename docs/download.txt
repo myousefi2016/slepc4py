@@ -1,6 +1,0 @@
-Availability
-============
-
-SLEPc for Python source distribution is available for download at the
-project home page generously hosted by Google Code:
-http://slepc4py.googlecode.com/.

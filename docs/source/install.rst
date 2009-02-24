@@ -15,12 +15,15 @@ Requirements
 
 * petsc4py_ package.
 
+.. include:: links.txt
+
 
 Building
 --------
 
 Download and unpack the source distribution::
 
+   $ wget -zxf http://slepc4py.googlecode.com/files/slepc4py-X.X.X.tar.gz
    $ tar -zxf slepc4py-X.X.X.tar.gz
    $ cd slepc4py-X.X.X
 
@@ -35,7 +38,7 @@ have built/installed SLEPc and PETSc::
    $ export PETSC_ARCH=linux-gnu
 
 Alternatively, you can edit the file ``setup.cfg`` and provide the
-required information below ``[config]`` section::
+required information below the ``[config]`` section::
 
    [config]
    slepc_dir  = /usr/local/slepc/3.0.0
@@ -51,8 +54,9 @@ Finally, you can build this distribution by typing::
 Installing
 ----------
 
-After building, this distribution is ready for installation. For a
-site install type::
+After building, this distribution is ready for installation. 
+
+You can do a site-install type::
 
    $ python setup.py install
 
@@ -63,10 +67,11 @@ or, in case you need root privileges::
 This will install the ``slepc4py`` package in the standard location
 ``<prefix>/lib/pythonX.X/site-packages``.
 
-You can also do a user install at your home directory::
+You can also do a user-install type::
 
    $ python setup.py install --home=$HOME
 
 This will install the ``slepc4py`` package in the standard location
-``$HOME/lib/python``. This location should be listed in the
-``PYTHONPATH`` environmental variable.
+``$HOME/lib/python`` (or perhaps ``$HOME/lib64/python``). This
+location should be listed in the ``PYTHONPATH`` environmental
+variable.
