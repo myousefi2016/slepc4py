@@ -15,6 +15,7 @@ A.setSizes([n+1, n])
 A.setFromOptions( )
 
 rstart, rend = A.getOwnershipRange()
+
 for i in xrange(rstart, rend):
   if i==0:
     for j in range(n):

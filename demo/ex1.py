@@ -12,26 +12,18 @@ A = PETSc.Mat(); A.create()
 A.setSizes([n, n])
 A.setFromOptions()
 
-o = A.getOwnershipRange()
-
-FirstBlock = 0
-LastBlock  = 0
-
-if (o[0] == 0): FirstBlock = 1
-if (o[1] == n): LastBlock  = -1
-
-start, end = A.getOwnershipRange()
+rstart, rend = A.getOwnershipRange()
 
 # first row
-if start == 0:
+if rstart == 0:
   A[0, :2] = [2, -1]
-  start += 1
+  rstart += 1
 # last row
-if end == n:
+if rend == n:
   A[n-1, -2:] = [-1, 2]
-  end -= 1
+  rend -= 1
 # other rows
-for i in range(start, end):
+for i in range(rstart, rend):
   A[i, i-1:i+2] = [-1, 2, -1]
 
 A.assemble()

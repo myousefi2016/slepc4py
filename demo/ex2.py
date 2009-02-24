@@ -58,17 +58,17 @@ def construct_operator():
     A.setFromOptions( )
     # Fill matrix
     Istart, Iend = A.getOwnershipRange()
-    for II in range(Istart,Iend):
-        v = -1.0; i = II/n; j = II-i*n;
+    for I in range(Istart,Iend):
+        v = -1.0; i = I/n; j = I-i*n;
         if i>0:
-            J=II-n; A[II,J] = v
+            J=I-n; A[I,J] = v
         if i<m-1:
-            J=II+n; A[II,J] = v
+            J=I+n; A[I,J] = v
         if j>0:
-            J=II-1; A[II,J] = v
+            J=I-1; A[I,J] = v
         if j<n-1:
-            J=II+1; A[II,J] = v
-        v=4.0; A[II,II] = v
+            J=I+1; A[I,J] = v
+        v=4.0; A[I,I] = v
     A.assemble()
     return A
 
