@@ -23,7 +23,7 @@ Building
 
 Download and unpack the source distribution::
 
-   $ wget -zxf http://slepc4py.googlecode.com/files/slepc4py-X.X.X.tar.gz
+   $ wget http://slepc4py.googlecode.com/files/slepc4py-X.X.X.tar.gz
    $ tar -zxf slepc4py-X.X.X.tar.gz
    $ cd slepc4py-X.X.X
 
