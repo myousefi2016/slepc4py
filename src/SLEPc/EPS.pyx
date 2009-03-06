@@ -3,6 +3,15 @@
 class EPSType(object):
     """
     EPS types
+
+    KRYLOVSCHUR : Krylov-Schur (default)
+    LANCZOS     : Lanczos
+    ARNOLDI     : Arnoldi
+    SUBSPACE    : Subspace Iteration
+    POWER       : Power Iteration, Inverse Iteration, RQI
+    LAPACK      : Wrappers to dense eigensolvers in Lapack
+    ARPACK, BLZPACK, TRLAN, BLOPEX, PRIMME: Wrappers to sparse eigensolvers
+                  (should be enabled during installation of SLEPc)
     """
     # provided implementations
     KRYLOVSCHUR = EPSKRYLOVSCHUR
@@ -21,6 +30,12 @@ class EPSType(object):
 class EPSProblemType(object):
     """
     EPS problem type
+
+    HEP    : Hermitian eigenproblem
+    NHEP   : Non-Hermitian eigenproblem
+    GHEP   : Generalized Hermitian eigenproblem
+    GNHEP  : Generalized Non-Hermitian eigenproblem
+    PGNHEP : Generalized Non-Hermitian eigenproblem with positive definite B
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
@@ -31,6 +46,11 @@ class EPSProblemType(object):
 class EPSExtraction(object):
     """
     EPS extraction technique
+
+    RITZ             : Standard Rayleigh-Ritz extraction
+    HARMONIC         : Harmonic extraction
+    REFINED          : Refined extraction
+    REFINED_HARMONIC : Refined harmonic extraction
     """
     RITZ             = EPS_RITZ
     HARMONIC         = EPS_HARMONIC
@@ -40,6 +60,9 @@ class EPSExtraction(object):
 class EPSClass(object):
     """
     EPS class of method
+
+    ONE_SIDE  : One-sided eigensolver, computes only right eigenvectors
+    TWO_SIDE  : Two-sided eigensolver, computes both right and left eigenvectors
     """
     ONE_SIDE  = EPS_ONE_SIDE
     TWO_SIDE  = EPS_TWO_SIDE
@@ -47,6 +70,13 @@ class EPSClass(object):
 class EPSWhich(object):
     """
     EPS desired piece of spectrum
+
+    LARGEST_MAGNITUDE  : Largest eigenvalues in magnitude
+    SMALLEST_MAGNITUDE : Smallest eigenvalues in magnitude
+    LARGEST_REAL       : Largest real parts
+    SMALLEST_REAL      : Smallest real parts
+    LARGEST_IMAGINARY  : Largest imaginary parts in magnitude
+    SMALLEST_IMAGINARY : Smallest imaginary parts in magnitude
     """
     LARGEST_MAGNITUDE  = EPS_LARGEST_MAGNITUDE
     SMALLEST_MAGNITUDE = EPS_SMALLEST_MAGNITUDE
@@ -151,11 +181,6 @@ cdef class EPS(Object):
         eps_type: EPS.Type enumerate
                   The solver to be used.
 
-        Options Database Keys
-        ---------------------
-        -eps_type <method>: Sets the method; use -help for a list 
-                            of available methods.
-    
         Notes
         -----
         See `EPSType` for available methods. The default is KRYLOVSCHUR.
@@ -657,45 +682,142 @@ cdef class EPS(Object):
     #
 
     def getInitialVector(self):
+        """
+        Gets the initial vector associated with the eigensolver; if the vector 
+        was not set it will return a 0 pointer or a vector randomly generated 
+        by `setUp()`.
+
+        Returns
+        -------
+        V: Vec
+           The initial vector.
+        """
         cdef Vec V = Vec()
         CHKERR( EPSGetInitialVector(self.eps, &V.vec) )
         V.inc_ref(); return V
 
     def setInitialVector(self, Vec V not None):
+        """
+        Sets the initial vector from which the eigensolver starts to iterate.
+
+        Parameters
+        ----------
+        V: Vec
+           The initial vector.
+        """
         CHKERR( EPSSetInitialVector(self.eps, V.vec) )
 
     def getInitialVectorLeft(self):
+        """
+        Gets the left initial vector associated with the eigensolver; if the vector 
+        was not set it will return a 0 pointer or a vector randomly generated 
+        by `setUp()`.
+
+        Returns
+        -------
+        V: Vec
+           The initial vector.
+        """
         cdef Vec V = Vec()
         CHKERR( EPSGetLeftInitialVector(self.eps, &V.vec) )
         V.inc_ref(); return V
 
     def setInitialVectorLeft(self, Vec W not None):
+        """
+        Sets the left initial vector from which the eigensolver starts to iterate,
+        corresponding to the left recurrence (two-sided solvers).
+
+        Parameters
+        ----------
+        V: Vec
+           The initial vector.
+        """
         CHKERR( EPSSetLeftInitialVector(self.eps, W.vec) )
 
     #
 
     def setUp(self):
+        """
+        Sets up all the internal data structures necessary for the execution of 
+        the eigensolver. 
+
+        Notes
+        -----
+        This function need not be called explicitly in most cases, since `solve()`
+        calls it. It can be useful when one wants to measure the set-up time 
+        separately from the solve time.
+        """
         CHKERR( EPSSetUp(self.eps) )
 
     def solve(self):
+        """
+        Solves the eigensystem.
+        """
         CHKERR( EPSSolve(self.eps) )
 
     def getIterationNumber(self):
+        """
+        Gets the current iteration number. If the call to `solve()` is complete, 
+        then it returns the number of iterations carried out by the solution method.
+
+        Returns
+        -------
+        its: int
+             Iteration number.
+        """
         cdef PetscInt ival = 0
         CHKERR( EPSGetIterationNumber(self.eps, &ival) )
         return ival
 
     def getConvergedReason(self):
+        """
+        Gets the reason why the `solve()` iteration was stopped.
+
+        Returns
+        -------
+        reason: EPS.ConvergedReason enumerate
+                Negative value indicates diverged, positive value converged.
+        """
         cdef SlepcEPSConvergedReason val = EPS_CONVERGED_ITERATING
         CHKERR( EPSGetConvergedReason(self.eps, &val) )
         return val
 
     def getConverged(self):
+        """
+        Gets the number of converged eigenpairs.
+
+        Returns
+        -------
+        nconv: int
+               Number of converged eigenpairs.
+
+        Notes
+        -----
+        This function should be called after `solve()` has finished.
+        """
         cdef PetscInt ival = 0
         CHKERR( EPSGetConverged(self.eps, &ival) )
         return ival
 
     def getInvariantSubspace(self):
+        """
+        Gets an orthonormal basis of the computed invariant subspace.
+
+        Returns
+        -------
+        v: array of Vec
+           Basis of the invariant subspace.
+
+        Notes
+        -----
+        This function should be called after `solve()` has finished.
+
+        The `nconv` vectors returned in `v` span an invariant subspace associated 
+        with the computed eigenvalues (`nconv` is the value returned by
+        `getConverged()`). An invariant subspace X of A satisfies Ax 
+        in X for all x in X (a similar definition applies for generalized 
+        eigenproblems). 
+        """
         cdef PetscInt i = 0, ncv = 0
         cdef PetscVec v = NULL, *isp = NULL
         CHKERR( EPSGetConverged(self.eps, &ncv) )
@@ -711,6 +833,19 @@ cdef class EPS(Object):
         return subspace
 
     def getInvariantSubspaceLeft(self):
+        """
+        Gets an orthonormal basis of the computed left invariant subspace
+        (only available in two-sided eigensolvers).
+
+        Returns
+        -------
+        v: array of Vec
+           Basis of the left invariant subspace.
+
+        Notes
+        -----
+        See `getInvariantSubspace()` for additional information.
+        """
         cdef PetscInt i = 0, ncv = 0
         cdef PetscVec w = NULL, *isp = NULL
         CHKERR( EPSGetConverged(self.eps, &ncv) )
@@ -726,12 +861,49 @@ cdef class EPS(Object):
         return subspace
 
     def getValue(self, int i):
+        """
+        Gets the i-th eigenvalue as computed by `solve()`.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+
+        Returns
+        -------
+        e: scalar (possibly complex)
+           The computed eigenvalue.
+
+        Notes
+        -----
+        The index `i` should be a value between `0` and `nconv-1` (see 
+        `getConverged()`. Eigenpairs are indexed according to the ordering 
+        criterion established with `setWhichEigenpairs()`.
+        """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
         CHKERR( EPSGetValue(self.eps, i, &sval1, &sval2) )
         return complex(toScalar(sval1), toScalar(sval2))
 
     def getVector(self, int i, Vec Vr not None, Vec Vi=None):
+        """
+        Gets the i-th eigenvector as computed by `solve()`.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+        Vr: Vec
+            Placeholder for the returned eigenvector (real part).
+        Vi: Vec, optional
+            Placeholder for the returned eigenvector (imaginary part).
+
+        Notes
+        -----
+        The index `i` should be a value between `0` and `nconv-1` (see 
+        `getConverged()`. Eigenpairs are indexed according to the ordering 
+        criterion established with `setWhichEigenpairs()`.
+        """
         cdef PetscVec vecr = NULL
         cdef PetscVec veci = NULL
         if Vr is not None: vecr = Vr.vec
@@ -739,6 +911,25 @@ cdef class EPS(Object):
         CHKERR( EPSGetRightVector(self.eps, i, vecr, veci) )
 
     def getVectorLeft(self, int i, Vec Wr not None, Vec Wi=None):
+        """
+        Gets the i-th left eigenvector as computed by `solve()`,
+        (only available in two-sided eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+        Wr: Vec
+            Placeholder for the returned left eigenvector (real part).
+        Wi: Vec, optional
+            Placeholder for the returned left eigenvector (imaginary part).
+
+        Notes
+        -----
+        The index `i` should be a value between `0` and `nconv-1` (see 
+        `getConverged()`. Eigenpairs are indexed according to the ordering 
+        criterion established with `setWhichEigenpairs()`.
+        """
         cdef PetscVec vecr = NULL
         cdef PetscVec veci = NULL
         if Wr is not None: vecr = Wr.vec
@@ -746,6 +937,30 @@ cdef class EPS(Object):
         CHKERR( EPSGetLeftVector(self.eps, i, vecr, veci) )
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
+        """
+        Gets the i-th solution of the eigenproblem as computed by `solve()`.
+        The solution consists of both the eigenvalue and the eigenvector.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+        Vr: Vec
+            Placeholder for the returned eigenvector (real part).
+        Vi: Vec
+            Placeholder for the returned eigenvector (imaginary part).
+
+        Returns
+        -------
+        e: scalar (possibly complex)
+           The computed eigenvalue.
+
+        Notes
+        -----
+        The index `i` should be a value between `0` and `nconv-1` (see 
+        `getConverged()`. Eigenpairs are indexed according to the ordering 
+        criterion established with `setWhichEigenpairs()`.
+        """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
         cdef PetscVec vecr = NULL
@@ -758,36 +973,164 @@ cdef class EPS(Object):
     #
 
     def getErrorEstimate(self, int i):
+        """
+        Returns the error estimate associated to the i-th computed eigenpair.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        e: real
+           Error estimate.
+
+        Notes
+        -----
+        This is the error estimate used internally by the eigensolver. The actual
+        error bound can be computed with `computeRelativeError()`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
         return rval
 
     def getErrorEstimateLeft(self, int i):
+        """
+        Returns the left error estimate associated to the i-th computed eigenpair
+        (only available in two-sided eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        e: real
+           Left error estimate.
+
+        Notes
+        -----
+        This is the error estimate used internally by the eigensolver. The actual
+        error bound can be computed with `computeRelativeError()`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &rval) )
         return rval
 
     def computeRelativeError(self, int i):
+        """
+        Computes the relative error bound associated with the i-th computed eigenpair.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        e: real
+           The relative error bound, computed as `||Ax-kBx||_2/||kx||_2` where 
+           `k` is the eigenvalue and `x` is the eigenvector. 
+           If `k=0` the relative error is computed as `||Ax||_2/||x||_2`.
+
+        Notes
+        -----
+        The index `i` should be a value between `0` and `nconv-1` (see 
+        `getConverged()`. Eigenpairs are indexed according to the ordering 
+        criterion established with `setWhichEigenpairs()`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
         return rval
 
     def computeRelativeErrorLeft(self, int i):
+        """
+        Computes the left relative error bound associated with the i-th computed
+        eigenpair (only available in two-sided eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        e: real
+           The relative error bound, computed as `||y'A-ky'B||_2/||ky||_2` where 
+           `k` is the eigenvalue and `y` is the left eigenvector. 
+           If `k=0` the relative error is computed as `||y'A||_2/||y||_2`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
         return rval
 
     def computeResidualNorm(self, int i):
+        """
+        Computes the norm of the residual vector associated with the i-th 
+        computed eigenpair.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        norm: real
+              The residual norm, computed as `||Ax-kBx||_2` where `k` is the 
+              eigenvalue and `x` is the eigenvector. 
+              If `k=0` then the residual norm is computed as `||Ax||_2`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
         return rval
 
     def computeResidualNormLeft(self, int i):
+        """
+        Computes the norm of the residual vector associated with the i-th 
+        computed left eigenpair (only available in two-sided eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        norm: real
+              The residual norm, computed as `||y'A-ky'B||_2` where `k` is the 
+              eigenvalue and `y` is the left eigenvector. 
+              If `k=0` then the residual norm is computed as `||y'A||_2`.
+        """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
         return rval
 
     def getOperationCounters(self):
+        """
+        Gets the total number of operator applications, inner product operations
+        and linear iterations used by the `ST` object during the last `solve()` call.
+
+        Returns
+        -------
+        ops: int
+             number of operator applications.
+        dots: int
+             number of inner product operations.
+        lits: int
+             number of linear iterations.
+
+        Notes
+        -----
+        When the eigensolver algorithm invokes `ST.apply()` then a linear system 
+        must be solved (except in the case of standard eigenproblems and shift
+        transformation). The number of iterations required in this solve is
+        accumulated into a counter whose value is returned by this function.
+
+        These counters are reset to zero at each successive call to `solve()`.
+        """
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
@@ -797,29 +1140,101 @@ cdef class EPS(Object):
     #
 
     def setPowerShiftType(self, shift):
+        """
+        Sets the type of shifts used during the power iteration. This can be used
+        to emulate the Rayleigh Quotient Iteration (RQI) method.
+
+        Parameters
+        ----------
+        shift: EPS.PowerShiftType enumerate
+               The type of shift.
+
+        Notes
+        -----
+        This call is only relevant if the type was set to `POWER` with `setType()`.
+
+        By default, shifts are constant (CONSTANT) and the iteration is the simple
+        power method (or inverse iteration if a shift-and-invert transformation is
+        being used).
+
+        A variable shift can be specified (RAYLEIGH or WILKINSON). In this case,
+        the iteration behaves rather like a cubic converging method as RQI.
+        """
         cdef SlepcEPSPowerShiftType val = shift
         CHKERR( EPSPowerSetShiftType(self.eps, val) )
 
     def getPowerShiftType(self):
+        """
+        Gets the type of shifts used during the power iteration.
+
+        Returns
+        -------
+        shift: EPS.PowerShiftType enumerate
+               The type of shift.
+        """
         cdef SlepcEPSPowerShiftType val = EPSPOWER_SHIFT_CONSTANT
         CHKERR( EPSPowerGetShiftType(self.eps, &val) )
         return val
 
     def setArnoldiDelayed(self, delayed):
+        """
+        Activates or deactivates delayed reorthogonalization in the Arnoldi iteration.
+
+        Parameters
+        ----------
+        delayed: boolean
+                 True if delayed reorthogonalization is to be used.
+
+        Notes
+        -----
+        This call is only relevant if the type was set to `ARNOLDI` with `setType()`.
+
+        Delayed reorthogonalization is an aggressive optimization for the Arnoldi
+        eigensolver than may provide better scalability, but sometimes makes the
+        solver converge less than the default algorithm.
+        """
         cdef PetscTruth val = PETSC_FALSE
         if delayed: val = PETSC_TRUE
         CHKERR( EPSArnoldiSetDelayed(self.eps, val) )
 
     def getArnoldiDelayed(self):
+        """
+        Gets the type of reorthogonalization used during the Arnoldi iteration. 
+
+        Returns
+        -------
+        delayed: boolean
+                 True if delayed reorthogonalization is to be used.
+        """
         cdef PetscTruth val = PETSC_FALSE
         CHKERR( EPSArnoldiGetDelayed(self.eps, &val) )
         return val
 
     def setLanczosReorthogType(self, reorthog):
+        """
+        Sets the type of reorthogonalization used during the Lanczos iteration.
+
+        Parameters
+        ----------
+        reorthog: EPS.LanczosReorthogType enumerate
+                  The type of reorthogonalization.
+
+        Notes
+        -----
+        This call is only relevant if the type was set to `LANCZOS` with `setType()`.
+        """
         cdef SlepcEPSLanczosReorthogType val = reorthog
         CHKERR( EPSLanczosSetReorthog(self.eps, val) )
 
     def getLanczosReorthogType(self):
+        """
+        Gets the type of reorthogonalization used during the Lanczos iteration.
+
+        Returns
+        -------
+        reorthog: EPS.LanczosReorthogType enumerate
+                  The type of reorthogonalization.
+        """
         cdef SlepcEPSLanczosReorthogType val = EPSLANCZOS_REORTHOG_LOCAL
         CHKERR( EPSLanczosGetReorthog(self.eps, &val) )
         return val
