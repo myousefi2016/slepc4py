@@ -2,7 +2,7 @@
 
 """
 SLEPc for Python
-==============
+================
 
 Python bindings for SLEPc libraries.
 """
@@ -34,7 +34,7 @@ download = url + 'files/%(name)s-%(version)s.tar.gz' % vars()
 
 descr    = __doc__.strip().split('\n'); del descr[1:3]
 devstat  = ['Development Status :: 3 - Alpha']
-keywords = ['SLEPc','PETSc','MPI']
+keywords = ['SLEPc', 'PETSc', 'MPI']
 
 metadata['name'] = name
 metadata['version'] = version
@@ -49,7 +49,6 @@ metadata['download_url'] = download
 # Extension modules
 # --------------------------------------------------------------------
 
-
 def get_ext_modules(Extension):
     from os   import walk, path
     from glob import glob
@@ -58,28 +57,21 @@ def get_ext_modules(Extension):
         depends += glob(path.join(pth, '*.h'))
     try:
         import petsc4py
-        petsc4py_inc = petsc4py.get_include()
+        petsc4py_includes = [petsc4py.get_include()]
     except ImportError:
-        petsc4py_inc = 'src/include'
+        petsc4py_includes = []
     return [Extension('slepc4py.lib.SLEPc',
                       sources=['src/SLEPc.c',],
                       include_dirs=['src/include',
-                                    petsc4py_inc,],
-                      depends=depends, language='c'),
-            Extension('slepc4py.lib.SLEPc',
-                      sources=['src/SLEPc.cpp',],
-                      include_dirs=['src/include',
-                                    petsc4py_inc,],
-                      depends=depends, language='c++'),
-            ]
-
+                                    ] + petsc4py_includes,
+                      depends=depends)]
 
 # --------------------------------------------------------------------
 # Setup
 # --------------------------------------------------------------------
 
 from conf.slepcconf import setup, Extension
-from conf.slepcconf import config, build, build_src, build_ext
+from conf.slepcconf import config, build, build_ext
 
 def main():
     setup(packages     = ['slepc4py',
@@ -95,7 +87,6 @@ def main():
           ext_modules  = get_ext_modules(Extension),
           cmdclass     = {'config'     : config,
                           'build'      : build,
-                          'build_src'  : build_src,
                           'build_ext'  : build_ext},
           **metadata)
 

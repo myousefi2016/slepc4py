@@ -12,7 +12,7 @@ __all__ = ['setup',
 import sys, os, platform
 
 if not hasattr(sys, 'version_info') or \
-       sys.version_info < (2, 4, 0,'final'):
+       sys.version_info < (2, 4, 0, 'final'):
     raise SystemExit("Python 2.4 or later is required "
                      "to build SLEPc for Python package.")
 
@@ -22,7 +22,6 @@ from conf.core import PetscConfig
 from conf.core import setup, Extension, log
 from conf.core import config     as _config
 from conf.core import build      as _build
-from conf.core import build_src  as _build_src
 from conf.core import build_ext  as _build_ext
 
 from distutils.errors import DistutilsError
@@ -32,7 +31,7 @@ from distutils.errors import DistutilsError
 
 class SlepcConfig(PetscConfig):
 
-    def __init__(self, petsc_dir, petsc_arch, slepc_dir):
+    def __init__(self,  slepc_dir, petsc_dir, petsc_arch):
         PetscConfig.__init__(self, petsc_dir, petsc_arch)
         if not slepc_dir:
             raise DistutilsError("SLEPc not found")
@@ -132,11 +131,9 @@ class build(_build):
         self.slepc_dir = config.get_slepc_dir(self.slepc_dir)
 
 
-class build_src(_build_src):
-    pass
-
-
 class build_ext(_build_ext):
+
+    user_options = _build_ext.user_options + cmd_slepc_opts
 
     def initialize_options(self):
         _build_ext.initialize_options(self)
@@ -148,7 +145,7 @@ class build_ext(_build_ext):
                                    ('slepc_dir',  'slepc_dir'))
 
     def _get_config(self, petsc_dir, petsc_arch):
-        return SlepcConfig(petsc_dir, petsc_arch, self.slepc_dir)
+        return SlepcConfig(self.slepc_dir, petsc_dir, petsc_arch)
 
 
     def get_config_data(self, arch_list):
