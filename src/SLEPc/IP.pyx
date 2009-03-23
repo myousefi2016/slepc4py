@@ -140,7 +140,7 @@ cdef class IP(Object):
         cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
         CHKERR( IPGetOrthogonalization(self.ip, &val1, &val2, &rval) )
-        return (val1, val2, rval)
+        return (val1, val2, toReal(rval))
 
     def setOrthogonalization(self, type=None, refine=None, eta=None):
         """
@@ -171,7 +171,7 @@ cdef class IP(Object):
         cdef PetscReal rval = PETSC_DEFAULT
         if type   is not None: val1= type
         if refine is not None: val2= refine
-        if eta    is not None: rval = eta
+        if eta    is not None: rval = asReal(eta)
         CHKERR( IPSetOrthogonalization(self.ip, val1, val2, rval) )
 
     #
@@ -254,7 +254,7 @@ cdef class IP(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( IPNorm(self.ip, x.vec, &rval) )
-        return rval
+        return toReal(rval)
 
     def innerProduct(self, Vec x not None, Vec y not None):
         """
@@ -282,7 +282,7 @@ cdef class IP(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &rval) )
-        return rval
+        return toReal(rval)
 
     def orthogonalize(self, VS, Vec v not None, Vec work=None):
         """
@@ -346,7 +346,7 @@ cdef class IP(Object):
             coefs = toScalar(H[0])
         else:
             coefs = [toScalar(H[i]) for i in range(n)]
-        return (coefs, rval, <bint>tval)
+        return (coefs, toReal(rval), <bint>tval)
 
 # --------------------------------------------------------------------
 

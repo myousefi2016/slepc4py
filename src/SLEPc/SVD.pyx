@@ -260,7 +260,7 @@ cdef class SVD(Object):
         cdef PetscReal rval = 0
         cdef PetscInt  ival = 0
         CHKERR( SVDGetTolerances(self.svd, &rval, &ival) )
-        return (rval, ival)
+        return (toReal(rval), ival)
 
     def setTolerances(self, tol=None, max_it=None):
         """
@@ -281,7 +281,7 @@ cdef class SVD(Object):
         """
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
-        if tol    is not None: rval = tol
+        if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = max_it
         CHKERR( SVDSetTolerances(self.svd, rval, ival) )
 
@@ -504,7 +504,7 @@ cdef class SVD(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, NULL, NULL) )
-        return rval
+        return toReal(rval)
 
     def getVectors(self, int i, Vec U not None, Vec V not None):
         """
@@ -525,8 +525,8 @@ cdef class SVD(Object):
         `getConverged()`. Singular triplets are indexed according to the ordering 
         criterion established with `setWhichSingularTriplets()`.
         """
-        cdef PetscReal rval = 0
-        CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, U.vec, V.vec) )
+        cdef PetscReal dummy = 0
+        CHKERR( SVDGetSingularTriplet(self.svd, i, &dummy, U.vec, V.vec) )
 
     def getSingularTriplet(self, int i, Vec U=None, Vec V=None):
         """
@@ -560,7 +560,7 @@ cdef class SVD(Object):
         if U is not None: Uvec = U.vec
         if V is not None: Vvec = V.vec
         CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, Uvec, Vvec) )
-        return rval
+        return toReal(rval)
 
     #
 
@@ -589,7 +589,7 @@ cdef class SVD(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( SVDComputeRelativeError(self.svd, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def computeResidualNorms(self, int i):
         """
@@ -613,7 +613,7 @@ cdef class SVD(Object):
         cdef PetscReal rval1 = 0
         cdef PetscReal rval2 = 0
         CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
-        return (rval1, rval2)
+        return (toReal(rval1), toReal(rval2))
 
     def getOperationCounters(self):
         """

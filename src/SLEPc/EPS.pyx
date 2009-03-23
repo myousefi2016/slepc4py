@@ -476,7 +476,7 @@ cdef class EPS(Object):
         cdef PetscReal rval = 0
         cdef PetscInt  ival = 0
         CHKERR( EPSGetTolerances(self.eps, &rval, &ival) )
-        return (rval, ival)
+        return (toReal(rval), ival)
 
     def setTolerances(self, tol=None, max_it=None):
         """
@@ -497,7 +497,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
-        if tol    is not None: rval = tol
+        if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = max_it
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
 
@@ -993,7 +993,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def getErrorEstimateLeft(self, int i):
         """
@@ -1017,7 +1017,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def computeRelativeError(self, int i):
         """
@@ -1043,7 +1043,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def computeRelativeErrorLeft(self, int i):
         """
@@ -1064,7 +1064,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def computeResidualNorm(self, int i):
         """
@@ -1085,7 +1085,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def computeResidualNormLeft(self, int i):
         """
@@ -1106,7 +1106,7 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
-        return rval
+        return toReal(rval)
 
     def getOperationCounters(self):
         """
