@@ -280,9 +280,9 @@ cdef class IP(Object):
         for complex symmetric problems or the B-inner product for positive definite B,
         `(x,y)_B=y^H Bx`.
         """
-        cdef PetscReal rval = 0
-        CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &rval) )
-        return toReal(rval)
+        cdef PetscScalar sval = 0
+        CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &sval) )
+        return toScalar(sval)
 
     def orthogonalize(self, VS, Vec v not None, Vec work=None):
         """
