@@ -1,19 +1,16 @@
-import sys, petsc4py
-petsc4py.init(sys.argv)
+import sys, slepc4py
+slepc4py.init(sys.argv)
 
 from petsc4py import PETSc
 from slepc4py import SLEPc
 
-from slepc4py.SLEPc import EPS
-from petsc4py.PETSc import Mat
-
-def solve_eigensystem(A, problem_type=EPS.ProblemType.HEP):
+def solve_eigensystem(A, problem_type=SLEPc.EPS.ProblemType.HEP):
     # Create the results vectors
     xr, tmp = A.getVecs()
     xi, tmp = A.getVecs()
 
     # Setup the eigensolver
-    E = EPS().create()
+    E = SLEPc.EPS().create()
     E.setOperators(A,None)
     E.setDimensions(3,PETSc.DECIDE)
     E.setProblemType( problem_type )
@@ -84,7 +81,7 @@ def construct_operator():
     m = n = opts.getInt('N', 40)
     # Create shell matrix
     context = Laplacian2D(m,n)
-    A = Mat().createPython([m*n,m*n], context)
+    A = PETSc.Mat().createPython([m*n,m*n], context)
     return A
 
 if __name__ == '__main__':

@@ -17,8 +17,8 @@ you want to gain access to the facilities for accesing command-line
 options, the following lines must be executed by the main script prior
 to any petsc4py or slepc4py calls::
 
-    import sys, petsc4py
-    petsc4py.init(sys.argv)
+    import sys, slepc4py
+    slepc4py.init(sys.argv)
 
 Next, we have to import the relevant modules. Normally, both PETSc and
 SLEPc modules have to be imported in all slepc4py programs. It may be
