@@ -1,6 +1,7 @@
 import sys, os, glob
 import unittest
 
+import petsc4py
 try:
     import slepc4py
 except ImportError:
@@ -24,6 +25,7 @@ if '-slepc' in sys.argv:
     del idx
 
 slepc4py.init(args)
+from petsc4py import PETSc
 from slepc4py import SLEPc
 
 #version = SLEPc.Sys.getVersion()
@@ -50,7 +52,25 @@ def test_cases():
 def runtests(*args, **kargs):
     SLEPc.COMM_WORLD.barrier()
     sys.stderr.flush()
+    #
+    sys.stderr.write("petsc4py imported from '%s'\n" % petsc4py.__path__[0])
+    (major, minor, micro), patch = PETSc.Sys.getVersion(patch=True)
+    r = PETSc.Sys.getVersionInfo()['release']
+    if r: release = 'release'
+    else: release = 'development'
+    arch = PETSc.__arch__
+    sys.stderr.write(
+        "using PETSc %d.%d.%d-p%d %s (configuration: '%s')\n" % \
+        (major, minor, micro, patch, release, arch) )
+    #
     sys.stderr.write("slepc4py imported from '%s'\n" % slepc4py.__path__[0])
+    (major, minor, micro), patch = (0,0,0), 0
+    release = 'release'
+    arch = SLEPc.__arch__
+    sys.stderr.write(
+        "using SLEPc %d.%d.%d-p%d %s (configuration: '%s')\n" % \
+        (major, minor, micro, patch, release, arch) )
+    #
     sys.stderr.flush()
     SLEPc.COMM_WORLD.barrier()
 
