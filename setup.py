@@ -45,6 +45,9 @@ metadata['classifiers'] += devstat
 metadata['url'] = url
 metadata['download_url'] = download
 
+metadata['provides'] = ['slepc4py']
+metadata['requires'] = ['petsc4py']
+
 # --------------------------------------------------------------------
 # Extension modules
 # --------------------------------------------------------------------
