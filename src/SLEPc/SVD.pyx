@@ -4,11 +4,11 @@ class SVDType(object):
     """
     SVD types
 
-    CROSS     : Eigenproblem with the cross-product matrix
-    CYCLIC    : Eigenproblem with the cyclic matrix
-    LAPACK    : Wrappers to dense SVD solvers in Lapack
-    LANCZOS   : Lanczos
-    TRLANCZOS : Thick-restart Lanczos
+    - `CROSS`:     Eigenproblem with the cross-product matrix.
+    - `CYCLIC`:    Eigenproblem with the cyclic matrix.
+    - `LAPACK`:    Wrappers to dense SVD solvers in Lapack.
+    - `LANCZOS`:   Lanczos.
+    - `TRLANCZOS`: Thick-restart Lanczos.
     """
     CROSS     = SVDCROSS
     CYCLIC    = SVDCYCLIC
@@ -20,8 +20,8 @@ class SVDWhich(object):
     """
     SVD desired piece of spectrum
 
-    LARGEST  : largest singular values
-    SMALLEST : smallest singular values
+    - `LARGEST`:  largest singular values.
+    - `SMALLEST`: smallest singular values.
     """
     LARGEST  = SVD_LARGEST
     SMALLEST = SVD_SMALLEST
@@ -30,8 +30,8 @@ class SVDTransposeMode(object):
     """
     SVD handling of the transpose of the matrix
 
-    EXPLICIT : matrix is built explicitly
-    IMPLICIT : matrix is handled implicitly
+    - `EXPLICIT`: matrix is built explicitly.
+    - `IMPLICIT`: matrix is handled implicitly.
     """
     EXPLICIT = SVD_TRANSPOSE_EXPLICIT
     IMPLICIT = SVD_TRANSPOSE_IMPLICIT
@@ -39,6 +39,11 @@ class SVDTransposeMode(object):
 class SVDConvergedReason(object):
     """
     SVD convergence reasons
+
+    - `CONVERGED_TOL`:
+    - `DIVERGED_ITS`:
+    - `DIVERGED_BREAKDOWN`:
+    - `CONVERGED_ITERATING`:
     """
     CONVERGED_TOL       = SVD_CONVERGED_TOL
     DIVERGED_ITS        = SVD_DIVERGED_ITS
@@ -69,7 +74,8 @@ cdef class SVD(Object):
         Parameters
         ----------
         viewer: Viewer, optional
-                Visualization context; if not provided, the standard output is used.
+                Visualization context; if not provided, the standard
+                output is used.
         """
         cdef PetscViewer vwr = NULL
         if viewer is not None: vwr = viewer.vwr
@@ -89,8 +95,9 @@ cdef class SVD(Object):
 
         Parameters
         ----------
-        comm: MPI_Comm, optional
-              MPI communicator; if not provided, it defaults to all processes.
+        comm: Comm, optional
+              MPI communicator; if not provided, it defaults to all
+              processes.
         """
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcSVD newsvd = NULL
@@ -109,11 +116,12 @@ cdef class SVD(Object):
 
         Notes
         -----
-        See `SVDType` for available methods. The default is CROSS.
-        Normally, it is best to use `setFromOptions()` and then set the SVD
-        type from the options database rather than by using this routine.
-        Using the options database provides the user with maximum flexibility
-        in evaluating the different available methods.
+        See `SVD.Type` for available methods. The default is CROSS.
+        Normally, it is best to use `setFromOptions()` and then set
+        the SVD type from the options database rather than by using
+        this routine.  Using the options database provides the user
+        with maximum flexibility in evaluating the different available
+        methods.
         """
         CHKERR( SVDSetType(self.svd, str2cp(svd_type)) )
 
@@ -132,21 +140,23 @@ cdef class SVD(Object):
 
     def setOptionsPrefix(self, prefix):
         """
-        Sets the prefix used for searching for all SVD options in the database.
+        Sets the prefix used for searching for all SVD options in the
+        database.
 
         Parameters
         ----------
         prefix: string
-                The prefix string to prepend to all SVD option requests.
+                The prefix string to prepend to all SVD option
+                requests.
 
         Notes
         -----
-        A hyphen (-) must NOT be given at the beginning of the prefix name.
-        The first character of all runtime options is AUTOMATICALLY the
-        hyphen.
+        A hyphen (-) must NOT be given at the beginning of the prefix
+        name.  The first character of all runtime options is
+        AUTOMATICALLY the hyphen.
 
-        For example, to distinguish between the runtime options for two
-        different SVD contexts, one could call::
+        For example, to distinguish between the runtime options for
+        two different SVD contexts, one could call::
 
             S1.setOptionsPrefix("svd1_")
             S2.setOptionsPrefix("svd2_")
@@ -155,7 +165,8 @@ cdef class SVD(Object):
 
     def getOptionsPrefix(self):
         """
-        Gets the prefix used for searching for all SVD options in the database.
+        Gets the prefix used for searching for all SVD options in the
+        database.
 
         Returns
         -------
@@ -168,13 +179,14 @@ cdef class SVD(Object):
 
     def setFromOptions(self):
         """
-        Sets SVD options from the options database. This routine must be 
-        called before `setUp()` if the user is to be allowed to set the 
-        solver type.
+        Sets SVD options from the options database. This routine must
+        be called before `setUp()` if the user is to be allowed to set
+        the solver type.
 
         Notes
         -----
-        To see all options, run your program with the -help option.
+        To see all options, run your program with the ``-help``
+        option.
         """
         CHKERR( SVDSetFromOptions(self.svd) )
 
@@ -182,8 +194,8 @@ cdef class SVD(Object):
 
     def getTransposeMode(self):
         """
-        Gets the mode used to compute the transpose of the matrix associated 
-        with the singular value problem.
+        Gets the mode used to compute the transpose of the matrix
+        associated with the singular value problem.
 
         Returns
         -------
@@ -196,8 +208,8 @@ cdef class SVD(Object):
 
     def setTransposeMode(self, mode):
         """
-        Sets the mode used to compute the transpose of the matrix associated 
-        with the singular value problem.
+        Sets the mode used to compute the transpose of the matrix
+        associated with the singular value problem.
 
         Parameters
         ----------
@@ -206,15 +218,18 @@ cdef class SVD(Object):
 
         Notes
         -----
-        In the `EXPLICIT` mode, the transpose of the matrix is explicitly built.
+        In the `SVD.TransposeMode.EXPLICIT` mode, the transpose of the
+        matrix is explicitly built.
 
-        The option `IMPLICIT` does not build the transpose, but handles it
-        implicitly via `Mat.multTranspose()` operations. This is likely to be
-        more inefficient than `EXPLICIT`, both in sequential and in parallel,
-        but requires less storage.
+        The option `SVD.TransposeMode.IMPLICIT` does not build the
+        transpose, but handles it implicitly via *multTranspose()*
+        matrix operation. This is likely to be more inefficient than
+        `SVD.TransposeMode.EXPLICIT`, both in sequential and in
+        parallel, but requires less storage.
 
-        The default is `EXPLICIT` if the matrix has defined the `Mat.transpose()`
-        operation, and `IMPLICIT` otherwise.
+        The default is `SVD.TransposeMode.EXPLICIT` if the matrix has
+        defined the *transpose()* matrix operation, and
+        `SVD.TransposeMode.IMPLICIT` otherwise.
         """
         cdef SlepcSVDTransposeMode val = mode
         CHKERR( SVDSetTransposeMode(self.svd, val) )
@@ -226,7 +241,8 @@ cdef class SVD(Object):
         Returns
         -------
         which: SVD.Which enumerate
-               The singular values to be sought (either largest or smallest).
+               The singular values to be sought (either largest or
+               smallest).
         """
         cdef SlepcSVDWhich val = SVD_LARGEST
         CHKERR( SVDGetWhichSingularTriplets(self.svd, &val) )
@@ -239,7 +255,8 @@ cdef class SVD(Object):
         Parameters
         ----------
         which: SVD.Which enumerate
-               The singular values to be sought (either largest or smallest).
+               The singular values to be sought (either largest or
+               smallest).
         """
         cdef SlepcSVDWhich val = which
         CHKERR( SVDSetWhichSingularTriplets(self.svd, val) )
@@ -247,8 +264,8 @@ cdef class SVD(Object):
 
     def getTolerances(self):
         """
-        Gets the tolerance and maximum iteration count used by the default 
-        SVD convergence tests.
+        Gets the tolerance and maximum iteration count used by the
+        default SVD convergence tests.
 
         Returns
         -------
@@ -264,8 +281,8 @@ cdef class SVD(Object):
 
     def setTolerances(self, tol=None, max_it=None):
         """
-        Sets the tolerance and maximum iteration count used by the default 
-        SVD convergence tests.
+        Sets the tolerance and maximum iteration count used by the
+        default SVD convergence tests.
 
         Parameters
         ----------
@@ -276,8 +293,8 @@ cdef class SVD(Object):
 
         Notes
         -----
-        Use PETSC_DECIDE for maxits to assign a reasonably good value, which
-        is dependent on the solution method.
+        Use `DECIDE` for `max_it` to assign a reasonably good value,
+        which is dependent on the solution method.
         """
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
@@ -287,14 +304,16 @@ cdef class SVD(Object):
 
     def getDimensions(self):
         """
-        Gets the number of singular values to compute and the dimension of the subspace.
+        Gets the number of singular values to compute and the
+        dimension of the subspace.
 
         Returns
         -------
         nsv: int
              Number of singular values to compute.
         ncv: int
-             Maximum dimension of the subspace to be used by the solver.
+             Maximum dimension of the subspace to be used by the
+             solver.
         mpd: int
              Maximum dimension allowed for the projected problem.
         """
@@ -306,32 +325,36 @@ cdef class SVD(Object):
 
     def setDimensions(self, nsv=None, ncv=None, mpd=None):
         """
-        Sets the number of singular values to compute and the dimension of the subspace.
+        Sets the number of singular values to compute and the
+        dimension of the subspace.
 
         Parameters
         ----------
         nsv: int, optional
              Number of singular values to compute.
         ncv: int, optional
-             Maximum dimension of the subspace to be used by the solver.
+             Maximum dimension of the subspace to be used by the
+             solver.
         mpd: int, optional
              Maximum dimension allowed for the projected problem.
 
         Notes
         -----
-        Use PETSC_DECIDE for `ncv` and `mpd` to assign a reasonably good value, 
-        which is dependent on the solution method.
+        Use `DECIDE` for `ncv` and `mpd` to assign a reasonably good
+        value, which is dependent on the solution method.
 
-        The parameters `ncv` and `mpd` are intimately related, so that the user 
-        is advised to set one of them at most. Normal usage is the following:
+        The parameters `ncv` and `mpd` are intimately related, so that
+        the user is advised to set one of them at most. Normal usage
+        is the following:
 
-         - In cases where `nsv` is small, the user sets `ncv` (a reasonable default
-           is `2*nsv`).
+         - In cases where `nsv` is small, the user sets `ncv`
+           (a reasonable default is 2 * `nsv`).
          - In cases where `nsv` is large, the user sets `mpd`.
 
-        The value of `ncv` should always be between `nsv` and `(nsv+mpd)`, typically
-        `ncv=nsv+mpd`. If `nsv` is not too large, `mpd=nsv` is a reasonable choice, 
-        otherwise a smaller value should be used.
+        The value of `ncv` should always be between `nsv` and (`nsv` +
+        `mpd`), typically `ncv` = `nsv` + `mpd`. If `nsv` is not too
+        large, `mpd` = `nsv` is a reasonable choice, otherwise a
+        smaller value should be used.
         """
         cdef PetscInt ival1 = PETSC_IGNORE
         cdef PetscInt ival2 = PETSC_IGNORE
@@ -371,7 +394,7 @@ cdef class SVD(Object):
 
         Returns
         -------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the singular value problem.
         """
         cdef Mat A = Mat()
@@ -384,7 +407,7 @@ cdef class SVD(Object):
 
         Parameters
         ----------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the singular value problem.
         """
         CHKERR( SVDSetOperator(self.svd, A.mat) )
@@ -393,9 +416,9 @@ cdef class SVD(Object):
 
     def getInitialVector(self):
         """
-        Gets the initial vector associated with the SVD solver; if the vector
-        was not set it will return a 0 pointer or a vector randomly generated
-        by `setUp()`.
+        Gets the initial vector associated with the SVD solver; if the
+        vector was not set it will return a 0 pointer or a vector
+        randomly generated by `setUp()`.
 
         Returns
         -------
@@ -408,7 +431,8 @@ cdef class SVD(Object):
 
     def setInitialVector(self, Vec V not None):
         """
-        Sets the initial vector from which the SVD solver starts to iterate.
+        Sets the initial vector from which the SVD solver starts to
+        iterate.
 
         Parameters
         ----------
@@ -421,14 +445,14 @@ cdef class SVD(Object):
 
     def setUp(self):
         """
-        Sets up all the internal data structures necessary for the execution of 
-        the singular value solver. 
+        Sets up all the internal data structures necessary for the
+        execution of the singular value solver.
 
         Notes
         -----
-        This function need not be called explicitly in most cases, since `solve()`
-        calls it. It can be useful when one wants to measure the set-up time 
-        separately from the solve time.
+        This function need not be called explicitly in most cases,
+        since `solve()` calls it. It can be useful when one wants to
+        measure the set-up time separately from the solve time.
         """
         CHKERR( SVDSetUp(self.svd) )
 
@@ -440,8 +464,9 @@ cdef class SVD(Object):
 
     def getIterationNumber(self):
         """
-        Gets the current iteration number. If the call to `solve()` is complete, 
-        then it returns the number of iterations carried out by the solution method.
+        Gets the current iteration number. If the call to `solve()` is
+        complete, then it returns the number of iterations carried out
+        by the solution method.
 
         Returns
         -------
@@ -459,7 +484,8 @@ cdef class SVD(Object):
         Returns
         -------
         reason: SVD.ConvergedReason enumerate
-                Negative value indicates diverged, positive value converged.
+                Negative value indicates diverged, positive value
+                converged.
         """
         cdef SlepcSVDConvergedReason val = SVD_CONVERGED_ITERATING
         CHKERR( SVDGetConvergedReason(self.svd, &val) )
@@ -498,9 +524,10 @@ cdef class SVD(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Singular triplets are indexed according to the ordering 
-        criterion established with `setWhichSingularTriplets()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Singular triplets are
+        indexed according to the ordering criterion established with
+        `setWhichSingularTriplets()`.
         """
         cdef PetscReal rval = 0
         CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, NULL, NULL) )
@@ -508,7 +535,8 @@ cdef class SVD(Object):
 
     def getVectors(self, int i, Vec U not None, Vec V not None):
         """
-        Gets the i-th left and right singular vectors as computed by `solve()`.
+        Gets the i-th left and right singular vectors as computed by
+        `solve()`.
 
         Parameters
         ----------
@@ -521,18 +549,19 @@ cdef class SVD(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Singular triplets are indexed according to the ordering 
-        criterion established with `setWhichSingularTriplets()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Singular triplets are
+        indexed according to the ordering criterion established with
+        `setWhichSingularTriplets()`.
         """
         cdef PetscReal dummy = 0
         CHKERR( SVDGetSingularTriplet(self.svd, i, &dummy, U.vec, V.vec) )
 
     def getSingularTriplet(self, int i, Vec U=None, Vec V=None):
         """
-        Gets the i-th triplet of the singular value decomposition as computed
-        by `solve()`. The solution consists of the singular value and its left
-        and right singular vectors.
+        Gets the i-th triplet of the singular value decomposition as
+        computed by `solve()`. The solution consists of the singular
+        value and its left and right singular vectors.
 
         Parameters
         ----------
@@ -550,9 +579,10 @@ cdef class SVD(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Singular triplets are indexed according to the ordering 
-        criterion established with `setWhichSingularTriplets()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Singular triplets are
+        indexed according to the ordering criterion established with
+        `setWhichSingularTriplets()`.
         """
         cdef PetscReal rval = 0
         cdef PetscVec Uvec = NULL
@@ -566,7 +596,8 @@ cdef class SVD(Object):
 
     def computeRelativeError(self, int i):
         """
-        Computes the relative error bound associated with the i-th singular triplet.
+        Computes the relative error bound associated with the i-th
+        singular triplet.
 
         Parameters
         ----------
@@ -576,16 +607,19 @@ cdef class SVD(Object):
         Returns
         -------
         e: real
-           The relative error bound, computed as `sqrt(n1^2+n2^2)/sigma` where 
-           `n1 = ||A*v-sigma*u||_2`, `n2 = ||A^T*u-sigma*v||_2`, `sigma` is the
-           singular value, `u` and `v` are the left and right singular vectors. 
-           If `sigma` is too small the relative error is computed as `sqrt(n1^2+n2^2)`.
+           The relative error bound, computed as
+           ``sqrt(n1^2+n2^2)/sigma`` where ``n1 = ||A*v-sigma*u||_2``,
+           ``n2 = ||A^T*u-sigma*v||_2``, ``sigma`` is the singular
+           value, ``u`` and ``v`` are the left and right singular
+           vectors.  If ``sigma`` is too small the relative error is
+           computed as ``sqrt(n1^2+n2^2)``.
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Singular triplets are indexed according to the ordering 
-        criterion established with `setWhichSingularTriplets()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Singular triplets are
+        indexed according to the ordering criterion established with
+        `setWhichSingularTriplets()`.
         """
         cdef PetscReal rval = 0
         CHKERR( SVDComputeRelativeError(self.svd, i, &rval) )
@@ -593,8 +627,8 @@ cdef class SVD(Object):
 
     def computeResidualNorms(self, int i):
         """
-        Computes the norms of the residual vectors associated with the i-th 
-        computed singular triplet.
+        Computes the norms of the residual vectors associated with the
+        i-th computed singular triplet.
 
         Parameters
         ----------
@@ -604,11 +638,12 @@ cdef class SVD(Object):
         Returns
         -------
         norm1: real
-               The residual norm `||A*v-sigma*u||_2` where `sigma` is the 
-               singular value, `u` and `v` are the singular vectors. 
+               The residual norm ``||A*v-sigma*u||_2`` where ``sigma``
+               is the singular value, ``u`` and ``v`` are the singular
+               vectors.
         norm2: real
-               The residual norm `||A^T*u-sigma*v||_2` with the same `sigma`, 
-               `u` and `v`
+               The residual norm ``||A^T*u-sigma*v||_2`` with the same
+               ``sigma``, ``u`` and ``v``.
         """
         cdef PetscReal rval1 = 0
         cdef PetscReal rval2 = 0
@@ -617,8 +652,8 @@ cdef class SVD(Object):
 
     def getOperationCounters(self):
         """
-        Gets the total number of matrix-vector and dot products used by the
-        `SVD` object during the last `solve()` call.
+        Gets the total number of matrix-vector and dot products used
+        by the `SVD` object during the last `solve()` call.
 
         Returns
         -------
@@ -629,7 +664,8 @@ cdef class SVD(Object):
 
         Notes
         -----
-        These counters are reset to zero at each successive call to `solve()`.
+        These counters are reset to zero at each successive call to
+        `solve()`.
         """
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
@@ -640,7 +676,8 @@ cdef class SVD(Object):
 
     def setCrossEPS(self, EPS eps not None):
         """
-        Associate an eigensolver object (`EPS`) to the singular value solver.
+        Associate an eigensolver object (`EPS`) to the singular value
+        solver.
 
         Parameters
         ----------
@@ -651,8 +688,8 @@ cdef class SVD(Object):
 
     def getCrossEPS(self):
         """
-        Retrieve the eigensolver object (`EPS`) associated to the singular
-        value solver.
+        Retrieve the eigensolver object (`EPS`) associated to the
+        singular value solver.
 
         Returns
         -------
@@ -665,7 +702,8 @@ cdef class SVD(Object):
 
     def setCyclicEPS(self, EPS eps not None):
         """
-        Associate an eigensolver object (`EPS`) to the singular value solver.
+        Associate an eigensolver object (`EPS`) to the singular value
+        solver.
 
         Parameters
         ----------
@@ -676,8 +714,8 @@ cdef class SVD(Object):
 
     def getCyclicEPS(self):
         """
-        Retrieve the eigensolver object (`EPS`) associated to the singular
-        value solver.
+        Retrieve the eigensolver object (`EPS`) associated to the
+        singular value solver.
 
         Returns
         -------
@@ -690,13 +728,13 @@ cdef class SVD(Object):
 
     def setCyclicExplicitMatrix(self, flag=True):
         """
-        Indicate if the eigensolver operator `H(A) = [ 0  A ; A^T 0 ]` must be
-        computed explicitly.
+        Indicate if the eigensolver operator ``H(A) = [ 0 A ; A^T 0
+        ]`` must be computed explicitly.
 
         Parameters
         ----------
         flag: boolean
-              True if `H(A)` is built explicitly.
+              True if ``H(A)`` is built explicitly.
         """
         cdef PetscTruth tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE
@@ -704,13 +742,13 @@ cdef class SVD(Object):
 
     def getCyclicExplicitMatrix(self):
         """
-        Returns the flag indicating if `H(A) = [ 0  A ; A^T 0 ]` is built
-        explicitly.
+        Returns the flag indicating if ``H(A) = [ 0 A ; A^T 0 ]`` is
+        built explicitly.
 
         Returns
         -------
         flag: boolean
-              True if `H(A)` is built explicitly.
+              True if ``H(A)`` is built explicitly.
         """
         cdef PetscTruth tval = PETSC_FALSE
         CHKERR( SVDCyclicGetExplicitMatrix(self.svd, &tval) )
@@ -728,10 +766,11 @@ cdef class SVD(Object):
 
         Notes
         -----
-        By default, a two-sided variant is selected, which is sometimes slightly
-        more robust. However, the one-sided variant is faster because it avoids 
-        the orthogonalization associated to left singular vectors. It also saves
-        the memory required for storing such vectors.
+        By default, a two-sided variant is selected, which is
+        sometimes slightly more robust. However, the one-sided variant
+        is faster because it avoids the orthogonalization associated
+        to left singular vectors. It also saves the memory required
+        for storing such vectors.
         """
         cdef PetscTruth tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE
@@ -739,8 +778,8 @@ cdef class SVD(Object):
 
     def setTRLanczosOneSide(self, flag=True):
         """
-        Indicate if the variant of the thick-restart Lanczos method to be used is
-        one-sided or two-sided.
+        Indicate if the variant of the thick-restart Lanczos method to
+        be used is one-sided or two-sided.
 
         Parameters
         ----------
@@ -749,9 +788,10 @@ cdef class SVD(Object):
 
         Notes
         -----
-        By default, a two-sided variant is selected, which is sometimes slightly
-        more robust. However, the one-sided variant is faster because it avoids 
-        the orthogonalization associated to left singular vectors.
+        By default, a two-sided variant is selected, which is
+        sometimes slightly more robust. However, the one-sided variant
+        is faster because it avoids the orthogonalization associated
+        to left singular vectors.
         """
         cdef PetscTruth tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE

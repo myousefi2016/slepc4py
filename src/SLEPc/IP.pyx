@@ -4,8 +4,8 @@ class IPOrthoType(object):
     """
     IP orthogonalization types
 
-    CGS : Classical Gram-Schmidt
-    MGS : Modified Gram-Schmidt
+    - `CGS`: Classical Gram-Schmidt.
+    - `MGS`: Modified Gram-Schmidt.
     """
     CGS = IP_CGS_ORTH
     MGS = IP_MGS_ORTH
@@ -14,9 +14,9 @@ class IPRefineType(object):
     """
     IP orthogonalization refinement types
 
-    NEVER    : Never reorthogonalize
-    IFNEEDED : Reorthogonalize if a criterion is satisfied
-    ALWAYS   : Always reorthogonalize
+    - `NEVER`:    Never reorthogonalize.
+    - `IFNEEDED`: Reorthogonalize if a criterion is satisfied.
+    - `ALWAYS`:   Always reorthogonalize.
     """
     NEVER    = IP_ORTH_REFINE_NEVER
     IFNEEDED = IP_ORTH_REFINE_IFNEEDED
@@ -25,6 +25,9 @@ class IPRefineType(object):
 class IPBilinearForm(object):
     """
     IP bilinear form types
+
+    - `HERMITIAN`:
+    - `SYMMETRIC`:
     """
     HERMITIAN = IPINNER_HERMITIAN
     SYMMETRIC = IPINNER_SYMMETRIC
@@ -52,7 +55,8 @@ cdef class IP(Object):
         Parameters
         ----------
         viewer: Viewer, optional
-                Visualization context; if not provided, the standard output is used.
+                Visualization context; if not provided, the standard
+                output is used.
         """
         cdef PetscViewer vwr = NULL
         if viewer is not None: vwr = viewer.vwr
@@ -72,8 +76,9 @@ cdef class IP(Object):
 
         Parameters
         ----------
-        comm: MPI_Comm, optional
-              MPI communicator; if not provided, it defaults to all processes.
+        comm: Comm, optional
+              MPI communicator; if not provided, it defaults to all
+              processes.
         """
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcIP newip = NULL
@@ -83,24 +88,27 @@ cdef class IP(Object):
 
     def setOptionsPrefix(self, prefix):
         """
-        Sets the prefix used for searching for all IP options in the database.
+        Sets the prefix used for searching for all IP options in the
+        database.
 
         Parameters
         ----------
         prefix: string
-                The prefix string to prepend to all IP option requests.
+                The prefix string to prepend to all IP option
+                requests.
 
         Notes
         -----
-        A hyphen (-) must NOT be given at the beginning of the prefix name.
-        The first character of all runtime options is AUTOMATICALLY the
-        hyphen.
+        A hyphen (``-``) must NOT be given at the beginning of the
+        prefix name.  The first character of all runtime options is
+        AUTOMATICALLY the hyphen.
         """
         CHKERR( IPSetOptionsPrefix(self.ip, str2cp(prefix)) )
 
     def getOptionsPrefix(self):
         """
-        Gets the prefix used for searching for all IP options in the database.
+        Gets the prefix used for searching for all IP options in the
+        database.
 
         Returns
         -------
@@ -117,7 +125,8 @@ cdef class IP(Object):
 
         Notes
         -----
-        To see all options, run your program with the -help option.
+        To see all options, run your program with the ``-help``
+        option.
         """
         CHKERR( IPSetFromOptions(self.ip) )
 
@@ -134,7 +143,8 @@ cdef class IP(Object):
         refine: IP.RefineType enumerate
               The type of refinement.
         eta:  float
-              Parameter for selective refinement (`IFNEEDED`).
+              Parameter for selective refinement (used when the the
+              refinement type `IP.RefineType.IFNEEDED`).
         """
         cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
         cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
@@ -144,8 +154,9 @@ cdef class IP(Object):
 
     def setOrthogonalization(self, type=None, refine=None, eta=None):
         """
-        Specifies the type of orthogonalization technique to be used (classical
-        or modified Gram-Schmidt with or without refinement).
+        Specifies the type of orthogonalization technique to be used
+        (classical or modified Gram-Schmidt with or without
+        refinement).
 
 
         Parameters
@@ -159,12 +170,14 @@ cdef class IP(Object):
 
         Notes
         -----
-        The default settings work well for most problems. 
+        The default settings work well for most problems.
 
-        The parameter `eta` should be a real value between 0 and 1 (or `PETSC_DEFAULT`).
-        The value of `eta` is used only when the refinement type is `IFNEEDED`. 
+        The parameter `eta` should be a real value between ``0`` and
+        ``1`` (or `DEFAULT`).  The value of `eta` is used only when
+        the refinement type is `IP.RefineType.IFNEEDED`.
 
-        When using several processors, `MGS` is likely to result in bad scalability.
+        When using several processors, `IP.OrthoType.MGS` is likely to
+        result in bad scalability.
         """
         cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
         cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
@@ -211,7 +224,8 @@ cdef class IP(Object):
 
     def applyMatrix(self, Vec x not None, Vec y not None):
         """
-        Multiplies a vector with the matrix associated to the bilinear form.
+        Multiplies a vector with the matrix associated to the bilinear
+        form.
 
         Parameters
         ----------
@@ -222,8 +236,8 @@ cdef class IP(Object):
 
         Notes
         -----
-        If the bilinear form has no associated matrix this function copies the
-        vector.
+        If the bilinear form has no associated matrix this function
+        copies the vector.
         """
         CHKERR( IPApplyMatrix(self.ip, x.vec, y.vec) )
 
@@ -231,8 +245,8 @@ cdef class IP(Object):
 
     def norm(self, Vec x not None):
         """
-        Computes the norm of a vector as the square root of the inner product
-        `(x,x)` as defined by `innerProduct()`.
+        Computes the norm of a vector as the square root of the inner
+        product ``(x,x)`` as defined by `innerProduct()`.
 
         Parameters
         ----------
@@ -246,11 +260,12 @@ cdef class IP(Object):
 
         Notes
         -----
-        This function will usually compute the 2-norm of a vector, `||x||_2`. But
-        this behaviour may be different if using a non-standard inner product changed 
-        via `setBilinearForm()`. For example, if using the B-inner product for 
-        positive definite B, `(x,y)_B=y^H Bx`, then the computed norm is 
-        `||x||_B = sqrt( x^H Bx )`.
+        This function will usually compute the 2-norm of a vector,
+        ``||x||_2``. But this behaviour may be different if using a
+        non-standard inner product changed via
+        `setBilinearForm()`. For example, if using the B-inner product
+        for positive definite ``B`, ``(x,y)_B=y^H Bx``, then the
+        computed norm is ``||x||_B = sqrt( x^H Bx )``.
         """
         cdef PetscReal rval = 0
         CHKERR( IPNorm(self.ip, x.vec, &rval) )
@@ -274,11 +289,12 @@ cdef class IP(Object):
 
         Notes
         -----
-        This function will usually compute the standard dot product, `(x,y)=y^H x`.
-        However this behaviour may be different if changed via `setBilinearForm()`.
-        This allows use of other inner products such as the indefinite product `y^T x`
-        for complex symmetric problems or the B-inner product for positive definite B,
-        `(x,y)_B=y^H Bx`.
+        This function will usually compute the standard dot product,
+        ``(x,y)=y^H x``.  However this behaviour may be different if
+        changed via `setBilinearForm()`.  This allows use of other
+        inner products such as the indefinite product ``y^T x`` for
+        complex symmetric problems or the B-inner product for positive
+        definite ``B``, ``(x,y)_B=y^H Bx``.
         """
         cdef PetscScalar sval = 0
         CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &sval) )
@@ -290,7 +306,7 @@ cdef class IP(Object):
 
         Parameters
         ----------
-        VS: array of Vec
+        VS: list of Vec
             Set of orthonormal vectors.
         v:  Vec
             Vector to be orthogonalized, modified on return.
@@ -299,20 +315,22 @@ cdef class IP(Object):
 
         Returns
         -------
-        H:  Array of float
+        H:  list of float
             Coefficients computed during orthogonalization.
         norm: float
             The norm of the resulting vector.
         lindep: boolean
-            Flag indicating that refinement did not improve the quality
-            of orthogonalization.
+            Flag indicating that refinement did not improve the
+            quality of orthogonalization.
 
         Notes
         -----
-        This function applies an orthogonal projector to project vector `v` onto the
-        orthogonal complement of the span of the columns of `VS`.
+        This function applies an orthogonal projector to project
+        vector ``v`` onto the orthogonal complement of the span of the
+        columns of ``VS``.
 
-        On exit, `v0 = [V v]*H`, where `v0` is the original vector `v`.
+        On exit, ``v0 = [V v]*H``, where ``v0`` is the original vector
+        ``v``.
 
         This routine does not normalize the resulting vector.
         """

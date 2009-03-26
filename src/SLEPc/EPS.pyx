@@ -2,16 +2,25 @@
 
 class EPSType(object):
     """
-    EPS types
+    EPS type
 
-    KRYLOVSCHUR : Krylov-Schur (default)
-    LANCZOS     : Lanczos
-    ARNOLDI     : Arnoldi
-    SUBSPACE    : Subspace Iteration
-    POWER       : Power Iteration, Inverse Iteration, RQI
-    LAPACK      : Wrappers to dense eigensolvers in Lapack
-    ARPACK, BLZPACK, TRLAN, BLOPEX, PRIMME: Wrappers to sparse eigensolvers
-                  (should be enabled during installation of SLEPc)
+    Native sparse eigensolvers.
+
+    - `KRYLOVSCHUR`: Krylov-Schur (default).
+    - `LANCZOS`:     Lanczos.
+    - `ARNOLDI`:     Arnoldi.
+    - `SUBSPACE`:    Subspace Iteration.
+    - `POWER`:       Power Iteration, Inverse Iteration, RQI.
+    - `LAPACK`:      Wrappers to dense eigensolvers in Lapack.
+
+    Wrappers to sparse eigensolvers
+    (should be enabled during installation of SLEPc)
+
+    - `ARPACK`:
+    - `BLZPACK`:
+    - `TRLAN`:
+    - `BLOPEX`:
+    - `PRIMME`:
     """
     # provided implementations
     KRYLOVSCHUR = EPSKRYLOVSCHUR
@@ -31,11 +40,12 @@ class EPSProblemType(object):
     """
     EPS problem type
 
-    HEP    : Hermitian eigenproblem
-    NHEP   : Non-Hermitian eigenproblem
-    GHEP   : Generalized Hermitian eigenproblem
-    GNHEP  : Generalized Non-Hermitian eigenproblem
-    PGNHEP : Generalized Non-Hermitian eigenproblem with positive definite B
+    - `HEP`:    Hermitian eigenproblem.
+    - `NHEP`:   Non-Hermitian eigenproblem.
+    - `GHEP`:   Generalized Hermitian eigenproblem.
+    - `GNHEP`:  Generalized Non-Hermitian eigenproblem.
+    - `PGNHEP`: Generalized Non-Hermitian eigenproblem
+      with positive definite ``B``.
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
@@ -47,10 +57,10 @@ class EPSExtraction(object):
     """
     EPS extraction technique
 
-    RITZ             : Standard Rayleigh-Ritz extraction
-    HARMONIC         : Harmonic extraction
-    REFINED          : Refined extraction
-    REFINED_HARMONIC : Refined harmonic extraction
+    - `RITZ`:             Standard Rayleigh-Ritz extraction.
+    - `HARMONIC`:         Harmonic extraction.
+    - `REFINED`:          Refined extraction.
+    - `REFINED_HARMONIC`: Refined harmonic extraction.
     """
     RITZ             = EPS_RITZ
     HARMONIC         = EPS_HARMONIC
@@ -61,8 +71,9 @@ class EPSClass(object):
     """
     EPS class of method
 
-    ONE_SIDE  : One-sided eigensolver, computes only right eigenvectors
-    TWO_SIDE  : Two-sided eigensolver, computes both right and left eigenvectors
+
+    - `ONE_SIDE`: One-sided eigensolver, only right eigenvectors.
+    - `TWO_SIDE`: Two-sided eigensolver, right and left eigenvectors.
     """
     ONE_SIDE  = EPS_ONE_SIDE
     TWO_SIDE  = EPS_TWO_SIDE
@@ -71,12 +82,12 @@ class EPSWhich(object):
     """
     EPS desired piece of spectrum
 
-    LARGEST_MAGNITUDE  : Largest eigenvalues in magnitude
-    SMALLEST_MAGNITUDE : Smallest eigenvalues in magnitude
-    LARGEST_REAL       : Largest real parts
-    SMALLEST_REAL      : Smallest real parts
-    LARGEST_IMAGINARY  : Largest imaginary parts in magnitude
-    SMALLEST_IMAGINARY : Smallest imaginary parts in magnitude
+    - `LARGEST_MAGNITUDE`:  Largest eigenvalues in magnitude.
+    - `SMALLEST_MAGNITUDE`: Smallest eigenvalues in magnitude.
+    - `LARGEST_REAL`:       Largest real parts.
+    - `SMALLEST_REAL`:      Smallest real parts.
+    - `LARGEST_IMAGINARY`:  Largest imaginary parts in magnitude.
+    - `SMALLEST_IMAGINARY`: Smallest imaginary parts in magnitude.
     """
     LARGEST_MAGNITUDE  = EPS_LARGEST_MAGNITUDE
     SMALLEST_MAGNITUDE = EPS_SMALLEST_MAGNITUDE
@@ -88,6 +99,12 @@ class EPSWhich(object):
 class EPSConvergedReason(object):
     """
     EPS convergence reasons
+
+    - `CONVERGED_TOL`:
+    - `DIVERGED_ITS`:
+    - `DIVERGED_BREAKDOWN`:
+    - `DIVERGED_NONSYMMETRIC`:
+    - `CONVERGED_ITERATING`:
     """
     CONVERGED_TOL         = EPS_CONVERGED_TOL
     DIVERGED_ITS          = EPS_DIVERGED_ITS
@@ -97,7 +114,11 @@ class EPSConvergedReason(object):
 
 class EPSPowerShiftType(object):
     """
-    EPS Power shift type
+    EPS Power shift type.
+
+    - `CONSTANT`:
+    - `RAYLEIGH`:
+    - `WILKINSON`:
     """
     CONSTANT  = EPSPOWER_SHIFT_CONSTANT
     RAYLEIGH  = EPSPOWER_SHIFT_RAYLEIGH
@@ -106,6 +127,13 @@ class EPSPowerShiftType(object):
 class EPSLanczosReorthogType(object):
     """
     EPS Lanczos reorthogonalization type
+
+    - `LOCAL`:
+    - `FULL`:
+    - `SELECTIVE`:
+    - `PERIODIC`:
+    - `PARTIAL`:
+    - `DELAYED`:
     """
     LOCAL     =  EPSLANCZOS_REORTHOG_LOCAL
     FULL      =  EPSLANCZOS_REORTHOG_FULL
@@ -142,8 +170,9 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        viewer: Viewer, optional
-                Visualization context; if not provided, the standard output is used.
+        viewer: Viewer, optional.
+                Visualization context; if not provided, the standard
+                output is used.
         """
         cdef PetscViewer vwr = NULL
         if viewer is not None: vwr = viewer.vwr
@@ -164,7 +193,8 @@ cdef class EPS(Object):
         Parameters
         ----------
         comm: MPI_Comm, optional
-              MPI communicator; if not provided, it defaults to all processes.
+              MPI communicator; if not provided, it defaults to all
+              processes.
         """
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcEPS neweps = NULL
@@ -183,11 +213,12 @@ cdef class EPS(Object):
 
         Notes
         -----
-        See `EPSType` for available methods. The default is KRYLOVSCHUR.
-        Normally, it is best to use `setFromOptions()` and then set the EPS
-        type from the options database rather than by using this routine.
-        Using the options database provides the user with maximum flexibility
-        in evaluating the different available methods.
+        See `EPS.Type` for available methods. The default is
+        `EPS.Type.KRYLOVSCHUR`.  Normally, it is best to use
+        `setFromOptions()` and then set the EPS type from the options
+        database rather than by using this routine.  Using the options
+        database provides the user with maximum flexibility in
+        evaluating the different available methods.
         """
         CHKERR( EPSSetType(self.eps, str2cp(eps_type)) )
 
@@ -206,21 +237,23 @@ cdef class EPS(Object):
 
     def setOptionsPrefix(self, prefix):
         """
-        Sets the prefix used for searching for all EPS options in the database.
+        Sets the prefix used for searching for all EPS options in the
+        database.
 
         Parameters
         ----------
         prefix: string
-                The prefix string to prepend to all EPS option requests.
+                The prefix string to prepend to all EPS option
+                requests.
 
         Notes
         -----
-        A hyphen (-) must NOT be given at the beginning of the prefix name.
-        The first character of all runtime options is AUTOMATICALLY the
-        hyphen.
+        A hyphen (-) must NOT be given at the beginning of the prefix
+        name.  The first character of all runtime options is
+        AUTOMATICALLY the hyphen.
 
-        For example, to distinguish between the runtime options for two
-        different EPS contexts, one could call::
+        For example, to distinguish between the runtime options for
+        two different EPS contexts, one could call::
 
             E1.setOptionsPrefix("eig1_")
             E2.setOptionsPrefix("eig2_")
@@ -229,7 +262,8 @@ cdef class EPS(Object):
 
     def getOptionsPrefix(self):
         """
-        Gets the prefix used for searching for all EPS options in the database.
+        Gets the prefix used for searching for all EPS options in the
+        database.
 
         Returns
         -------
@@ -242,13 +276,14 @@ cdef class EPS(Object):
 
     def setFromOptions(self):
         """
-        Sets EPS options from the options database. This routine must be 
-        called before `setUp()` if the user is to be allowed to set the 
-        solver type.
+        Sets EPS options from the options database. This routine must
+        be called before `setUp()` if the user is to be allowed to set
+        the solver type.
 
         Notes
         -----
-        To see all options, run your program with the -help option.
+        To see all options, run your program with the ``-help``
+        option.
         """
         CHKERR( EPSSetFromOptions(self.eps) )
 
@@ -278,23 +313,27 @@ cdef class EPS(Object):
 
         Notes
         -----
-        Allowed values are: Hermitian (HEP), non-Hermitian (NHEP), generalized
-        Hermitian (GHEP), generalized non-Hermitian (GNHEP), and generalized
-        non-Hermitian with positive semi-definite B (PGNHEP).
+        Allowed values are: Hermitian (HEP), non-Hermitian (NHEP),
+        generalized Hermitian (GHEP), generalized non-Hermitian
+        (GNHEP), and generalized non-Hermitian with positive
+        semi-definite B (PGNHEP).
 
-        This function must be used to instruct SLEPc to exploit symmetry. If no
-        problem type is specified, by default a non-Hermitian problem is assumed
-        (either standard or generalized). If the user knows that the problem is
-        Hermitian (i.e. A=A^H) or generalized Hermitian (i.e. A=A^H, B=B^H, and 
-        B positive definite) then it is recommended to set the problem type so
-        that eigensolver can exploit these properties. 
+        This function must be used to instruct SLEPc to exploit
+        symmetry. If no problem type is specified, by default a
+        non-Hermitian problem is assumed (either standard or
+        generalized). If the user knows that the problem is Hermitian
+        (i.e. ``A=A^H``) or generalized Hermitian (i.e. ``A=A^H``,
+        ``B=B^H``, and ``B`` positive definite) then it is recommended
+        to set the problem type so that eigensolver can exploit these
+        properties.
         """
         cdef SlepcEPSProblemType val = problem_type
         CHKERR( EPSSetProblemType(self.eps, val) )
 
     def isGeneralized(self):
         """
-        Tells whether the EPS object corresponds to a generalized eigenvalue problem.
+        Tells whether the EPS object corresponds to a generalized
+        eigenvalue problem.
 
         Returns
         -------
@@ -307,12 +346,14 @@ cdef class EPS(Object):
 
     def isHermitian(self):
         """
-        Tells whether the EPS object corresponds to a Hermitian eigenvalue problem.
+        Tells whether the EPS object corresponds to a Hermitian
+        eigenvalue problem.
 
         Returns
         -------
         flag: boolean
-              True if the problem type set with `setProblemType()` was Hermitian.
+              True if the problem type set with `setProblemType()` was
+              Hermitian.
         """
         cdef PetscTruth tval = PETSC_FALSE
         CHKERR( EPSIsHermitian(self.eps, &tval) )
@@ -325,7 +366,7 @@ cdef class EPS(Object):
         Returns
         -------
         klass: EPS.Class enumerate
-               The class of eigensolver, either ONE_SIDE or TWO_SIDE.
+               The class of eigensolver, either one-side or two-side.
         """
         cdef SlepcEPSClass val = EPS_ONE_SIDE
         CHKERR( EPSGetClass(self.eps, &val) )
@@ -333,19 +374,21 @@ cdef class EPS(Object):
 
     def setClass(self, klass):
         """
-        Specifies the eigensolver class: either one-sided or two-sided.
+        Specifies the eigensolver class, either one-sided or
+        two-sided.
 
         Parameters
         ----------
         klass: EPS.Class enumerate
-               The class of eigensolver, either ONE_SIDE or TWO_SIDE.
+               The class of eigensolver, either one-side or two-side.
 
         Notes
         -----
-        Allowed solver classes are: one-sided (ONE_SIDE) and two-sided (TWO_SIDE).
-        One-sided eigensolvers are the standard ones, which allow the computation of
-        eigenvalues and (right) eigenvectors, whereas two-sided eigensolvers compute
-        left eigenvectors as well.
+        Allowed solver classes are: one-sided (`EPS.Class.ONE_SIDE`)
+        and two-sided (`EPS.Class.TWO_SIDE`).  One-sided eigensolvers
+        are the standard ones, which allow the computation of
+        eigenvalues and (right) eigenvectors, whereas two-sided
+        eigensolvers compute left eigenvectors as well.
         """
         cdef SlepcEPSClass val = klass
         CHKERR( EPSSetClass(self.eps, val) )
@@ -374,14 +417,14 @@ cdef class EPS(Object):
 
         Notes
         -----
-        Not all eigensolvers support all types of extraction. See the SLEPc
-        documentation for details.
+        Not all eigensolvers support all types of extraction. See the
+        SLEPc documentation for details.
 
-        By default, a standard Rayleigh-Ritz extraction is used. Other extractions
-        may be useful when computing interior eigenvalues.
+        By default, a standard Rayleigh-Ritz extraction is used. Other
+        extractions may be useful when computing interior eigenvalues.
 
-        Harmonic-type extractions are used in combination with a 'target'. See
-        `setTarget()`.
+        Harmonic-type extractions are used in combination with a
+        *target*. See `setTarget()`.
         """
         cdef SlepcEPSExtraction val = extraction
         CHKERR( EPSSetExtraction(self.eps, val) )
@@ -410,11 +453,12 @@ cdef class EPS(Object):
 
         Notes
         -----
-        Not all eigensolvers implemented in EPS account for all the possible
-        values. Also, some values make sense only for certain types of 
-        problems. If SLEPc is compiled for real numbers EPS_LARGEST_IMAGINARY
-        and SMALLEST_IMAGINARY use the absolute value of the imaginary part 
-        for eigenvalue selection.
+        Not all eigensolvers implemented in EPS account for all the
+        possible values. Also, some values make sense only for certain
+        types of problems. If SLEPc is compiled for real numbers
+        `EPS.Which.LARGEST_IMAGINARY` and
+        `EPS.Which.SMALLEST_IMAGINARY` use the absolute value of the
+        imaginary part for eigenvalue selection.
         """
         cdef SlepcEPSWhich val = which
         CHKERR( EPSSetWhichEigenpairs(self.eps, val) )
@@ -447,14 +491,14 @@ cdef class EPS(Object):
 
         Notes
         -----
-        The target is a scalar value used to determine the portion of the
-        spectrum of interest.
+        The target is a scalar value used to determine the portion of
+        the spectrum of interest.
 
-        If the target is not specified, then eigenvalues are computed according 
-        to the which parameter, see `setWhichEigenpairs()`.
-   
-        If the target is specified, then the sought-after eigenvalues are those
-        closest to the target.
+        If the target is not specified, then eigenvalues are computed
+        according to the which parameter, see `setWhichEigenpairs()`.
+
+        If the target is specified, then the sought-after eigenvalues
+        are those closest to the target.
         """
         cdef PetscScalar sval = asScalar(target)
         CHKERR( EPSSetTarget(self.eps, sval) )
@@ -463,8 +507,8 @@ cdef class EPS(Object):
 
     def getTolerances(self):
         """
-        Gets the tolerance and maximum iteration count used by the default 
-        EPS convergence tests.
+        Gets the tolerance and maximum iteration count used by the
+        default EPS convergence tests.
 
         Returns
         -------
@@ -480,8 +524,8 @@ cdef class EPS(Object):
 
     def setTolerances(self, tol=None, max_it=None):
         """
-        Sets the tolerance and maximum iteration count used by the default 
-        EPS convergence tests.
+        Sets the tolerance and maximum iteration count used by the
+        default EPS convergence tests.
 
         Parameters
         ----------
@@ -492,8 +536,8 @@ cdef class EPS(Object):
 
         Notes
         -----
-        Use PETSC_DECIDE for maxits to assign a reasonably good value, which
-        is dependent on the solution method.
+        Use `DECIDE` for maxits to assign a reasonably good value,
+        which is dependent on the solution method.
         """
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
@@ -503,14 +547,16 @@ cdef class EPS(Object):
 
     def getDimensions(self):
         """
-        Gets the number of eigenvalues to compute and the dimension of the subspace.
+        Gets the number of eigenvalues to compute and the dimension of
+        the subspace.
 
         Returns
         -------
         nev: int
              Number of eigenvalues to compute.
         ncv: int
-             Maximum dimension of the subspace to be used by the solver.
+             Maximum dimension of the subspace to be used by the
+             solver.
         mpd: int
              Maximum dimension allowed for the projected problem.
         """
@@ -522,32 +568,37 @@ cdef class EPS(Object):
 
     def setDimensions(self, nev=None, ncv=None, mpd=None):
         """
-        Sets the number of eigenvalues to compute and the dimension of the subspace.
+        Sets the number of eigenvalues to compute and the dimension of
+        the subspace.
 
         Parameters
         ----------
         nev: int, optional
              Number of eigenvalues to compute.
         ncv: int, optional
-             Maximum dimension of the subspace to be used by the solver.
+             Maximum dimension of the subspace to be used by the
+             solver.
         mpd: int, optional
              Maximum dimension allowed for the projected problem.
 
         Notes
         -----
-        Use PETSC_DECIDE for `ncv` and `mpd` to assign a reasonably good value, 
-        which is dependent on the solution method.
+        Use `DECIDE` for `ncv` and `mpd` to assign a reasonably good
+        value, which is dependent on the solution method.
 
-        The parameters `ncv` and `mpd` are intimately related, so that the user 
-        is advised to set one of them at most. Normal usage is the following:
+        The parameters `ncv` and `mpd` are intimately related, so that
+        the user is advised to set one of them at most. Normal usage
+        is the following:
 
-         - In cases where `nev` is small, the user sets `ncv` (a reasonable default
-           is `2*nev`).
-         - In cases where `nev` is large, the user sets `mpd`.
+        + In cases where `nev` is small, the user sets `ncv`
+          (a reasonable default is 2 * `nev`).
 
-        The value of `ncv` should always be between `nev` and `(nev+mpd)`, typically
-        `ncv=nev+mpd`. If `nev` is not too large, `mpd=nev` is a reasonable choice, 
-        otherwise a smaller value should be used.
+        + In cases where `nev` is large, the user sets `mpd`.
+
+        The value of `ncv` should always be between `nev` and (`nev` +
+        `mpd`), typically `ncv` = `nev` + `mpd`. If `nev` is not too
+        large, `mpd` = `nev` is a reasonable choice, otherwise a
+        smaller value should be used.
         """
         cdef PetscInt ival1 = PETSC_IGNORE
         cdef PetscInt ival2 = PETSC_IGNORE
@@ -559,8 +610,8 @@ cdef class EPS(Object):
 
     def getST(self):
         """
-        Obtain the spectral transformation (`ST`) object associated to the 
-        eigensolver object.
+        Obtain the spectral transformation (`ST`) object associated to
+        the eigensolver object.
 
         Returns
         -------
@@ -573,7 +624,8 @@ cdef class EPS(Object):
 
     def setST(self, ST st not None):
         """
-        Associates a spectral transformation object to the eigensolver.
+        Associates a spectral transformation object to the
+        eigensolver.
 
         Parameters
         ----------
@@ -584,7 +636,7 @@ cdef class EPS(Object):
 
     def getIP(self):
         """
-        Obtain the inner product object associated to the eigensolver object.
+        Obtain the inner product associated to the eigensolver.
 
         Returns
         -------
@@ -597,7 +649,7 @@ cdef class EPS(Object):
 
     def setIP(self, IP ip not None):
         """
-        Associates an inner product object to the eigensolver.
+        Associates an inner product to the eigensolver.
 
         Parameters
         ----------
@@ -612,9 +664,9 @@ cdef class EPS(Object):
 
         Returns
         -------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the eigensystem.
-        B: PETSc.Mat
+        B: Mat
            The second matrix in the case of generalized eigenproblems.
         """
         cdef Mat A = Mat()
@@ -628,9 +680,9 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the eigensystem.
-        B: PETSc.Mat, optional
+        B: Mat, optional
            The second matrix in the case of generalized eigenproblems;
            if not provided, a standard eigenproblem is assumed.
         """
@@ -644,23 +696,26 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        space: a PETSc.Vec or an array of PETSc.Vec
-               Set of basis vectors to be added to the deflation space.
+        space: a Vec or an array of Vec
+               Set of basis vectors to be added to the deflation
+               space.
         ortho: boolean, optional
-               True if basis vectors can be assumed to be mutullay orthonormal.
+               True if the basis vectors can be assumed to be mutullay
+               orthonormal.
 
         Notes
         -----
-        When a deflation space is given, the eigensolver seeks the eigensolution
-        in the restriction of the problem to the orthogonal complement of this
-        space. This can be used for instance in the case that an invariant 
-        subspace is known beforehand (such as the nullspace of the matrix).
+        When a deflation space is given, the eigensolver seeks the
+        eigensolution in the restriction of the problem to the
+        orthogonal complement of this space. This can be used for
+        instance in the case that an invariant subspace is known
+        beforehand (such as the nullspace of the matrix).
 
-        The basis vectors can be provided all at once or incrementally with
-        several calls to `attachDeflationSpace()`.
+        The basis vectors can be provided all at once or incrementally
+        with several calls to `attachDeflationSpace()`.
 
-        Set `ortho` to True if all the vectors passed in are known to be 
-        mutually orthonormal.
+        Set `ortho` to `True` if all the vectors passed in are known
+        to be mutually orthonormal.
         """
         cdef PetscInt i = 0, nds = 0
         cdef PetscVec* vds = NULL
@@ -675,7 +730,8 @@ cdef class EPS(Object):
 
     def removeDeflationSpace(self):
         """
-        Removes the deflation space previously set with `attachDeflationSpace()`.
+        Removes the deflation space previously set with
+        `attachDeflationSpace()`.
         """
         CHKERR( EPSRemoveDeflationSpace(self.eps) )
 
@@ -683,9 +739,9 @@ cdef class EPS(Object):
 
     def getInitialVector(self):
         """
-        Gets the initial vector associated with the eigensolver; if the vector 
-        was not set it will return a 0 pointer or a vector randomly generated 
-        by `setUp()`.
+        Gets the initial vector associated with the eigensolver; if
+        the vector was not set it will return a ``NULL`` vector or a
+        vector randomly generated by `setUp()`.
 
         Returns
         -------
@@ -698,7 +754,8 @@ cdef class EPS(Object):
 
     def setInitialVector(self, Vec V not None):
         """
-        Sets the initial vector from which the eigensolver starts to iterate.
+        Sets the initial vector from which the eigensolver starts to
+        iterate.
 
         Parameters
         ----------
@@ -709,9 +766,9 @@ cdef class EPS(Object):
 
     def getInitialVectorLeft(self):
         """
-        Gets the left initial vector associated with the eigensolver; if the vector 
-        was not set it will return a 0 pointer or a vector randomly generated 
-        by `setUp()`.
+        Gets the left initial vector associated with the eigensolver;
+        if the vector was not set it will return a ``NULL`` vector or
+        a vector randomly generated by `setUp()`.
 
         Returns
         -------
@@ -724,8 +781,9 @@ cdef class EPS(Object):
 
     def setInitialVectorLeft(self, Vec W not None):
         """
-        Sets the left initial vector from which the eigensolver starts to iterate,
-        corresponding to the left recurrence (two-sided solvers).
+        Sets the left initial vector from which the eigensolver starts
+        to iterate, corresponding to the left recurrence (two-sided
+        solvers).
 
         Parameters
         ----------
@@ -738,14 +796,14 @@ cdef class EPS(Object):
 
     def setUp(self):
         """
-        Sets up all the internal data structures necessary for the execution of 
-        the eigensolver. 
+        Sets up all the internal data structures necessary for the
+        execution of the eigensolver.
 
         Notes
         -----
-        This function need not be called explicitly in most cases, since `solve()`
-        calls it. It can be useful when one wants to measure the set-up time 
-        separately from the solve time.
+        This function need not be called explicitly in most cases,
+        since `solve()` calls it. It can be useful when one wants to
+        measure the set-up time separately from the solve time.
         """
         CHKERR( EPSSetUp(self.eps) )
 
@@ -757,8 +815,9 @@ cdef class EPS(Object):
 
     def getIterationNumber(self):
         """
-        Gets the current iteration number. If the call to `solve()` is complete, 
-        then it returns the number of iterations carried out by the solution method.
+        Gets the current iteration number. If the call to `solve()` is
+        complete, then it returns the number of iterations carried out
+        by the solution method.
 
         Returns
         -------
@@ -776,7 +835,8 @@ cdef class EPS(Object):
         Returns
         -------
         reason: EPS.ConvergedReason enumerate
-                Negative value indicates diverged, positive value converged.
+                Negative value indicates diverged, positive value
+                converged.
         """
         cdef SlepcEPSConvergedReason val = EPS_CONVERGED_ITERATING
         CHKERR( EPSGetConvergedReason(self.eps, &val) )
@@ -805,18 +865,17 @@ cdef class EPS(Object):
 
         Returns
         -------
-        v: array of Vec
+        subspace: list of Vec
            Basis of the invariant subspace.
 
         Notes
         -----
         This function should be called after `solve()` has finished.
 
-        The `nconv` vectors returned in `v` span an invariant subspace associated 
-        with the computed eigenvalues (`nconv` is the value returned by
-        `getConverged()`). An invariant subspace X of A satisfies Ax 
-        in X for all x in X (a similar definition applies for generalized 
-        eigenproblems). 
+        The returned vectors span an invariant subspace associated
+        with the computed eigenvalues. An invariant subspace ``X`` of
+        ``A` satisfies ``A x`` in ``X`` for all ``x`` in ``X`` (a
+        similar definition applies for generalized eigenproblems).
         """
         cdef PetscInt i = 0, ncv = 0
         cdef PetscVec v = NULL, *isp = NULL
@@ -834,8 +893,8 @@ cdef class EPS(Object):
 
     def getInvariantSubspaceLeft(self):
         """
-        Gets an orthonormal basis of the computed left invariant subspace
-        (only available in two-sided eigensolvers).
+        Gets an orthonormal basis of the computed left invariant
+        subspace (only available in two-sided eigensolvers).
 
         Returns
         -------
@@ -876,9 +935,10 @@ cdef class EPS(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Eigenpairs are indexed according to the ordering 
-        criterion established with `setWhichEigenpairs()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
@@ -900,9 +960,10 @@ cdef class EPS(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Eigenpairs are indexed according to the ordering 
-        criterion established with `setWhichEigenpairs()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
         """
         cdef PetscVec vecr = NULL
         cdef PetscVec veci = NULL
@@ -922,13 +983,15 @@ cdef class EPS(Object):
         Wr: Vec
             Placeholder for the returned left eigenvector (real part).
         Wi: Vec, optional
-            Placeholder for the returned left eigenvector (imaginary part).
+            Placeholder for the returned left eigenvector (imaginary
+            part).
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Eigenpairs are indexed according to the ordering 
-        criterion established with `setWhichEigenpairs()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
         """
         cdef PetscVec vecr = NULL
         cdef PetscVec veci = NULL
@@ -938,8 +1001,9 @@ cdef class EPS(Object):
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
         """
-        Gets the i-th solution of the eigenproblem as computed by `solve()`.
-        The solution consists of both the eigenvalue and the eigenvector.
+        Gets the i-th solution of the eigenproblem as computed by
+        `solve()`.  The solution consists of both the eigenvalue and
+        the eigenvector.
 
         Parameters
         ----------
@@ -957,9 +1021,10 @@ cdef class EPS(Object):
 
         Notes
         -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Eigenpairs are indexed according to the ordering 
-        criterion established with `setWhichEigenpairs()`.
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
@@ -974,7 +1039,8 @@ cdef class EPS(Object):
 
     def getErrorEstimate(self, int i):
         """
-        Returns the error estimate associated to the i-th computed eigenpair.
+        Returns the error estimate associated to the i-th computed
+        eigenpair.
 
         Parameters
         ----------
@@ -988,8 +1054,9 @@ cdef class EPS(Object):
 
         Notes
         -----
-        This is the error estimate used internally by the eigensolver. The actual
-        error bound can be computed with `computeRelativeError()`.
+        This is the error estimate used internally by the
+        eigensolver. The actual error bound can be computed with
+        `computeRelativeError()`.
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
@@ -997,8 +1064,8 @@ cdef class EPS(Object):
 
     def getErrorEstimateLeft(self, int i):
         """
-        Returns the left error estimate associated to the i-th computed eigenpair
-        (only available in two-sided eigensolvers).
+        Returns the left error estimate associated to the i-th
+        computed eigenpair (only available in two-sided eigensolvers).
 
         Parameters
         ----------
@@ -1012,8 +1079,9 @@ cdef class EPS(Object):
 
         Notes
         -----
-        This is the error estimate used internally by the eigensolver. The actual
-        error bound can be computed with `computeRelativeError()`.
+        This is the error estimate used internally by the
+        eigensolver. The actual error bound can be computed with
+        `computeRelativeError()`.
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &rval) )
@@ -1021,54 +1089,7 @@ cdef class EPS(Object):
 
     def computeRelativeError(self, int i):
         """
-        Computes the relative error bound associated with the i-th computed eigenpair.
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        e: real
-           The relative error bound, computed as `||Ax-kBx||_2/||kx||_2` where 
-           `k` is the eigenvalue and `x` is the eigenvector. 
-           If `k=0` the relative error is computed as `||Ax||_2/||x||_2`.
-
-        Notes
-        -----
-        The index `i` should be a value between `0` and `nconv-1` (see 
-        `getConverged()`. Eigenpairs are indexed according to the ordering 
-        criterion established with `setWhichEigenpairs()`.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
-        return toReal(rval)
-
-    def computeRelativeErrorLeft(self, int i):
-        """
-        Computes the left relative error bound associated with the i-th computed
-        eigenpair (only available in two-sided eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        e: real
-           The relative error bound, computed as `||y'A-ky'B||_2/||ky||_2` where 
-           `k` is the eigenvalue and `y` is the left eigenvector. 
-           If `k=0` the relative error is computed as `||y'A||_2/||y||_2`.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
-        return toReal(rval)
-
-    def computeResidualNorm(self, int i):
-        """
-        Computes the norm of the residual vector associated with the i-th 
+        Computes the relative error bound associated with the i-th
         computed eigenpair.
 
         Parameters
@@ -1078,19 +1099,50 @@ cdef class EPS(Object):
 
         Returns
         -------
-        norm: real
-              The residual norm, computed as `||Ax-kBx||_2` where `k` is the 
-              eigenvalue and `x` is the eigenvector. 
-              If `k=0` then the residual norm is computed as `||Ax||_2`.
+        e: real
+           The relative error bound, computed as
+           ``||Ax-kBx||_2/||kx||_2`` where ``k`` is the eigenvalue and
+           ``x`` is the eigenvector.  If ``k=0`` the relative error is
+           computed as ``||Ax||_2/||x||_2``.
+
+        Notes
+        -----
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
         """
         cdef PetscReal rval = 0
-        CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
+        CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
         return toReal(rval)
 
-    def computeResidualNormLeft(self, int i):
+    def computeRelativeErrorLeft(self, int i):
         """
-        Computes the norm of the residual vector associated with the i-th 
-        computed left eigenpair (only available in two-sided eigensolvers).
+        Computes the left relative error bound associated with the
+        i-th computed eigenpair (only available in two-sided
+        eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+        e: real
+           The relative error bound, computed as
+           ``||y'A-ky'B||_2/||ky||_2`` where ``k`` is the eigenvalue
+           and ``y`` is the left eigenvector.  If ``k=0`` the relative
+           error is computed as ``||y'A||_2/||y||_2``.
+        """
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
+        return toReal(rval)
+
+    def computeResidualNorm(self, int i):
+        """
+        Computes the norm of the residual vector associated with the
+        i-th computed eigenpair.
 
         Parameters
         ----------
@@ -1100,9 +1152,34 @@ cdef class EPS(Object):
         Returns
         -------
         norm: real
-              The residual norm, computed as `||y'A-ky'B||_2` where `k` is the 
-              eigenvalue and `y` is the left eigenvector. 
-              If `k=0` then the residual norm is computed as `||y'A||_2`.
+              The residual norm, computed as ``||Ax-kBx||_2`` where
+              ``k`` is the eigenvalue and ``x`` is the eigenvector.
+              If ``k=0`` then the residual norm is computed as
+              ``||Ax||_2``.
+        """
+        cdef PetscReal rval = 0
+        CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
+        return toReal(rval)
+
+    def computeResidualNormLeft(self, int i):
+        """
+        Computes the norm of the residual vector associated with the
+        i-th computed left eigenpair (only available in two-sided
+        eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be considered.
+
+        Returns
+        -------
+
+        norm: real
+              The residual norm, computed as ``||y'A-ky'B||_2`` where
+              ``k`` is the eigenvalue and ``y`` is the left
+              eigenvector.  If ``k=0`` then the residual norm is
+              computed as ``||y'A||_2``.
         """
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
@@ -1110,8 +1187,9 @@ cdef class EPS(Object):
 
     def getOperationCounters(self):
         """
-        Gets the total number of operator applications, inner product operations
-        and linear iterations used by the `ST` object during the last `solve()` call.
+        Gets the total number of operator applications, inner product
+        operations and linear iterations used by the `ST` object
+        during the last `solve()` call.
 
         Returns
         -------
@@ -1124,12 +1202,14 @@ cdef class EPS(Object):
 
         Notes
         -----
-        When the eigensolver algorithm invokes `ST.apply()` then a linear system 
-        must be solved (except in the case of standard eigenproblems and shift
-        transformation). The number of iterations required in this solve is
-        accumulated into a counter whose value is returned by this function.
+        When the eigensolver algorithm invokes `ST.apply()` then a
+        linear system must be solved (except in the case of standard
+        eigenproblems and shift transformation). The number of
+        iterations required in this solve is accumulated into a
+        counter whose value is returned by this function.
 
-        These counters are reset to zero at each successive call to `solve()`.
+        These counters are reset to zero at each successive call to
+        `solve()`.
         """
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
@@ -1141,8 +1221,9 @@ cdef class EPS(Object):
 
     def setPowerShiftType(self, shift):
         """
-        Sets the type of shifts used during the power iteration. This can be used
-        to emulate the Rayleigh Quotient Iteration (RQI) method.
+        Sets the type of shifts used during the power iteration. This
+        can be used to emulate the Rayleigh Quotient Iteration (RQI)
+        method.
 
         Parameters
         ----------
@@ -1151,14 +1232,18 @@ cdef class EPS(Object):
 
         Notes
         -----
-        This call is only relevant if the type was set to `POWER` with `setType()`.
+        This call is only relevant if the type was set to
+        `EPS.Type.POWER` with `setType()`.
 
-        By default, shifts are constant (CONSTANT) and the iteration is the simple
-        power method (or inverse iteration if a shift-and-invert transformation is
-        being used).
+        By default, shifts are constant
+        (`EPS.PowerShiftType.CONSTANT`) and the iteration is the
+        simple power method (or inverse iteration if a
+        shift-and-invert transformation is being used).
 
-        A variable shift can be specified (RAYLEIGH or WILKINSON). In this case,
-        the iteration behaves rather like a cubic converging method as RQI.
+        A variable shift can be specified
+        (`EPS.PowerShiftType.RAYLEIGH` or
+        `EPS.PowerShiftType.WILKINSON`). In this case, the iteration
+        behaves rather like a cubic converging method as RQI.
         """
         cdef SlepcEPSPowerShiftType val = shift
         CHKERR( EPSPowerSetShiftType(self.eps, val) )
@@ -1178,7 +1263,8 @@ cdef class EPS(Object):
 
     def setArnoldiDelayed(self, delayed):
         """
-        Activates or deactivates delayed reorthogonalization in the Arnoldi iteration.
+        Activates or deactivates delayed reorthogonalization in the
+        Arnoldi iteration.
 
         Parameters
         ----------
@@ -1187,11 +1273,13 @@ cdef class EPS(Object):
 
         Notes
         -----
-        This call is only relevant if the type was set to `ARNOLDI` with `setType()`.
+        This call is only relevant if the type was set to
+        `EPS.Type.ARNOLDI` with `setType()`.
 
-        Delayed reorthogonalization is an aggressive optimization for the Arnoldi
-        eigensolver than may provide better scalability, but sometimes makes the
-        solver converge less than the default algorithm.
+        Delayed reorthogonalization is an aggressive optimization for
+        the Arnoldi eigensolver than may provide better scalability,
+        but sometimes makes the solver converge less than the default
+        algorithm.
         """
         cdef PetscTruth val = PETSC_FALSE
         if delayed: val = PETSC_TRUE
@@ -1199,7 +1287,8 @@ cdef class EPS(Object):
 
     def getArnoldiDelayed(self):
         """
-        Gets the type of reorthogonalization used during the Arnoldi iteration. 
+        Gets the type of reorthogonalization used during the Arnoldi
+        iteration.
 
         Returns
         -------
@@ -1212,7 +1301,8 @@ cdef class EPS(Object):
 
     def setLanczosReorthogType(self, reorthog):
         """
-        Sets the type of reorthogonalization used during the Lanczos iteration.
+        Sets the type of reorthogonalization used during the Lanczos
+        iteration.
 
         Parameters
         ----------
@@ -1221,21 +1311,24 @@ cdef class EPS(Object):
 
         Notes
         -----
-        This call is only relevant if the type was set to `LANCZOS` with `setType()`.
+        This call is only relevant if the type was set to
+        `EPS.Type.LANCZOS` with `setType()`.
         """
         cdef SlepcEPSLanczosReorthogType val = reorthog
         CHKERR( EPSLanczosSetReorthog(self.eps, val) )
 
     def getLanczosReorthogType(self):
         """
-        Gets the type of reorthogonalization used during the Lanczos iteration.
+        Gets the type of reorthogonalization used during the Lanczos
+        iteration.
 
         Returns
         -------
         reorthog: EPS.LanczosReorthogType enumerate
                   The type of reorthogonalization.
         """
-        cdef SlepcEPSLanczosReorthogType val = EPSLANCZOS_REORTHOG_LOCAL
+        cdef SlepcEPSLanczosReorthogType val = \
+            EPSLANCZOS_REORTHOG_LOCAL
         CHKERR( EPSLanczosGetReorthog(self.eps, &val) )
         return val
 

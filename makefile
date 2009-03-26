@@ -68,8 +68,9 @@ sphinx:
 EPYDOCBUILD = ${PYTHON} ./conf/epydocify.py
 EPYDOCOPTS  =
 epydoc:
+	${PYTHON} -c 'import petsc4py.PETSc'
 	mkdir -p docs/html/api
-	${EPYDOCBUILD} ${EPYDOCOPTS} -o docs/html/api 
+	${EPYDOCBUILD} ${EPYDOCOPTS} --html -o docs/html/api 
 
 
 sdist: src docs

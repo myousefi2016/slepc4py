@@ -4,31 +4,37 @@ class STType(object):
     """
     ST types
 
-    SHELL  : Shell type for allowing user-defined spectral transformations
-    SHIFT  : Shift from origin
-    SINV   : Shift-and-invert
-    CAYLEY : Cayley transform
-    FOLD   : Folded spectrum
+    - `SHIFT`:  Shift from origin.
+    - `SINV`:   Shift-and-invert.
+    - `CAYLEY`: Cayley transform.
+    - `FOLD`:   Folded spectrum.
+    - `SHELL`:  User-defined.
     """
-    SHELL  = STSHELL
     SHIFT  = STSHIFT
     SINV   = STSINV
     CAYLEY = STCAYLEY
     FOLD   = STFOLD
+    SHELL  = STSHELL
 
 class STMatMode(object):
     """
     ST matrix mode
 
-    COPY    : A working copy of the matrix is created
-    INPLACE : The operation is computed in-place
-    SHELL   : The matrix `A-sigma B` is handled as an implicit matrix.
+    - `COPY`:    A working copy of the matrix is created.
+    - `INPLACE`: The operation is computed in-place.
+    - `SHELL`:   The matrix ``A-sigma*B`` is handled as an
+      implicit matrix.
     """
     COPY    = STMATMODE_COPY
     INPLACE = STMATMODE_INPLACE
     SHELL   = STMATMODE_SHELL
 
 class STMatStructure(object):
+    """
+    - `SAME`: Same non-zero pattern.
+    - `SUBSET`: Subset of non-zero pattern.
+    - `DIFFERENT`: Different non-zero pattern.
+    """
     # native
     SAME_NONZERO_PATTERN      = MAT_SAME_NONZERO_PATTERN
     DIFFERENT_NONZERO_PATTERN = MAT_DIFFERENT_NONZERO_PATTERN
@@ -61,7 +67,8 @@ cdef class ST(Object):
         Parameters
         ----------
         viewer: Viewer, optional
-                Visualization context; if not provided, the standard output is used.
+                Visualization context; if not provided, the standard
+                output is used.
         """
         cdef PetscViewer vwr = NULL
         if viewer is not None: vwr = viewer.vwr
@@ -81,8 +88,9 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        comm: MPI_Comm, optional
-              MPI communicator; if not provided, it defaults to all processes.
+        comm: Comm, optional
+              MPI communicator; if not provided, it defaults to all
+              processes.
         """
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcST newst = NULL
@@ -101,12 +109,12 @@ cdef class ST(Object):
 
         Notes
         -----
-        See `STType` for available methods. The default is `SHIFT` with a zero
-        shift.
-        Normally, it is best to use `setFromOptions()` and then set the ST
-        type from the options database rather than by using this routine.
-        Using the options database provides the user with maximum flexibility
-        in evaluating the different available methods.
+        See `ST.Type` for available methods. The default is
+        `ST.Type.SHIFT` with a zero shift.  Normally, it is best to
+        use `setFromOptions()` and then set the ST type from the
+        options database rather than by using this routine.  Using the
+        options database provides the user with maximum flexibility in
+        evaluating the different available methods.
         """
         CHKERR( STSetType(self.st, str2cp(st_type)) )
 
@@ -125,24 +133,27 @@ cdef class ST(Object):
 
     def setOptionsPrefix(self, prefix):
         """
-        Sets the prefix used for searching for all ST options in the database.
+        Sets the prefix used for searching for all ST options in the
+        database.
 
         Parameters
         ----------
         prefix: string
-                The prefix string to prepend to all ST option requests.
+                The prefix string to prepend to all ST option
+                requests.
 
         Notes
         -----
-        A hyphen (-) must NOT be given at the beginning of the prefix name.
-        The first character of all runtime options is AUTOMATICALLY the
-        hyphen.
+        A hyphen (``-``) must NOT be given at the beginning of the
+        prefix name.  The first character of all runtime options is
+        AUTOMATICALLY the hyphen.
         """
         CHKERR( STSetOptionsPrefix(self.st, str2cp(prefix)) )
 
     def getOptionsPrefix(self):
         """
-        Gets the prefix used for searching for all ST options in the database.
+        Gets the prefix used for searching for all ST options in the
+        database.
 
         Returns
         -------
@@ -155,9 +166,9 @@ cdef class ST(Object):
 
     def setFromOptions(self):
         """
-        Sets ST options from the options database. This routine must be 
-        called before `setUp()` if the user is to be allowed to set the 
-        solver type.
+        Sets ST options from the options database. This routine must
+        be called before `setUp()` if the user is to be allowed to set
+        the solver type.
 
         Notes
         -----
@@ -178,8 +189,9 @@ cdef class ST(Object):
 
         Notes
         -----
-        In some spectral transformations, changing the shift may have associated
-        a lot of work, for example recomputing a factorization.
+        In some spectral transformations, changing the shift may have
+        associated a lot of work, for example recomputing a
+        factorization.
         """
         cdef PetscScalar sval = asScalar(shift)
         CHKERR( STSetShift(self.st, sval) )
@@ -209,32 +221,36 @@ cdef class ST(Object):
 
         Notes
         -----
-        By default (`COPY`), a copy of matrix `A` is made and then this copy
-        is shifted explicitly, e.g. `A <- (A - s B)`. 
+        By default (`ST.MatMode.COPY`), a copy of matrix ``A`` is made
+        and then this copy is shifted explicitly, e.g. ``A <- (A - s
+        B)``.
 
-        With `INPLACE`, the original matrix `A` is shifted at `setUp()` and
-        unshifted at the end of the computations. With respect to the previous
-        one, this mode avoids a copy of matrix `A`. However, a backdraw is
-        that the recovered matrix might be slightly different from the original
+        With `ST.MatMode.INPLACE`, the original matrix ``A`` is
+        shifted at `setUp()` and unshifted at the end of the
+        computations. With respect to the previous one, this mode
+        avoids a copy of matrix ``A``. However, a backdraw is that the
+        recovered matrix might be slightly different from the original
         one (due to roundoff).
 
-        With `SHELL`, the solver works with an implicit shell matrix that
-        represents the shifted matrix. This mode is the most efficient in
-        creating the shifted matrix but it places serious limitations to the 
-        linear solves performed in each iteration of the eigensolver (typically,
-        only interative solvers with Jacobi preconditioning can be used).
-   
-        In the case of generalized problems, in the two first modes the matrix
-        `A - s B` has to be computed explicitly. The efficiency of this computation 
-        can be controlled with `setMatStructure()`.
+        With `ST.MatMode.SHELL`, the solver works with an implicit
+        shell matrix that represents the shifted matrix. This mode is
+        the most efficient in creating the shifted matrix but it
+        places serious limitations to the linear solves performed in
+        each iteration of the eigensolver (typically, only interative
+        solvers with Jacobi preconditioning can be used).
+
+        In the case of generalized problems, in the two first modes
+        the matrix ``A - s B`` has to be computed explicitly. The
+        efficiency of this computation can be controlled with
+        `setMatStructure()`.
         """
         cdef SlepcSTMatMode val = mode
         CHKERR( STSetMatMode(self.st, val) )
 
     def getMatMode(self):
         """
-        Gets a flag that indicates how the matrix is being shifted in the
-        shift-and-invert and Cayley spectral transformations.
+        Gets a flag that indicates how the matrix is being shifted in
+        the shift-and-invert and Cayley spectral transformations.
 
         Returns
         -------
@@ -251,9 +267,9 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the eigensystem.
-        B: PETSc.Mat, optional
+        B: Mat, optional
            The second matrix in the case of generalized eigenproblems;
            if not provided, a standard eigenproblem is assumed.
         """
@@ -267,9 +283,9 @@ cdef class ST(Object):
 
         Returns
         -------
-        A: PETSc.Mat
+        A: Mat
            The matrix associated with the eigensystem.
-        B: PETSc.Mat
+        B: Mat
            The second matrix in the case of generalized eigenproblems.
         """
         cdef Mat A = Mat()
@@ -279,28 +295,32 @@ cdef class ST(Object):
 
     def setMatStructure(self, structure):
         """
-        Sets an internal MatStructure attribute to indicate which is the relation
-        of the sparsity pattern of the two matrices A and B constituting the
-        generalized eigenvalue problem. This function has no effect in the case
-        of standard eigenproblems.
+        Sets an internal MatStructure attribute to indicate which is
+        the relation of the sparsity pattern of the two matrices ``A``
+        and ``B`` constituting the generalized eigenvalue
+        problem. This function has no effect in the case of standard
+        eigenproblems.
 
         Parameters
         ----------
         structure: ST.MatStructure enumerate
-                   Either `SAME`, `DIFFERENT`, or `SUBSET`.
+                   Either same, different, or a subset of the non-zero
+                   sparsity pattern.
 
         Notes
         -----
-        By default, the sparsity patterns are assumed to be different. If the
-        patterns are equal or a subset then it is recommended to set this attribute
-        for efficiency reasons (in particular, for internal `Mat.AXPY()` operations).
+        By default, the sparsity patterns are assumed to be
+        different. If the patterns are equal or a subset then it is
+        recommended to set this attribute for efficiency reasons (in
+        particular, for internal *AXPY()* matrix operations).
         """
         cdef PetscMatStructure val = structure
         CHKERR( STSetMatStructure(self.st, val) )
 
     def setKSP(self, KSP ksp not None):
         """
-        Sets the KSP object associated with the spectral transformation.
+        Sets the KSP object associated with the spectral
+        transformation.
 
         Parameters
         ----------
@@ -311,7 +331,8 @@ cdef class ST(Object):
 
     def getKSP(self):
         """
-        Gets the KSP object associated with the spectral transformation.
+        Gets the KSP object associated with the spectral
+        transformation.
 
         Returns
         -------
@@ -320,9 +341,9 @@ cdef class ST(Object):
 
         Notes
         -----
-        On output, the value of `ksp` can be `PETSC_NULL` if the combination of 
-        eigenproblem type and selected transformation does not require to 
-        solve a linear system of equations.
+        On output, the internal value of KSP can be ``NULL`` if the
+        combination of eigenproblem type and selected transformation
+        does not require to solve a linear system of equations.
         """
         cdef KSP ksp = KSP()
         CHKERR( STGetKSP(self.st, &ksp.ksp) )
@@ -338,9 +359,9 @@ cdef class ST(Object):
 
     def apply(self, Vec x not None, Vec y not None):
         """
-        Applies the spectral transformation operator to a vector, for instance
-        `(A - sB)^-1 B` in the case of the shift-and-invert tranformation and
-        generalized eigenproblem.
+        Applies the spectral transformation operator to a vector, for
+        instance ``(A - sB)^-1 B`` in the case of the shift-and-invert
+        tranformation and generalized eigenproblem.
 
         Parameters
         ----------
@@ -353,9 +374,9 @@ cdef class ST(Object):
 
     def applyTranspose(self, Vec x not None, Vec y not None):
         """
-        Applies the transpose of the operator to a vector, for instance
-        `B^T(A - sB)^-T` in the case of the shift-and-invert tranformation and
-        generalized eigenproblem.
+        Applies the transpose of the operator to a vector, for
+        instance ``B^T(A - sB)^-T`` in the case of the
+        shift-and-invert tranformation and generalized eigenproblem.
 
         Parameters
         ----------
@@ -370,7 +391,8 @@ cdef class ST(Object):
 
     def setCayleyAntishift(self, tau):
         """
-        Sets the value of the anti-shift for the Cayley spectral transformation.
+        Sets the value of the anti-shift for the Cayley spectral
+        transformation.
 
         Parameters
         ----------
@@ -379,9 +401,11 @@ cdef class ST(Object):
 
         Notes
         -----
-        In the generalized Cayley transform, the operator can be expressed as
-        `OP = inv(A - sigma B)*(A + tau B)`. This function sets the value of `tau`.
-        Use `setShift()` for setting `sigma`.
+
+        In the generalized Cayley transform, the operator can be
+        expressed as ``OP = inv(A - sigma B)*(A + tau B)``. This
+        function sets the value of `tau`.  Use `setShift()` for
+        setting ``sigma``.
         """
         cdef PetscScalar sval = asScalar(tau)
         CHKERR( STCayleySetAntishift(self.st, sval) )
@@ -393,7 +417,8 @@ cdef class ST(Object):
         Parameters
         ----------
         left: boolean
-              True if the wanted eigenvalues are on the left side of the shift.
+              True if the wanted eigenvalues are on the left side
+              of the shift.
         """
         cdef PetscTruth tval = PETSC_FALSE
         if left: tval = PETSC_TRUE
