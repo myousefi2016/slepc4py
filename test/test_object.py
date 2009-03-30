@@ -4,7 +4,7 @@ import unittest
 
 # --------------------------------------------------------------------
 
-class TestObjectBase(object):
+class BaseTestObject(object):
 
     CLASS, FACTORY = None, 'create'
     TARGS, KARGS = (), {}
@@ -16,6 +16,17 @@ class TestObjectBase(object):
 
     def tearDown(self):
         self.obj = None
+
+    def testTypeRegistry(self):
+        type_reg = PETSc.__type_registry__
+        cookie = self.obj.getCookie()
+        self.assertTrue(type_reg[cookie] is self.CLASS )
+
+    def testLogClass(self):
+        name = self.CLASS.__name__
+        logcls = PETSc.Log.Class(name)
+        cookie = self.obj.getCookie()
+        self.assertEqual(logcls.id, cookie)
 
     def testClass(self):
         self.assertTrue(isinstance(self.obj, self.CLASS))
@@ -93,16 +104,16 @@ class TestObjectBase(object):
 
 # --------------------------------------------------------------------
 
-class TestObjectEPS(TestObjectBase, unittest.TestCase):
+class TestObjectEPS(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.EPS
 
-class TestObjectSVD(TestObjectBase, unittest.TestCase):
+class TestObjectSVD(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.SVD
 
-class TestObjectST(TestObjectBase, unittest.TestCase):
+class TestObjectST(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.ST
 
-class TestObjectIP(TestObjectBase, unittest.TestCase):
+class TestObjectIP(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.IP
 
 # --------------------------------------------------------------------
