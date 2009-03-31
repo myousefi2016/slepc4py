@@ -28,7 +28,7 @@ subject to change at any time.
 
   + NumPy_ 1.0.1 and above.
 
-  + petsc4py_ 1.0.0 and above.
+  + petsc4py_ (latest release).
 
 .. _PETSc:    http://www.mcs.anl.gov/petsc/
 .. _SLEPc:    http://www.grycap.upv.es/slepc/
