@@ -1,6 +1,5 @@
-# Author:    Lisandro Dalcin
-# Contact:   dalcinl@gmail.com
-# Copyright: This module has been placed in the public domain.
+# Author:  Lisandro Dalcin
+# Contact: dalcinl@gmail.com
 
 """
 Command line access to the SLEPc Options Database.

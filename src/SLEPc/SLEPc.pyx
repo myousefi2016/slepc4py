@@ -144,8 +144,7 @@ cdef extern from "stdio.h" nogil:
     int fprintf(FILE *, char *, ...)
 
 cdef int initialize(object args) except -1:
-    if (<int>SlepcInitializeCalled):
-        return 1
+    if (<int>SlepcInitializeCalled): return 1
     # initialize SLEPC
     CHKERR( SlepcInitialize(NULL, NULL, NULL, NULL) )
     # register finalization function

@@ -1,5 +1,5 @@
-from petsc4py import PETSc
 from slepc4py import SLEPc
+from petsc4py import PETSc
 import unittest
 
 # --------------------------------------------------------------------

@@ -1,6 +1,7 @@
-# Author:    Lisandro Dalcin
-# Contact:   dalcinl@gmail.com
-# Copyright: This module has been placed in the public domain.
+# Author:  Lisandro Dalcin
+# Contact: dalcinl@gmail.com
+
+# --------------------------------------------------------------------
 
 """
 SLEPc for Python
@@ -19,8 +20,6 @@ a large, sparse, rectangular matrix.
 .. _PETSc: http://www.mcs.anl.gov/petsc
 """
 
-# --------------------------------------------------------------------
-
 __author__    = 'Lisandro Dalcin'
 __version__   = '1.0.0'
 __credits__   = 'SLEPc Team <slepc-maint@grycap.upv.es>'
@@ -38,10 +37,11 @@ def init(args=None, arch=None):
     .. note:: This function should be called only once, typically at
        the very beginning of the bootstrap script of an application.
     """
-    import petsc4py, slepc4py.lib
-    path, arch  = slepc4py.lib.getPathArchSLEPc(arch)
-    petsc4py.init(args, arch)
+    import slepc4py.lib
     SLEPc = slepc4py.lib.ImportSLEPc(arch)
+    PETSc = slepc4py.lib.ImportPETSc(arch)
+    args  = slepc4py.lib.getInitArgs(args)
+    PETSc._initialize(args)
     SLEPc._initialize(args)
 
 # --------------------------------------------------------------------

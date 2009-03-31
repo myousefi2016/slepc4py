@@ -1,6 +1,10 @@
 ARCH = None
 from slepc4py.lib import ImportSLEPc
+from slepc4py.lib import ImportPETSc
 SLEPc = ImportSLEPc(ARCH)
-del ARCH, ImportSLEPc
+PETSc = ImportPETSc(ARCH)
+PETSc._initialize()
 SLEPc._initialize()
-del SLEPc
+del SLEPc, PETSc
+del ImportSLEPc, ImportPETSc
+del ARCH

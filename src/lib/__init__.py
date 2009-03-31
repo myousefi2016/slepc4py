@@ -1,6 +1,5 @@
-# Author:    Lisandro Dalcin
-# Contact:   dalcinl@gmail.com
-# Copyright: This module has been placed in the public domain.
+# Author:  Lisandro Dalcin
+# Contact: dalcinl@gmail.com
 
 # --------------------------------------------------------------------
 
@@ -22,7 +21,8 @@ environmental variable, or a configuration file.
 
 # --------------------------------------------------------------------
 
-from petsc4py.lib import ImportPETSc, Import, getPathArch
+from petsc4py.lib import ImportPETSc
+from petsc4py.lib import Import, getPathArch, getInitArgs
 
 
 def ImportSLEPc(arch=None):
