@@ -97,7 +97,7 @@ def main():
 
 if __name__ == '__main__':
     import sys, os
-    C_SOURCE = os.path.join('src', 'slepc4py_SLEPc.c')
+    C_SOURCE = os.path.join('src', 'slepc4py.SLEPc.c')
     def cython_help():
         if os.path.exists(C_SOURCE): return
         warn = lambda msg='': sys.stderr.write(msg+'\n')

@@ -35,9 +35,9 @@ distclean: clean docsclean
 	-${RM} `find . -name '*.py[co]'`
 
 srcclean:
-	-${RM} src/slepc4py_SLEPc.c
-	-${RM} src/include/slepc4py/slepc4py_SLEPc.h
-	-${RM} src/include/slepc4py/slepc4py_SLEPc_api.h
+	-${RM} src/slepc4py.SLEPc.c
+	-${RM} src/include/slepc4py/slepc4py.SLEPc.h
+	-${RM} src/include/slepc4py/slepc4py.SLEPc_api.h
 
 docsclean:
 	-${RM} -r docs/html docs/*.pdf
@@ -51,8 +51,8 @@ uninstall:
 CY_SRC_PXD = $(wildcard src/include/slepc4py/*.pxd)
 CY_SRC_PXI = $(wildcard src/SLEPc/*.pxi)
 CY_SRC_PYX = $(wildcard src/SLEPc/*.pyx)
-src/SLEPc.c: src/slepc4py_SLEPc.c
-src/slepc4py_SLEPc.c: ${CY_SRC_PXD} ${CY_SRC_PXI} ${CY_SRC_PYX}
+src/SLEPc.c: src/slepc4py.SLEPc.c
+src/slepc4py.SLEPc.c: ${CY_SRC_PXD} ${CY_SRC_PXI} ${CY_SRC_PYX}
 	${PYTHON} ./conf/cythonize.py
 
 cython:
