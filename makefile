@@ -1,15 +1,12 @@
 .PHONY: default \
 	src cython \
-	config build test install \
-	docs sphinx sphinx-html sphinx-pdf epydoc \
-	sdist \
+	config build test install sdist \
+	docs rst2html sphinx sphinx-html sphinx-pdf epydoc epydoc-html \
 	clean distclean srcclean docsclean fullclean uninstall
 
 PYTHON = python
 
 default: build
-
-src: src/SLEPc.c
 
 config: 
 	${PYTHON} setup.py config ${CONFIGOPT}
@@ -23,7 +20,9 @@ test:
 install: build
 	${PYTHON} setup.py install ${INSTALLOPT} --home=${HOME}
 
-docs: sphinx epydoc
+
+sdist: src docs
+	${PYTHON} setup.py sdist ${SDISTOPT}
 
 clean:
 	${PYTHON} setup.py clean --all
@@ -34,19 +33,20 @@ distclean: clean docsclean
 	-${RM} `find . -name '*~'`
 	-${RM} `find . -name '*.py[co]'`
 
-srcclean:
-	-${RM} src/slepc4py.SLEPc.c
-	-${RM} src/include/slepc4py/slepc4py.SLEPc.h
-	-${RM} src/include/slepc4py/slepc4py.SLEPc_api.h
-
-docsclean:
-	-${RM} -r docs/html docs/*.pdf
-
 fullclean: distclean srcclean docsclean
 
 uninstall:
 	-${RM} -r ${HOME}/lib/python/slepc4py
 	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
+
+# ----
+
+src: src/SLEPc.c
+
+srcclean:
+	-${RM} src/slepc4py.SLEPc.c
+	-${RM} src/include/slepc4py/slepc4py.SLEPc.h
+	-${RM} src/include/slepc4py/slepc4py.SLEPc_api.h
 
 CY_SRC_PXD = $(wildcard src/include/slepc4py/*.pxd)
 CY_SRC_PXI = $(wildcard src/SLEPc/*.pxi)
@@ -58,14 +58,29 @@ src/slepc4py.SLEPc.c: ${CY_SRC_PXD} ${CY_SRC_PXI} ${CY_SRC_PYX}
 cython:
 	${PYTHON} ./conf/cythonize.py
 
+# ----
+
+docs: rst2html sphinx epydoc
+
+docsclean:
+	-${RM} docs/*.html docs/*.pdf
+	-${RM} -r docs/usrman docs/apiref
+
+RST2HTML = rst2html
+RST2HTMLOPTS = --no-compact-lists --cloak-email-addresses
+rst2html:
+#	${RST2HTML} ${RST2HTMLOPTS} docs/index.rst > docs/index.html
+	${RST2HTML} ${RST2HTMLOPTS} LICENSE.txt    > docs/LICENSE.html
+	${RST2HTML} ${RST2HTMLOPTS} HISTORY.txt    > docs/HISTORY.html
+
 SPHINXBUILD = sphinx-build
 SPHINXOPTS  =
 sphinx: sphinx-html sphinx-pdf
 sphinx-html:
 	${PYTHON} -c 'import slepc4py.SLEPc'
-	mkdir -p build/doctrees docs/html/man
+	mkdir -p build/doctrees docs/usrman
 	${SPHINXBUILD} -b html -d build/doctrees ${SPHINXOPTS} \
-	docs/source docs/html/man
+	docs/source docs/usrman
 sphinx-pdf:
 	${PYTHON} -c 'import slepc4py.SLEPc'
 	mkdir -p build/doctrees build/latex
@@ -76,11 +91,10 @@ sphinx-pdf:
 
 EPYDOCBUILD = ${PYTHON} ./conf/epydocify.py
 EPYDOCOPTS  =
-epydoc:
+epydoc: epydoc-html
+epydoc-html:
 	${PYTHON} -c 'import slepc4py.SLEPc'
-	mkdir -p docs/html/api
-	${EPYDOCBUILD} ${EPYDOCOPTS} --html -o docs/html/api 
+	mkdir -p docs/apiref
+	${EPYDOCBUILD} ${EPYDOCOPTS} -o docs/apiref
 
-
-sdist: src docs
-	${PYTHON} setup.py sdist ${SDISTOPT}
+# ----
