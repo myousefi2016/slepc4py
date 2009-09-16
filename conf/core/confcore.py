@@ -122,17 +122,6 @@ class PetscConfig:
         extension.define_macros.extend(macros)
         # includes and libraries
         petsc_inc = cfgutils.flaglist(self['PETSC_INCLUDE'])
-        # --- some hackery for petsc 2.3.2 ---
-        has_petsc_232 = False
-        bmake_dir = os.path.join(self['PETSC_DIR'], 'bmake')
-        incprv_dir = os.path.join(self['PETSC_DIR'], 'include', 'private')
-        if os.path.isdir(bmake_dir) and os.path.isdir(incprv_dir):
-            matimpl_h = os.path.join(incprv_dir, 'matimpl.h')
-            if not os.path.exists(matimpl_h): has_petsc_232 = True
-        if has_petsc_232:
-            include_dirs = petsc_inc.get('include_dirs',[])
-            include_dirs.append('src/include/compat/petsc232/impl')
-        # -------------------------------------
         lib_info = (self['PETSC_LIB_DIR'], self['PETSC_LIB_BASIC'])
         petsc_lib = cfgutils.flaglist('-L%s %s' % lib_info)
         petsc_lib['runtime_library_dirs'].append(self['PETSC_LIB_DIR'])
@@ -220,6 +209,8 @@ cmd_petsc_opts = [
 
 class config(_config):
 
+    Configure = PetscConfig
+
     user_options = _config.user_options + cmd_petsc_opts
 
     def initialize_options(self):
@@ -227,20 +218,23 @@ class config(_config):
         self.petsc_dir  = None
         self.petsc_arch = None
 
+    def get_config_arch(self, arch):
+        return config.Configure(self.petsc_dir, arch)
+
     def run(self):
         _config.run(self)
-        petsc_dir  = config.get_petsc_dir(self.petsc_dir)
-        if petsc_dir is None: return
-        petsc_arch = config.get_petsc_arch(petsc_dir, self.petsc_arch)
-        bmake_dir = os.path.join(petsc_dir, 'bmake')
+        self.petsc_dir = config.get_petsc_dir(self.petsc_dir)
+        if self.petsc_dir is None: return
+        petsc_arch = config.get_petsc_arch(self.petsc_dir, self.petsc_arch)
+        bmake_dir = os.path.join(self.petsc_dir, 'bmake')
         have_bmake = os.path.isdir(bmake_dir)
         log.info('-' * 70)
-        log.info('PETSC_DIR:   %s' % petsc_dir)
+        log.info('PETSC_DIR:   %s' % self.petsc_dir)
         arch_list = petsc_arch
         if not have_bmake and not arch_list :
             arch_list = [ None ]
         for arch in arch_list:
-            conf = PetscConfig(petsc_dir, arch)
+            conf = self.get_config_arch(arch)
             archname    = conf.PETSC_ARCH or conf['PETSC_ARCH_NAME']
             scalar_type = conf['PETSC_SCALAR']
             precision   = conf['PETSC_PRECISION']
@@ -335,6 +329,8 @@ class build(_build):
 
 class build_ext(_build_ext):
 
+    user_options = _build_ext.user_options + cmd_petsc_opts
+
     def initialize_options(self):
         _build_ext.initialize_options(self)
         self.petsc_dir  = None
@@ -363,9 +359,6 @@ class build_ext(_build_ext):
             if pylib_dir not in self.library_dirs:
                 self.library_dirs.append(pylib_dir)
 
-    def _get_config(self, petsc_dir, petsc_arch):
-        return PetscConfig(petsc_dir, petsc_arch)
-
     def _copy_ext(self, ext):
         extclass = ext.__class__
         fullname = self.get_ext_fullname(ext.name)
@@ -391,6 +384,9 @@ class build_ext(_build_ext):
         self.build_lib  = build_lib
         self.build_temp = build_temp
 
+    def get_config_arch(self, arch):
+        return config.Configure(self.petsc_dir, arch)
+
     def build_extension(self, ext):
         if not isinstance(ext, Extension):
             return _build_ext.build_extension(self, ext)
@@ -400,7 +396,7 @@ class build_ext(_build_ext):
         if not petsc_arch:
             petsc_arch = [ None ]
         for arch in petsc_arch:
-            config = self._get_config(self.petsc_dir, arch)
+            config = self.get_config_arch(arch)
             ARCH = arch or config['PETSC_ARCH_NAME']
             if ARCH not in self.PETSC_ARCH_LIST:
                 self.PETSC_ARCH_LIST.append(ARCH)

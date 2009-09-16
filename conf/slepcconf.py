@@ -13,8 +13,7 @@ import sys, os, platform
 
 if not hasattr(sys, 'version_info') or \
        sys.version_info < (2, 4, 0, 'final'):
-    raise SystemExit("Python 2.4 or later is required "
-                     "to build SLEPc for Python package.")
+    raise SystemExit("Python 2.4 or later is required")
 
 # --------------------------------------------------------------------
 
@@ -86,17 +85,22 @@ cmd_slepc_opts = [
 
 class config(_config):
 
+    Configure = SlepcConfig
+
     user_options = _config.user_options + cmd_slepc_opts
 
     def initialize_options(self):
         _config.initialize_options(self)
         self.slepc_dir  = None
 
+    def get_config_arch(self, arch):
+        return config.Configure(self.slepc_dir, self.petsc_dir, arch)
+
     def run(self):
-        slepc_dir = config.get_slepc_dir(self.slepc_dir)
-        if slepc_dir is None: return
+        self.slepc_dir = config.get_slepc_dir(self.slepc_dir)
+        if self.slepc_dir is None: return
         log.info('-' * 70)
-        log.info('SLEPC_DIR:   %s' % slepc_dir)
+        log.info('SLEPC_DIR:   %s' % self.slepc_dir)
         _config.run(self)
 
     @staticmethod
@@ -144,9 +148,8 @@ class build_ext(_build_ext):
         self.set_undefined_options('build',
                                    ('slepc_dir',  'slepc_dir'))
 
-    def _get_config(self, petsc_dir, petsc_arch):
-        return SlepcConfig(self.slepc_dir, petsc_dir, petsc_arch)
-
+    def get_config_arch(self, arch):
+        return config.Configure(self.slepc_dir, self.petsc_dir, arch)
 
     def get_config_data(self, arch_list):
         template = """\
