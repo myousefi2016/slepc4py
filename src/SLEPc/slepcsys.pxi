@@ -21,7 +21,6 @@ cdef extern from "petsc.h" nogil:
     int PetscObjectDestroy(PetscObject)
 
 cdef extern from "slepc.h" nogil:
-
     enum: SLEPC_VERSION_MAJOR
     enum: SLEPC_VERSION_MINOR
     enum: SLEPC_VERSION_SUBMINOR
@@ -30,7 +29,6 @@ cdef extern from "slepc.h" nogil:
     char* SLEPC_VERSION_DATE
     char* SLEPC_VERSION_PATCH_DATE
     char* SLEPC_AUTHOR_INFO
-
     int SlepcInitialize(int*,char***,char[],char[])
     int SlepcFinalize()
     int SlepcInitializeCalled

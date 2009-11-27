@@ -1,7 +1,7 @@
 # Author:  Lisandro Dalcin
 # Contact: dalcinl@gmail.com
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """
 Extension modules for different SLEPc configurations.
@@ -19,7 +19,7 @@ on the value of a user-provided configuration name, the ``PETSC_ARCH``
 environmental variable, or a configuration file.
 """
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 from petsc4py.lib import ImportPETSc
 from petsc4py.lib import Import, getPathArch, getInitArgs
@@ -45,4 +45,4 @@ def getPathArchSLEPc(arch=None):
     path, arch = getPathArch(path, arch, rcvar, rcfile)
     return (path, arch)
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------

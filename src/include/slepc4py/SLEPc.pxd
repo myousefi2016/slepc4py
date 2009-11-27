@@ -1,8 +1,8 @@
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 from petsc4py.PETSc cimport Object
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef extern from "slepc.h":
     pass
@@ -23,7 +23,7 @@ cdef extern from "slepcsvd.h":
     struct _p_SVD
     ctypedef _p_SVD* SlepcSVD "SVD"
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 ctypedef public api class ST(Object) [type PySlepcST_Type, object PySlepcSTObject]:
     cdef SlepcST st
@@ -37,4 +37,4 @@ ctypedef public api class EPS(Object) [type PySlepcEPS_Type, object PySlepcEPSOb
 ctypedef public api class SVD(Object) [type PySlepcSVD_Type, object PySlepcSVDObject]:
     cdef SlepcSVD svd
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------

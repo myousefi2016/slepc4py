@@ -1,4 +1,4 @@
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 from petsc4py.PETSc import Error
 
@@ -6,7 +6,7 @@ from petsc4py.PETSc import COMM_NULL
 from petsc4py.PETSc import COMM_SELF
 from petsc4py.PETSc import COMM_WORLD
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 from petsc4py.PETSc cimport MPI_Comm
 from petsc4py.PETSc cimport PetscObject, PetscViewer
@@ -18,12 +18,7 @@ from petsc4py.PETSc cimport Object, Viewer
 from petsc4py.PETSc cimport Vec, Mat
 from petsc4py.PETSc cimport KSP, PC
 
-# --------------------------------------------------------------------
-
-cdef extern from *:
-   ctypedef unsigned long int size_t
-
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef extern from *:
     ctypedef char* char_p       "char*"
@@ -39,7 +34,7 @@ cdef inline char_p str2cp(object s) except ? NULL:
 
 include "allocate.pxi"
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 # Vile hack for raising a exception and not contaminating traceback
 
@@ -69,7 +64,9 @@ cdef inline int CHKERR(int ierr) except -1:
         pyx_raise(<object>PyExc_RuntimeError, ierr, NULL)
     return -1
 
-# --------------------------------------------------------------------
+if 0: raise RuntimeError # Do not remove this line !!!
+
+# -----------------------------------------------------------------------------
 
 cdef extern from "petsc.h":
     ctypedef long   PetscInt
@@ -104,7 +101,7 @@ cdef inline object toScalar(PetscScalar value):
 cdef inline PetscScalar asScalar(object value) except*:
     return PyPetscScalar_AsPetscScalar(value)
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 include "slepcmpi.pxi"
 include "slepcsys.pxi"
@@ -113,7 +110,7 @@ include "slepcip.pxi"
 include "slepceps.pxi"
 include "slepcsvd.pxi"
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 __doc__ = \
 """
@@ -130,9 +127,7 @@ include "IP.pyx"
 include "EPS.pyx"
 include "SVD.pyx"
 
-# --------------------------------------------------------------------
-
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef extern from "Python.h":
     int Py_AtExit(void (*)())
@@ -178,7 +173,7 @@ cdef void finalize() nogil:
                 "[error code: %d]\n", ierr)
     # and we are done, see you later !!
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def _initialize(args=None):
     cdef int ready = initialize(args)
@@ -187,5 +182,4 @@ def _initialize(args=None):
 def _finalize():
     finalize()
 
-# --------------------------------------------------------------------
-if 0: raise RuntimeError # Do not remove this line !!!
+# -----------------------------------------------------------------------------

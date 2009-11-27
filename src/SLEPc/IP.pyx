@@ -1,4 +1,4 @@
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 class IPOrthoType(object):
     """
@@ -32,7 +32,7 @@ class IPBilinearForm(object):
     HERMITIAN = IPINNER_HERMITIAN
     SYMMETRIC = IPINNER_SYMMETRIC
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef class IP(Object):
 
@@ -146,8 +146,10 @@ cdef class IP(Object):
               Parameter for selective refinement (used when the the
               refinement type `IP.RefineType.IFNEEDED`).
         """
-        cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
-        cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogonalizationType val1
+        val1 = IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType val2
+        val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
         CHKERR( IPGetOrthogonalization(self.ip, &val1, &val2, &rval) )
         return (val1, val2, toReal(rval))
@@ -179,8 +181,10 @@ cdef class IP(Object):
         When using several processors, `IP.OrthoType.MGS` is likely to
         result in bad scalability.
         """
-        cdef SlepcIPOrthogonalizationType val1 = IP_CGS_ORTH
-        cdef SlepcIPOrthogonalizationRefinementType val2 = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogonalizationType val1
+        val1 = IP_CGS_ORTH
+        cdef SlepcIPOrthogonalizationRefinementType val2
+        val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
         if type   is not None: val1= type
         if refine is not None: val2= refine
@@ -360,10 +364,10 @@ cdef class IP(Object):
             coefs = [toScalar(H[i]) for i in range(n)]
         return (coefs, toReal(rval), <bint>tval)
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 del IPOrthoType
 del IPRefineType
 del IPBilinearForm
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------

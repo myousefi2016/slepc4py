@@ -55,7 +55,7 @@ cdef extern from "slepcsvd.h" nogil:
     int SVDGetIterationNumber(SlepcSVD,PetscInt*)
     int SVDGetConvergedReason(SlepcSVD,SlepcSVDConvergedReason*)
     int SVDGetConverged(SlepcSVD,PetscInt*)
-    int SVDGetSingularTriplet(SlepcSVD,PetscInt,PetscReal*OUTPUT,PetscVec,PetscVec)
+    int SVDGetSingularTriplet(SlepcSVD,PetscInt,PetscReal*,PetscVec,PetscVec)
     int SVDComputeResidualNorms(SlepcSVD,PetscInt,PetscReal*,PetscReal*)
     int SVDComputeRelativeError(SlepcSVD,PetscInt,PetscReal*)
     int SVDGetOperationCounters(SlepcSVD,PetscInt*,PetscInt*)

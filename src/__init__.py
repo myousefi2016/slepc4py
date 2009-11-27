@@ -1,7 +1,7 @@
 # Author:  Lisandro Dalcin
 # Contact: dalcinl@gmail.com
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """
 SLEPc for Python
@@ -24,7 +24,7 @@ __author__    = 'Lisandro Dalcin'
 __version__   = '1.0.0'
 __credits__   = 'SLEPc Team <slepc-maint@grycap.upv.es>'
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def init(args=None, arch=None):
     """
@@ -44,7 +44,7 @@ def init(args=None, arch=None):
     PETSc._initialize(args)
     SLEPc._initialize(args)
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 def get_include():
     """
@@ -56,17 +56,17 @@ def get_include():
 
       import petscc4py, slepc4py
       Extension('extension_name', ...
-                include_dirs=[...,
-                              petsc4py.get_include(),
-                              slepc4py.get_include(),])
+		include_dirs=[...,
+			      petsc4py.get_include(),
+			      slepc4py.get_include(),])
     """
     from os.path import dirname, join
     return join(dirname(__file__), 'include')
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 if __name__ == '__main__':
     import slepc4py.help
     slepc4py.help.help()
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
