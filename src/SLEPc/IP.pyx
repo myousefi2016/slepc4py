@@ -300,7 +300,7 @@ cdef class IP(Object):
         CHKERR( IPInnerProduct(self.ip, x.vec, y.vec, &sval) )
         return toScalar(sval)
 
-    def orthogonalize(self, VS, Vec v not None, Vec work=None):
+    def orthogonalize(self, VS, Vec v not None):
         """
         Orthogonalize a vector with respect to a set of vectors.
 
@@ -310,8 +310,6 @@ cdef class IP(Object):
             Set of orthonormal vectors.
         v:  Vec
             Vector to be orthogonalized, modified on return.
-        work: Vec, optional
-            Workspace.
 
         Returns
         -------
@@ -340,8 +338,6 @@ cdef class IP(Object):
         cdef PetscScalar* H = NULL, h = 0
         cdef PetscReal rval = 0
         cdef PetscTruth tval = PETSC_FALSE
-        cdef PetscVec w = NULL
-        cdef PetscScalar* sw = NULL
         cdef object tmp1 = None, tmp2 = None
         if isinstance(VS, Vec):
             n = 1
@@ -349,16 +345,14 @@ cdef class IP(Object):
             H = &h
         else:
             n = len(VS)
-            tmp1 = allocate(n*sizeof(Vec),<void**>&V)
+            tmp1 = allocate(n*sizeof(PetscVec),<void**>&V)
             tmp2 = allocate(n*sizeof(PetscScalar),<void**>&H)
             for i in range(n):
                 V[i] = (<Vec?>VS[i]).vec
                 H[i] = 0
-        if work is not None: w = work.vec
         CHKERR( IPOrthogonalize(self.ip,
-                                n, which, V, v.vec,
-                                H, &rval, &tval,
-                                w, sw) )
+                                0, NULL, n, NULL, V, v.vec,
+                                H, &rval, &tval) )
         cdef object coefs = None
         if isinstance(VS, Vec):
             coefs = toScalar(H[0])

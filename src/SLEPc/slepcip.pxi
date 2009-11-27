@@ -32,4 +32,4 @@ cdef extern from "slepcip.h" nogil:
     int IPNorm(SlepcIP,PetscVec,PetscReal*)
     int IPInnerProduct(SlepcIP,PetscVec,PetscVec,PetscReal*)
 
-    int IPOrthogonalize(SlepcIP,PetscInt,PetscTruth*,PetscVec*,PetscVec,PetscScalar*,PetscReal*,PetscTruth*,PetscVec,PetscScalar*)
+    int IPOrthogonalize(SlepcIP,PetscInt,PetscVec*,PetscInt,PetscTruth*,PetscVec*,PetscVec,PetscScalar*,PetscReal*,PetscTruth*)
