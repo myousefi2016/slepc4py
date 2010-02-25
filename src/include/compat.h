@@ -21,14 +21,12 @@ PetscErrorCode IPOrthogonalize_300(IP ip,
 				   PetscTruth *lindep)
 {
   PetscErrorCode ierr;
-  Vec *vwork;
-  PetscScalar *swork;
   PetscFunctionBegin;
   PetscValidHeaderSpecific(ip,IP_COOKIE,1);
   if (nds > 0) {
     SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
   }
-  ierr = IPOrthogonalize(ip,n,wich,V,v,H,norm,lindep,
+  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,
 			 PETSC_NULL,0);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
@@ -230,17 +228,22 @@ PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscIn
 #undef __FUNCT__
 #define __FUNCT__ "IPOrthogonalize_233"
 PETSC_STATIC_INLINE
-PetscErrorCode IPOrthogonalize_233(IP ip,PetscInt n,PetscTruth *which,Vec *V,Vec v,
-				   PetscScalar *H,PetscReal *norm,PetscTruth *lindep,
-				   Vec work,PetscScalar* swork)
+PetscErrorCode IPOrthogonalize_233(IP ip,
+				   PetscInt nds,Vec *DS,
+				   PetscInt n,PetscTruth *which,Vec *V,
+				   Vec v,PetscScalar *H,PetscReal *norm,
+				   PetscTruth *lindep)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
-  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,work);CHKERRQ(ierr);
+  PetscValidHeaderSpecific(ip,IP_COOKIE,1);
+  if (nds > 0) {
+    SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  }
+  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,/*work*/0);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
 #define IPOrthogonalize IPOrthogonalize_233
-
 #endif
 
 #endif /* !SLEPC_COMPAT_H */
