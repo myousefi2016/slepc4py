@@ -1,3 +1,6 @@
+/* Author:  Lisandro Dalcin   */
+/* Contact: dalcinl@gmail.com */
+
 #ifndef SLEPC4PY_H
 #define SLEPC4PY_H
 

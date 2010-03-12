@@ -1,3 +1,6 @@
+# Author:  Lisandro Dalcin
+# Contact: dalcinl@gmail.com
+
 # -----------------------------------------------------------------------------
 
 from petsc4py.PETSc cimport Object
