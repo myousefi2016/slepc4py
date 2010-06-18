@@ -823,6 +823,14 @@ cdef class EPS(Object):
 
     #
 
+    def cancelMonitor(self):
+        """
+        Clears all monitors for an EPS object.
+        """
+        CHKERR( EPSMonitorCancel(self.eps) )
+
+    #
+
     def setUp(self):
         """
         Sets up all the internal data structures necessary for the

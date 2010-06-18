@@ -49,6 +49,8 @@ cdef extern from "slepcsvd.h" nogil:
     int SVDSetWhichSingularTriplets(SlepcSVD,SlepcSVDWhich)
     int SVDGetWhichSingularTriplets(SlepcSVD,SlepcSVDWhich*)
 
+    int SVDMonitorCancel(SlepcSVD)
+
     int SVDSetUp(SlepcSVD)
     int SVDSolve(SlepcSVD)
     int SVDGetIterationNumber(SlepcSVD,PetscInt*)

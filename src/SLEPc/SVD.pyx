@@ -434,6 +434,14 @@ cdef class SVD(Object):
 
     #
 
+    def cancelMonitor(self):
+        """
+        Clears all monitors for an EPS object.
+        """
+        CHKERR( SVDMonitorCancel(self.svd) )
+
+    #
+
     def setUp(self):
         """
         Sets up all the internal data structures necessary for the

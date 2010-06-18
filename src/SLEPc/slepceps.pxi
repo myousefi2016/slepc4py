@@ -97,6 +97,8 @@ cdef extern from "slepceps.h" nogil:
     int EPSSetInitialSpace(SlepcEPS,PetscInt,PetscVec*)
     int EPSSetInitialSpaceLeft(SlepcEPS,PetscInt,PetscVec*)
 
+    int EPSMonitorCancel(SlepcEPS)
+
     int EPSSetUp(SlepcEPS)
     int EPSSolve(SlepcEPS)
 
