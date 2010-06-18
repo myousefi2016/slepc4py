@@ -1,8 +1,8 @@
 cdef extern from "slepcip.h" nogil:
 
     ctypedef enum SlepcIPOrthogonalizationType "IPOrthogonalizationType":
-        IP_MGS_ORTH
-        IP_CGS_ORTH
+        IP_ORTH_MGS
+        IP_ORTH_CGS
 
     ctypedef enum SlepcIPOrthogonalizationRefinementType "IPOrthogonalizationRefinementType":
         IP_ORTH_REFINE_NEVER
@@ -10,8 +10,8 @@ cdef extern from "slepcip.h" nogil:
         IP_ORTH_REFINE_ALWAYS
 
     ctypedef enum SlepcIPBilinearForm "IPBilinearForm":
-        IPINNER_HERMITIAN
-        IPINNER_SYMMETRIC
+        IP_INNER_HERMITIAN
+        IP_INNER_SYMMETRIC
 
     int IPCreate(MPI_Comm,SlepcIP*)
     int IPView(SlepcIP,PetscViewer)

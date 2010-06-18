@@ -7,8 +7,8 @@ class IPOrthoType(object):
     - `CGS`: Classical Gram-Schmidt.
     - `MGS`: Modified Gram-Schmidt.
     """
-    CGS = IP_CGS_ORTH
-    MGS = IP_MGS_ORTH
+    CGS = IP_ORTH_CGS
+    MGS = IP_ORTH_MGS
 
 class IPRefineType(object):
     """
@@ -29,8 +29,8 @@ class IPBilinearForm(object):
     - `HERMITIAN`:
     - `SYMMETRIC`:
     """
-    HERMITIAN = IPINNER_HERMITIAN
-    SYMMETRIC = IPINNER_SYMMETRIC
+    HERMITIAN = IP_INNER_HERMITIAN
+    SYMMETRIC = IP_INNER_SYMMETRIC
 
 # -----------------------------------------------------------------------------
 
@@ -147,7 +147,7 @@ cdef class IP(Object):
               refinement type `IP.RefineType.IFNEEDED`).
         """
         cdef SlepcIPOrthogonalizationType val1
-        val1 = IP_CGS_ORTH
+        val1 = IP_ORTH_CGS
         cdef SlepcIPOrthogonalizationRefinementType val2
         val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
@@ -182,7 +182,7 @@ cdef class IP(Object):
         result in bad scalability.
         """
         cdef SlepcIPOrthogonalizationType val1
-        val1 = IP_CGS_ORTH
+        val1 = IP_ORTH_CGS
         cdef SlepcIPOrthogonalizationRefinementType val2
         val2 = IP_ORTH_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
@@ -204,7 +204,7 @@ cdef class IP(Object):
         """
         cdef Mat mat = Mat()
         cdef PetscMat m = NULL
-        cdef SlepcIPBilinearForm val = IPINNER_HERMITIAN
+        cdef SlepcIPBilinearForm val = IP_INNER_HERMITIAN
         CHKERR( IPGetBilinearForm(self.ip, &m, &val) )
         mat.mat = m; mat.inc_ref()
         return (mat, val)
@@ -221,7 +221,7 @@ cdef class IP(Object):
               The type of bilinear form.
         """
         cdef PetscMat m = NULL
-        cdef SlepcIPBilinearForm val = IPINNER_HERMITIAN
+        cdef SlepcIPBilinearForm val = IP_INNER_HERMITIAN
         if mat  is not None: m = mat.mat
         if form is not None: val = form
         CHKERR( IPSetBilinearForm(self.ip, m, val) )

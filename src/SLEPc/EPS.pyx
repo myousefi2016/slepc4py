@@ -6,12 +6,13 @@ class EPSType(object):
 
     Native sparse eigensolvers.
 
-    - `KRYLOVSCHUR`: Krylov-Schur (default).
-    - `LANCZOS`:     Lanczos.
-    - `ARNOLDI`:     Arnoldi.
-    - `SUBSPACE`:    Subspace Iteration.
-    - `POWER`:       Power Iteration, Inverse Iteration, RQI.
-    - `LAPACK`:      Wrappers to dense eigensolvers in Lapack.
+    - `KRYLOVSCHUR`:  Krylov-Schur (default).
+    - `LANCZOS`:      Lanczos.
+    - `DSITRLANCZOS`: Thick restart Lanczos.
+    - `ARNOLDI`:      Arnoldi.
+    - `SUBSPACE`:     Subspace Iteration.
+    - `POWER`:        Power Iteration, Inverse Iteration, RQI.
+    - `LAPACK`:       Wrappers to dense eigensolvers in Lapack.
 
     Wrappers to sparse eigensolvers
     (should be enabled during installation of SLEPc)
@@ -23,18 +24,19 @@ class EPSType(object):
     - `PRIMME`:
     """
     # provided implementations
-    KRYLOVSCHUR = EPSKRYLOVSCHUR
-    LANCZOS     = EPSLANCZOS
-    ARNOLDI     = EPSARNOLDI
-    SUBSPACE    = EPSSUBSPACE
-    POWER       = EPSPOWER
-    LAPACK      = EPSLAPACK
+    KRYLOVSCHUR  = EPSKRYLOVSCHUR
+    DSITRLANCZOS = EPSDSITRLANCZOS
+    LANCZOS      = EPSLANCZOS
+    ARNOLDI      = EPSARNOLDI
+    SUBSPACE     = EPSSUBSPACE
+    POWER        = EPSPOWER
+    LAPACK       = EPSLAPACK
     # with external libraries
-    ARPACK      = EPSARPACK
-    BLZPACK     = EPSBLZPACK
-    TRLAN       = EPSTRLAN
-    BLOPEX      = EPSBLOPEX
-    PRIMME      = EPSPRIMME
+    ARPACK       = EPSARPACK
+    BLZPACK      = EPSBLZPACK
+    TRLAN        = EPSTRLAN
+    BLOPEX       = EPSBLOPEX
+    PRIMME       = EPSPRIMME
 
 class EPSProblemType(object):
     """
@@ -44,14 +46,17 @@ class EPSProblemType(object):
     - `NHEP`:   Non-Hermitian eigenproblem.
     - `GHEP`:   Generalized Hermitian eigenproblem.
     - `GNHEP`:  Generalized Non-Hermitian eigenproblem.
-    - `PGNHEP`: Generalized Non-Hermitian eigenproblem
-      with positive definite ``B``.
+    - `PGNHEP`: Generalized Non-Hermitian eigenproblem 
+                with positive definite ``B``.
+    - `GHIEP`:  Generalized Hermitian eigenproblem
+                with indefinite ``B``.
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
     GHEP   = EPS_GHEP
     GNHEP  = EPS_GNHEP
     PGNHEP = EPS_PGNHEP
+    GHIEP  = EPS_GHIEP
 
 class EPSExtraction(object):
     """
@@ -67,34 +72,46 @@ class EPSExtraction(object):
     REFINED          = EPS_REFINED
     REFINED_HARMONIC = EPS_REFINED_HARMONIC
 
-class EPSClass(object):
+class EPSBalance(object):
     """
-    EPS class of method
+    EPS type of balancing used for non-Hermitian problems
 
 
+    - `NONE`:     None.
     - `ONE_SIDE`: One-sided eigensolver, only right eigenvectors.
     - `TWO_SIDE`: Two-sided eigensolver, right and left eigenvectors.
+    - `USER`:     User-defined.
     """
-    ONE_SIDE  = EPS_ONE_SIDE
-    TWO_SIDE  = EPS_TWO_SIDE
+    NONE    = EPS_BALANCE_NONE
+    ONESIDE = EPS_BALANCE_ONESIDE
+    TWOSIDE = EPS_BALANCE_TWOSIDE
+    USER    = EPS_BALANCE_USER
 
 class EPSWhich(object):
     """
     EPS desired piece of spectrum
 
-    - `LARGEST_MAGNITUDE`:  Largest eigenvalues in magnitude.
-    - `SMALLEST_MAGNITUDE`: Smallest eigenvalues in magnitude.
+    - `LARGEST_MAGNITUDE`:  Largest magnitude (default).
     - `LARGEST_REAL`:       Largest real parts.
-    - `SMALLEST_REAL`:      Smallest real parts.
     - `LARGEST_IMAGINARY`:  Largest imaginary parts in magnitude.
+    - `SMALLEST_MAGNITUDE`: Smallest magnitude.
+    - `SMALLEST_REAL`:      Smallest real parts.
     - `SMALLEST_IMAGINARY`: Smallest imaginary parts in magnitude.
+    - `TARGET_MAGNITUDE`:   Magnitude closest to target.
+    - `TARGET_REAL`:        Real part closest to target.
+    - `TARGET_IMAGINARY`:   Imaginary part closest to target.
+    - `USER`:               User defined ordering.
     """
     LARGEST_MAGNITUDE  = EPS_LARGEST_MAGNITUDE
-    SMALLEST_MAGNITUDE = EPS_SMALLEST_MAGNITUDE
     LARGEST_REAL       = EPS_LARGEST_REAL
-    SMALLEST_REAL      = EPS_SMALLEST_REAL
     LARGEST_IMAGINARY  = EPS_LARGEST_IMAGINARY
+    SMALLEST_MAGNITUDE = EPS_SMALLEST_MAGNITUDE
+    SMALLEST_REAL      = EPS_SMALLEST_REAL
     SMALLEST_IMAGINARY = EPS_SMALLEST_IMAGINARY
+    TARGET_MAGNITUDE   = EPS_TARGET_MAGNITUDE
+    TARGET_REAL        = EPS_TARGET_REAL
+    TARGET_IMAGINARY   = EPS_TARGET_IMAGINARY
+    USER               = EPS_WHICH_USER
 
 class EPSConvergedReason(object):
     """
@@ -111,6 +128,7 @@ class EPSConvergedReason(object):
     DIVERGED_BREAKDOWN    = EPS_DIVERGED_BREAKDOWN
     DIVERGED_NONSYMMETRIC = EPS_DIVERGED_NONSYMMETRIC
     CONVERGED_ITERATING   = EPS_CONVERGED_ITERATING
+    ITERATING             = EPS_CONVERGED_ITERATING
 
 class EPSPowerShiftType(object):
     """
@@ -120,9 +138,9 @@ class EPSPowerShiftType(object):
     - `RAYLEIGH`:
     - `WILKINSON`:
     """
-    CONSTANT  = EPSPOWER_SHIFT_CONSTANT
-    RAYLEIGH  = EPSPOWER_SHIFT_RAYLEIGH
-    WILKINSON = EPSPOWER_SHIFT_WILKINSON
+    CONSTANT  = EPS_POWER_SHIFT_CONSTANT
+    RAYLEIGH  = EPS_POWER_SHIFT_RAYLEIGH
+    WILKINSON = EPS_POWER_SHIFT_WILKINSON
 
 class EPSLanczosReorthogType(object):
     """
@@ -135,12 +153,12 @@ class EPSLanczosReorthogType(object):
     - `PARTIAL`:
     - `DELAYED`:
     """
-    LOCAL     =  EPSLANCZOS_REORTHOG_LOCAL
-    FULL      =  EPSLANCZOS_REORTHOG_FULL
-    SELECTIVE =  EPSLANCZOS_REORTHOG_SELECTIVE
-    PERIODIC  =  EPSLANCZOS_REORTHOG_PERIODIC
-    PARTIAL   =  EPSLANCZOS_REORTHOG_PARTIAL
-    DELAYED   =  EPSLANCZOS_REORTHOG_DELAYED
+    LOCAL     =  EPS_LANCZOS_REORTHOG_LOCAL
+    FULL      =  EPS_LANCZOS_REORTHOG_FULL
+    SELECTIVE =  EPS_LANCZOS_REORTHOG_SELECTIVE
+    PERIODIC  =  EPS_LANCZOS_REORTHOG_PERIODIC
+    PARTIAL   =  EPS_LANCZOS_REORTHOG_PARTIAL
+    DELAYED   =  EPS_LANCZOS_REORTHOG_DELAYED
 
 # --------------------------------------------------------------------
 
@@ -153,7 +171,7 @@ cdef class EPS(Object):
     Type            = EPSType
     ProblemType     = EPSProblemType
     Extraction      = EPSExtraction
-    Class           = EPSClass
+    Balance         = EPSBalance
     Which           = EPSWhich
     ConvergedReason = EPSConvergedReason
 
@@ -359,39 +377,47 @@ cdef class EPS(Object):
         CHKERR( EPSIsHermitian(self.eps, &tval) )
         return <bint> tval
 
-    def getClass(self):
+    def getBalance(self):
         """
-        Gets the eigensolver class from the EPS object.
+        Gets the balancing type used by the EPS object,
+        and the associated parameters.
 
         Returns
         -------
-        klass: EPS.Class enumerate
-               The class of eigensolver, either one-side or two-side.
+        balance: EPS.Balance enumerate
+                 The balancing method
+        iterations: integer
+                    Number of iterations of the balancing algorithm
+        cutoff: real
+                Cutoff value
         """
-        cdef SlepcEPSClass val = EPS_ONE_SIDE
-        CHKERR( EPSGetClass(self.eps, &val) )
-        return val
+        cdef SlepcEPSBalance val = EPS_BALANCE_ONESIDE
+        cdef PetscInt ival = 0
+        cdef PetscReal rval = 0
+        CHKERR( EPSGetBalance(self.eps, &val, &ival, &rval) )
+        return (val, toInt(ival), toReal(rval))
 
-    def setClass(self, klass):
+    def setBalance(self, balance=None, iterations=None, cutoff=None):
         """
-        Specifies the eigensolver class, either one-sided or
-        two-sided.
+        Specifies the balancing technique to be employed by the
+        eigensolver, and some parameters associated to it.
 
         Parameters
         ----------
-        klass: EPS.Class enumerate
-               The class of eigensolver, either one-side or two-side.
-
-        Notes
-        -----
-        Allowed solver classes are: one-sided (`EPS.Class.ONE_SIDE`)
-        and two-sided (`EPS.Class.TWO_SIDE`).  One-sided eigensolvers
-        are the standard ones, which allow the computation of
-        eigenvalues and (right) eigenvectors, whereas two-sided
-        eigensolvers compute left eigenvectors as well.
+        balance: EPS.Balance enumerate
+                 The balancing method
+        iterations: integer
+                    Number of iterations of the balancing algorithm
+        cutoff: real
+                Cutoff value
         """
-        cdef SlepcEPSClass val = klass
-        CHKERR( EPSSetClass(self.eps, val) )
+        cdef SlepcEPSBalance val = <SlepcEPSBalance>PETSC_IGNORE
+        cdef PetscInt ival = PETSC_IGNORE
+        cdef PetscReal rval = PETSC_IGNORE
+        if balance    is not None: val  = balance
+        if iterations is not None: ival = asInt(iterations)
+        if cutoff     is not None: rval = asReal(cutoff)
+        CHKERR( EPSSetBalance(self.eps, val, ival, rval) )
 
     def getExtraction(self):
         """
@@ -462,6 +488,33 @@ cdef class EPS(Object):
         """
         cdef SlepcEPSWhich val = which
         CHKERR( EPSSetWhichEigenpairs(self.eps, val) )
+
+    def getLeftVectorsWanted(self):
+        """
+        Returns the flag indicating whether left eigenvectors are
+        required or not.
+
+        Returns
+        -------
+        wanted: boolean
+                Whether left eigenvectors are required or not.
+        """
+        cdef PetscTruth tval = PETSC_FALSE
+        CHKERR( EPSGetLeftVectorsWanted(self.eps, &tval) )
+        return <bint>tval
+
+    def setLeftVectorsWanted(self, wanted):
+        """
+        Specifies the flag indicating whether left eigenvectors are
+        required or not.
+
+        Parameters
+        ----------
+        wanted: boolean
+                Whether left eigenvectors are required or not.
+        """
+        cdef PetscTruth tval = wanted
+        CHKERR( EPSSetLeftVectorsWanted(self.eps, tval) )
 
     def getTarget(self):
         """
@@ -690,7 +743,7 @@ cdef class EPS(Object):
         if B is not None: Bmat = B.mat
         CHKERR( EPSSetOperators(self.eps, A.mat, Bmat) )
 
-    def attachDeflationSpace(self, space, ortho=False):
+    def setDeflationSpace(self, space):
         """
         Add vectors to the basis of the deflation space.
 
@@ -699,9 +752,6 @@ cdef class EPS(Object):
         space: a Vec or an array of Vec
                Set of basis vectors to be added to the deflation
                space.
-        ortho: boolean, optional
-               True if the basis vectors can be assumed to be mutullay
-               orthonormal.
 
         Notes
         -----
@@ -714,19 +764,16 @@ cdef class EPS(Object):
         The basis vectors can be provided all at once or incrementally
         with several calls to `attachDeflationSpace()`.
 
-        Set `ortho` to `True` if all the vectors passed in are known
-        to be mutually orthonormal.
+        The vectors do not need to be mutually orthonormal, since they
+        are explicitly orthonormalized internally.
         """
         cdef PetscInt i = 0, nds = 0
         cdef PetscVec* vds = NULL
-        cdef PetscTruth tval = PETSC_FALSE
-        cdef object tmp = None
         if isinstance(space, Vec): space = [space]
         nds = len(space)
-        tmp = allocate(nds*sizeof(Vec),<void**>&vds)
-        if ortho: tval = PETSC_TRUE
+        cdef tmp = allocate(nds*sizeof(Vec),<void**>&vds)
         for i in range(nds): vds[i] = (<Vec?>space[i]).vec
-        CHKERR( EPSAttachDeflationSpace(self.eps, nds, vds, tval) )
+        CHKERR( EPSSetDeflationSpace(self.eps, nds, vds) )
 
     def removeDeflationSpace(self):
         """
@@ -737,60 +784,42 @@ cdef class EPS(Object):
 
     #
 
-    def getInitialVector(self):
+    def setInitialSpace(self, space):
         """
-        Gets the initial vector associated with the eigensolver; if
-        the vector was not set it will return a ``NULL`` vector or a
-        vector randomly generated by `setUp()`.
-
-        Returns
-        -------
-        V: Vec
-           The initial vector.
-        """
-        cdef Vec V = Vec()
-        CHKERR( EPSGetInitialVector(self.eps, &V.vec) )
-        V.inc_ref(); return V
-
-    def setInitialVector(self, Vec V not None):
-        """
-        Sets the initial vector from which the eigensolver starts to
+        Sets the initial space from which the eigensolver starts to
         iterate.
 
         Parameters
         ----------
-        V: Vec
-           The initial vector.
+        space: Vec or sequence of Vec
+           The initial space
         """
-        CHKERR( EPSSetInitialVector(self.eps, V.vec) )
+        cdef PetscInt i = 0, ns = 0
+        cdef PetscVec *vs = NULL
+        if isinstance(space, Vec): space = [space]
+        ns = len(space)
+        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetInitialSpace(self.eps, ns, vs) )
 
-    def getInitialVectorLeft(self):
+    def setInitialSpaceLeft(self, space):
         """
-        Gets the left initial vector associated with the eigensolver;
-        if the vector was not set it will return a ``NULL`` vector or
-        a vector randomly generated by `setUp()`.
-
-        Returns
-        -------
-        V: Vec
-           The initial vector.
-        """
-        cdef Vec V = Vec()
-        CHKERR( EPSGetLeftInitialVector(self.eps, &V.vec) )
-        V.inc_ref(); return V
-
-    def setInitialVectorLeft(self, Vec W not None):
-        """
-        Sets the left initial vector from which the eigensolver starts
+        Sets the left initial space from which the eigensolver starts
         to iterate, corresponding to the left recurrence (two-sided
         solvers).
 
         Parameters
         ----------
-        V: Vec
-           The initial vector.
+        space: Vec or sequence of Vec
+           The initial space
         """
-        CHKERR( EPSSetLeftInitialVector(self.eps, W.vec) )
+        cdef PetscInt i = 0, ns = 0
+        cdef PetscVec *vs = NULL
+        if isinstance(space, Vec): space = [space]
+        ns = len(space)
+        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetInitialSpaceLeft(self.eps, ns, vs) )
 
     #
 
@@ -859,67 +888,7 @@ cdef class EPS(Object):
         CHKERR( EPSGetConverged(self.eps, &ival) )
         return ival
 
-    def getInvariantSubspace(self):
-        """
-        Gets an orthonormal basis of the computed invariant subspace.
-
-        Returns
-        -------
-        subspace: list of Vec
-           Basis of the invariant subspace.
-
-        Notes
-        -----
-        This function should be called after `solve()` has finished.
-
-        The returned vectors span an invariant subspace associated
-        with the computed eigenvalues. An invariant subspace ``X`` of
-        ``A` satisfies ``A x`` in ``X`` for all ``x`` in ``X`` (a
-        similar definition applies for generalized eigenproblems).
-        """
-        cdef PetscInt i = 0, ncv = 0
-        cdef PetscVec v = NULL, *isp = NULL
-        CHKERR( EPSGetConverged(self.eps, &ncv) )
-        CHKERR( EPSGetInitialVector(self.eps, &v) )
-        cdef Vec V = None
-        cdef list subspace = []
-        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
-        for i in range(ncv):
-            V = Vec(); subspace.append(V)
-            CHKERR( VecDuplicate(v, &isp[i]) )
-            V.vec = isp[i]
-        CHKERR( EPSGetInvariantSubspace(self.eps, isp) )
-        return subspace
-
-    def getInvariantSubspaceLeft(self):
-        """
-        Gets an orthonormal basis of the computed left invariant
-        subspace (only available in two-sided eigensolvers).
-
-        Returns
-        -------
-        v: array of Vec
-           Basis of the left invariant subspace.
-
-        Notes
-        -----
-        See `getInvariantSubspace()` for additional information.
-        """
-        cdef PetscInt i = 0, ncv = 0
-        cdef PetscVec w = NULL, *isp = NULL
-        CHKERR( EPSGetConverged(self.eps, &ncv) )
-        CHKERR( EPSGetLeftInitialVector(self.eps, &w) )
-        cdef Vec W = None
-        cdef list subspace = []
-        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
-        for i in range(ncv):
-            W = Vec(); subspace.append(W)
-            CHKERR( VecDuplicate(w, &isp[i]) )
-            W.vec = isp[i]
-        CHKERR( EPSGetLeftInvariantSubspace(self.eps, isp) )
-        return subspace
-
-    def getValue(self, int i):
+    def getEigenvalue(self, int i):
         """
         Gets the i-th eigenvalue as computed by `solve()`.
 
@@ -942,10 +911,10 @@ cdef class EPS(Object):
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
-        CHKERR( EPSGetValue(self.eps, i, &sval1, &sval2) )
+        CHKERR( EPSGetEigenvalue(self.eps, i, &sval1, &sval2) )
         return complex(toScalar(sval1), toScalar(sval2))
 
-    def getVector(self, int i, Vec Vr not None, Vec Vi=None):
+    def getEigenvector(self, int i, Vec Vr not None, Vec Vi=None):
         """
         Gets the i-th eigenvector as computed by `solve()`.
 
@@ -969,35 +938,7 @@ cdef class EPS(Object):
         cdef PetscVec veci = NULL
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
-        CHKERR( EPSGetRightVector(self.eps, i, vecr, veci) )
-
-    def getVectorLeft(self, int i, Vec Wr not None, Vec Wi=None):
-        """
-        Gets the i-th left eigenvector as computed by `solve()`,
-        (only available in two-sided eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be obtained.
-        Wr: Vec
-            Placeholder for the returned left eigenvector (real part).
-        Wi: Vec, optional
-            Placeholder for the returned left eigenvector (imaginary
-            part).
-
-        Notes
-        -----
-        The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
-        according to the ordering criterion established with
-        `setWhichEigenpairs()`.
-        """
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Wr is not None: vecr = Wr.vec
-        if Wi is not None: veci = Wi.vec
-        CHKERR( EPSGetLeftVector(self.eps, i, vecr, veci) )
+        CHKERR( EPSGetEigenvector(self.eps, i, vecr, veci) )
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
         """
@@ -1034,6 +975,96 @@ cdef class EPS(Object):
         if Vi is not None: veci = Vi.vec
         CHKERR( EPSGetEigenpair(self.eps, i, &sval1, &sval2, vecr, veci) )
         return complex(toScalar(sval1), toScalar(sval2))
+
+    ## def getInvariantSubspace(self):
+    ##     """
+    ##     Gets an orthonormal basis of the computed invariant subspace.
+    ##
+    ##     Returns
+    ##     -------
+    ##     subspace: list of Vec
+    ##        Basis of the invariant subspace.
+    ##
+    ##     Notes
+    ##     -----
+    ##     This function should be called after `solve()` has finished.
+    ##
+    ##     The returned vectors span an invariant subspace associated
+    ##     with the computed eigenvalues. An invariant subspace ``X`` of
+    ##     ``A` satisfies ``A x`` in ``X`` for all ``x`` in ``X`` (a
+    ##     similar definition applies for generalized eigenproblems).
+    ##     """
+    ##     cdef PetscInt i = 0, ncv = 0
+    ##     cdef PetscVec v = NULL, *isp = NULL
+    ##     CHKERR( EPSGetConverged(self.eps, &ncv) )
+    ##     CHKERR( EPSGetInitialVector(self.eps, &v) )
+    ##     cdef Vec V = None
+    ##     cdef list subspace = []
+    ##     cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+    ##     for i in range(ncv):
+    ##         V = Vec(); subspace.append(V)
+    ##         CHKERR( VecDuplicate(v, &isp[i]) )
+    ##         V.vec = isp[i]
+    ##     CHKERR( EPSGetInvariantSubspace(self.eps, isp) )
+    ##     return subspace
+
+    #
+
+    def getEigenvectorLeft(self, int i, Vec Wr not None, Vec Wi=None):
+        """
+        Gets the i-th left eigenvector as computed by `solve()`,
+        (only available in two-sided eigensolvers).
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+        Wr: Vec
+            Placeholder for the returned left eigenvector (real part).
+        Wi: Vec, optional
+            Placeholder for the returned left eigenvector (imaginary
+            part).
+
+        Notes
+        -----
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        according to the ordering criterion established with
+        `setWhichEigenpairs()`.
+        """
+        cdef PetscVec vecr = NULL
+        cdef PetscVec veci = NULL
+        if Wr is not None: vecr = Wr.vec
+        if Wi is not None: veci = Wi.vec
+        CHKERR( EPSGetEigenvectorLeft(self.eps, i, vecr, veci) )
+
+    ## def getInvariantSubspaceLeft(self):
+    ##     """
+    ##     Gets an orthonormal basis of the computed left invariant
+    ##     subspace (only available in two-sided eigensolvers).
+    ##
+    ##     Returns
+    ##     -------
+    ##     v: array of Vec
+    ##        Basis of the left invariant subspace.
+    ##
+    ##     Notes
+    ##     -----
+    ##     See `getInvariantSubspace()` for additional information.
+    ##     """
+    ##     cdef PetscInt i = 0, ncv = 0
+    ##     cdef PetscVec w = NULL, *isp = NULL
+    ##     CHKERR( EPSGetConverged(self.eps, &ncv) )
+    ##     CHKERR( EPSGetLeftInitialVector(self.eps, &w) )
+    ##     cdef Vec W = None
+    ##     cdef list subspace = []
+    ##     cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+    ##     for i in range(ncv):
+    ##         W = Vec(); subspace.append(W)
+    ##         CHKERR( VecDuplicate(w, &isp[i]) )
+    ##         W.vec = isp[i]
+    ##     CHKERR( EPSGetLeftInvariantSubspace(self.eps, isp) )
+    ##     return subspace
 
     #
 
@@ -1257,7 +1288,7 @@ cdef class EPS(Object):
         shift: EPS.PowerShiftType enumerate
                The type of shift.
         """
-        cdef SlepcEPSPowerShiftType val = EPSPOWER_SHIFT_CONSTANT
+        cdef SlepcEPSPowerShiftType val = EPS_POWER_SHIFT_CONSTANT
         CHKERR( EPSPowerGetShiftType(self.eps, &val) )
         return val
 
@@ -1328,7 +1359,7 @@ cdef class EPS(Object):
                   The type of reorthogonalization.
         """
         cdef SlepcEPSLanczosReorthogType val = \
-            EPSLANCZOS_REORTHOG_LOCAL
+            EPS_LANCZOS_REORTHOG_LOCAL
         CHKERR( EPSLanczosGetReorthog(self.eps, &val) )
         return val
 
@@ -1386,7 +1417,7 @@ cdef class EPS(Object):
 del EPSType
 del EPSProblemType
 del EPSExtraction
-del EPSClass
+del EPSBalance
 del EPSWhich
 del EPSConvergedReason
 del EPSPowerShiftType

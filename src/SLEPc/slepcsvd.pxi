@@ -38,8 +38,7 @@ cdef extern from "slepcsvd.h" nogil:
     int SVDSetOperator(SlepcSVD,PetscMat)
     int SVDGetOperator(SlepcSVD,PetscMat*)
 
-    int SVDSetInitialVector(SlepcSVD,PetscVec)
-    int SVDGetInitialVector(SlepcSVD,PetscVec*)
+    int SVDSetInitialSpace(SlepcSVD,PetscInt,PetscVec*)
 
     int SVDSetTransposeMode(SlepcSVD,SlepcSVDTransposeMode)
     int SVDGetTransposeMode(SlepcSVD,SlepcSVDTransposeMode*)

@@ -28,16 +28,28 @@ cdef extern from "slepcsvd.h":
 
 # -----------------------------------------------------------------------------
 
-ctypedef public api class ST(Object) [type PySlepcST_Type, object PySlepcSTObject]:
+ctypedef public api class ST(Object) [
+    type   PySlepcST_Type,
+    object PySlepcSTObject,
+    ]:
     cdef SlepcST st
 
-ctypedef public api class IP(Object) [type PySlepcIP_Type, object PySlepcIPObject]:
+ctypedef public api class IP(Object) [
+    type   PySlepcIP_Type,
+    object PySlepcIPObject,
+    ]:
     cdef SlepcIP ip
 
-ctypedef public api class EPS(Object) [type PySlepcEPS_Type, object PySlepcEPSObject]:
+ctypedef public api class EPS(Object) [
+    type PySlepcEPS_Type,
+    object PySlepcEPSObject,
+    ]:
     cdef SlepcEPS eps
 
-ctypedef public api class SVD(Object) [type PySlepcSVD_Type, object PySlepcSVDObject]:
+ctypedef public api class SVD(Object) [
+    type   PySlepcSVD_Type,
+    object PySlepcSVDObject,
+    ]:
     cdef SlepcSVD svd
 
 # -----------------------------------------------------------------------------

@@ -6,6 +6,7 @@ cdef extern from "slepceps.h" nogil:
     SlepcEPSType EPSARNOLDI
     SlepcEPSType EPSLANCZOS
     SlepcEPSType EPSKRYLOVSCHUR
+    SlepcEPSType EPSDSITRLANCZOS
     SlepcEPSType EPSLAPACK
     SlepcEPSType EPSARPACK
     SlepcEPSType EPSBLZPACK
@@ -19,6 +20,7 @@ cdef extern from "slepceps.h" nogil:
         EPS_NHEP
         EPS_GNHEP
         EPS_PGNHEP
+        EPS_GHIEP
 
     ctypedef enum SlepcEPSExtraction "EPSExtraction":
         EPS_RITZ
@@ -27,13 +29,22 @@ cdef extern from "slepceps.h" nogil:
         EPS_REFINED_HARMONIC
 
     ctypedef enum SlepcEPSWhich "EPSWhich":
-        EPS_LARGEST_MAGNITUDE, EPS_SMALLEST_MAGNITUDE,
-        EPS_LARGEST_REAL,      EPS_SMALLEST_REAL,
-        EPS_LARGEST_IMAGINARY, EPS_SMALLEST_IMAGINARY
+        EPS_LARGEST_MAGNITUDE,
+        EPS_LARGEST_REAL,
+        EPS_LARGEST_IMAGINARY,
+        EPS_SMALLEST_MAGNITUDE,
+        EPS_SMALLEST_REAL,
+        EPS_SMALLEST_IMAGINARY,
+        EPS_TARGET_MAGNITUDE,
+        EPS_TARGET_REAL,
+        EPS_TARGET_IMAGINARY,
+        EPS_WHICH_USER
 
-    ctypedef enum SlepcEPSClass "EPSClass":
-         EPS_ONE_SIDE
-         EPS_TWO_SIDE
+    ctypedef enum SlepcEPSBalance "EPSBalance":
+        EPS_BALANCE_NONE
+        EPS_BALANCE_ONESIDE
+        EPS_BALANCE_TWOSIDE
+        EPS_BALANCE_USER
 
     ctypedef enum SlepcEPSConvergedReason "EPSConvergedReason":
         EPS_CONVERGED_ITERATING
@@ -58,10 +69,12 @@ cdef extern from "slepceps.h" nogil:
     int EPSIsHermitian(SlepcEPS,PetscTruth*)
     int EPSSetExtraction(SlepcEPS,SlepcEPSExtraction)
     int EPSGetExtraction(SlepcEPS,SlepcEPSExtraction*)
-    int EPSSetClass(SlepcEPS,SlepcEPSClass)
-    int EPSGetClass(SlepcEPS,SlepcEPSClass*)
+    int EPSSetBalance(SlepcEPS,SlepcEPSBalance,PetscInt,PetscReal)
+    int EPSGetBalance(SlepcEPS,SlepcEPSBalance*,PetscInt*,PetscReal*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
     int EPSGetWhichEigenpairs(SlepcEPS,SlepcEPSWhich*)
+    int EPSSetLeftVectorsWanted(SlepcEPS,PetscTruth)
+    int EPSGetLeftVectorsWanted(SlepcEPS,PetscTruth*)
     int EPSSetTarget(SlepcEPS,PetscScalar)
     int EPSGetTarget(SlepcEPS,PetscScalar*)
 
@@ -78,13 +91,11 @@ cdef extern from "slepceps.h" nogil:
     int EPSSetOperators(SlepcEPS,PetscMat,PetscMat)
     int EPSGetOperators(SlepcEPS,PetscMat*,PetscMat*)
 
-    int EPSAttachDeflationSpace(SlepcEPS,PetscInt,PetscVec*,PetscTruth)
+    int EPSSetDeflationSpace(SlepcEPS,PetscInt,PetscVec*)
     int EPSRemoveDeflationSpace(SlepcEPS)
 
-    int EPSSetInitialVector(SlepcEPS,PetscVec)
-    int EPSGetInitialVector(SlepcEPS,PetscVec*)
-    int EPSSetLeftInitialVector(SlepcEPS,PetscVec)
-    int EPSGetLeftInitialVector(SlepcEPS,PetscVec*)
+    int EPSSetInitialSpace(SlepcEPS,PetscInt,PetscVec*)
+    int EPSSetInitialSpaceLeft(SlepcEPS,PetscInt,PetscVec*)
 
     int EPSSetUp(SlepcEPS)
     int EPSSolve(SlepcEPS)
@@ -92,12 +103,12 @@ cdef extern from "slepceps.h" nogil:
     int EPSGetIterationNumber(SlepcEPS,PetscInt*)
     int EPSGetConvergedReason(SlepcEPS,SlepcEPSConvergedReason*)
     int EPSGetConverged(SlepcEPS,PetscInt*)
-    int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
-    int EPSGetLeftInvariantSubspace(SlepcEPS,PetscVec*)
-    int EPSGetValue(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*)
-    int EPSGetRightVector(SlepcEPS,PetscInt,PetscVec,PetscVec)
-    int EPSGetLeftVector(SlepcEPS,PetscInt,PetscVec,PetscVec)
+    int EPSGetEigenvalue(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*)
+    int EPSGetEigenvector(SlepcEPS,PetscInt,PetscVec,PetscVec)
+    int EPSGetEigenvectorLeft(SlepcEPS,PetscInt,PetscVec,PetscVec)
     int EPSGetEigenpair(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
+    int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
+    int EPSGetInvariantSubspaceLeft(SlepcEPS,PetscVec*)
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
     int EPSGetErrorEstimateLeft(SlepcEPS,PetscInt,PetscReal*)
@@ -109,9 +120,9 @@ cdef extern from "slepceps.h" nogil:
 
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
-        EPSPOWER_SHIFT_CONSTANT
-        EPSPOWER_SHIFT_RAYLEIGH
-        EPSPOWER_SHIFT_WILKINSON
+        EPS_POWER_SHIFT_CONSTANT
+        EPS_POWER_SHIFT_RAYLEIGH
+        EPS_POWER_SHIFT_WILKINSON
     int EPSPowerSetShiftType(SlepcEPS,SlepcEPSPowerShiftType)
     int EPSPowerGetShiftType(SlepcEPS,SlepcEPSPowerShiftType*)
 
@@ -119,12 +130,12 @@ cdef extern from "slepceps.h" nogil:
     int EPSArnoldiGetDelayed(SlepcEPS,PetscTruth*)
 
     ctypedef enum SlepcEPSLanczosReorthogType "EPSLanczosReorthogType":
-        EPSLANCZOS_REORTHOG_LOCAL
-        EPSLANCZOS_REORTHOG_FULL
-        EPSLANCZOS_REORTHOG_SELECTIVE
-        EPSLANCZOS_REORTHOG_PERIODIC
-        EPSLANCZOS_REORTHOG_PARTIAL
-        EPSLANCZOS_REORTHOG_DELAYED
+        EPS_LANCZOS_REORTHOG_LOCAL
+        EPS_LANCZOS_REORTHOG_FULL
+        EPS_LANCZOS_REORTHOG_SELECTIVE
+        EPS_LANCZOS_REORTHOG_PERIODIC
+        EPS_LANCZOS_REORTHOG_PARTIAL
+        EPS_LANCZOS_REORTHOG_DELAYED
     int EPSLanczosSetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType)
     int EPSLanczosGetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType*)
 

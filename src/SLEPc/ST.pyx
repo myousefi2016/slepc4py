@@ -25,9 +25,9 @@ class STMatMode(object):
     - `SHELL`:   The matrix ``A-sigma*B`` is handled as an
       implicit matrix.
     """
-    COPY    = STMATMODE_COPY
-    INPLACE = STMATMODE_INPLACE
-    SHELL   = STMATMODE_SHELL
+    COPY    = ST_MATMODE_COPY
+    INPLACE = ST_MATMODE_INPLACE
+    SHELL   = ST_MATMODE_SHELL
 
 class STMatStructure(object):
     """
@@ -257,7 +257,7 @@ cdef class ST(Object):
         mode: ST.MatMode enumerate
               The mode flag.
         """
-        cdef SlepcSTMatMode val = STMATMODE_INPLACE
+        cdef SlepcSTMatMode val = ST_MATMODE_INPLACE
         CHKERR( STGetMatMode(self.st, &val) )
         return val
 

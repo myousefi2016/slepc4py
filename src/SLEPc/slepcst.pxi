@@ -8,9 +8,9 @@ cdef extern from "slepcst.h" nogil:
     SlepcSTType STFOLD
 
     ctypedef enum SlepcSTMatMode "STMatMode":
-        STMATMODE_COPY
-        STMATMODE_INPLACE
-        STMATMODE_SHELL
+        ST_MATMODE_COPY
+        ST_MATMODE_INPLACE
+        ST_MATMODE_SHELL
 
     ctypedef enum  PetscMatStructure "MatStructure":
         MAT_SAME_NONZERO_PATTERN      "SAME_NONZERO_PATTERN"
