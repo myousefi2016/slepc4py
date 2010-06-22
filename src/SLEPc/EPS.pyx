@@ -253,6 +253,20 @@ cdef class EPS(Object):
         CHKERR( EPSGetType(self.eps, &eps_type) )
         return cp2str(eps_type)
 
+    def getOptionsPrefix(self):
+        """
+        Gets the prefix used for searching for all EPS options in the
+        database.
+
+        Returns
+        -------
+        prefix: string
+                The prefix string set for this EPS object.
+        """
+        cdef const_char_p prefix = NULL
+        CHKERR( EPSGetOptionsPrefix(self.eps, &prefix) )
+        return cp2str(prefix)
+
     def setOptionsPrefix(self, prefix):
         """
         Sets the prefix used for searching for all EPS options in the
@@ -276,21 +290,21 @@ cdef class EPS(Object):
             E1.setOptionsPrefix("eig1_")
             E2.setOptionsPrefix("eig2_")
         """
-        CHKERR( EPSSetOptionsPrefix(self.eps, str2cp(prefix)) )
+        cdef char *cval= str2cp(prefix)
+        CHKERR( EPSSetOptionsPrefix(self.eps, cval) )
 
-    def getOptionsPrefix(self):
+    def appendOptionsPrefix(self, prefix):
         """
-        Gets the prefix used for searching for all EPS options in the
-        database.
+        Appends to the prefix used for searching for all EPS options
+        in the database.
 
-        Returns
-        -------
+        Parameters
+        ----------
         prefix: string
-                The prefix string set for this EPS object.
+                The prefix string to prepend to all EPS option requests.
         """
-        cdef const_char_p prefix = NULL
-        CHKERR( EPSGetOptionsPrefix(self.eps, &prefix) )
-        return cp2str(prefix)
+        cdef char *cval= str2cp(prefix)
+        CHKERR( EPSAppendOptionsPrefix(self.eps, cval) )
 
     def setFromOptions(self):
         """

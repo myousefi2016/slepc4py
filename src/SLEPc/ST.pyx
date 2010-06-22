@@ -148,7 +148,8 @@ cdef class ST(Object):
         prefix name.  The first character of all runtime options is
         AUTOMATICALLY the hyphen.
         """
-        CHKERR( STSetOptionsPrefix(self.st, str2cp(prefix)) )
+        cdef char *cval= str2cp(prefix)
+        CHKERR( STSetOptionsPrefix(self.st, cval) )
 
     def getOptionsPrefix(self):
         """

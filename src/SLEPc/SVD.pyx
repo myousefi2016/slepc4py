@@ -138,6 +138,20 @@ cdef class SVD(Object):
         CHKERR( SVDGetType(self.svd, &svd_type) )
         return cp2str(svd_type)
 
+    def getOptionsPrefix(self):
+        """
+        Gets the prefix used for searching for all SVD options in the
+        database.
+
+        Returns
+        -------
+        prefix: string
+                The prefix string set for this SVD object.
+        """
+        cdef const_char_p prefix = NULL
+        CHKERR( SVDGetOptionsPrefix(self.svd, &prefix) )
+        return cp2str(prefix)
+
     def setOptionsPrefix(self, prefix):
         """
         Sets the prefix used for searching for all SVD options in the
@@ -161,21 +175,21 @@ cdef class SVD(Object):
             S1.setOptionsPrefix("svd1_")
             S2.setOptionsPrefix("svd2_")
         """
-        CHKERR( SVDSetOptionsPrefix(self.svd, str2cp(prefix)) )
+        cdef char *cval= str2cp(prefix)
+        CHKERR( SVDSetOptionsPrefix(self.svd, cval) )
 
-    def getOptionsPrefix(self):
+    def appendOptionsPrefix(self, prefix):
         """
-        Gets the prefix used for searching for all SVD options in the
-        database.
+        Appends to the prefix used for searching for all SVD options
+        in the database.
 
-        Returns
-        -------
+        Parameters
+        ----------
         prefix: string
-                The prefix string set for this SVD object.
+                The prefix string to prepend to all SVD option requests.
         """
-        cdef const_char_p prefix = NULL
-        CHKERR( SVDGetOptionsPrefix(self.svd, &prefix) )
-        return cp2str(prefix)
+        cdef char *cval= str2cp(prefix)
+        CHKERR( SVDAppendOptionsPrefix(self.svd, cval) )
 
     def setFromOptions(self):
         """
@@ -436,7 +450,7 @@ cdef class SVD(Object):
 
     def cancelMonitor(self):
         """
-        Clears all monitors for an EPS object.
+        Clears all monitors for an SVD object.
         """
         CHKERR( SVDMonitorCancel(self.svd) )
 
