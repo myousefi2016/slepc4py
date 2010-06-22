@@ -587,7 +587,7 @@ cdef class EPS(Object):
         cdef PetscReal rval = 0
         cdef PetscInt  ival = 0
         CHKERR( EPSGetTolerances(self.eps, &rval, &ival) )
-        return (toReal(rval), ival)
+        return (toReal(rval), toInt(ival))
 
     def setTolerances(self, tol=None, max_it=None):
         """
@@ -609,7 +609,7 @@ cdef class EPS(Object):
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
         if tol    is not None: rval = asReal(tol)
-        if max_it is not None: ival = max_it
+        if max_it is not None: ival = asInt(max_it)
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
 
     def getDimensions(self):
@@ -631,7 +631,7 @@ cdef class EPS(Object):
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
         CHKERR( EPSGetDimensions(self.eps, &ival1, &ival2, &ival3) )
-        return (ival1, ival2, ival3)
+        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     def setDimensions(self, nev=None, ncv=None, mpd=None):
         """
@@ -670,9 +670,9 @@ cdef class EPS(Object):
         cdef PetscInt ival1 = PETSC_IGNORE
         cdef PetscInt ival2 = PETSC_IGNORE
         cdef PetscInt ival3 = PETSC_IGNORE
-        if nev is not None: ival1 = nev
-        if ncv is not None: ival2 = ncv
-        if mpd is not None: ival3 = mpd
+        if nev is not None: ival1 = asInt(nev)
+        if ncv is not None: ival2 = asInt(ncv)
+        if mpd is not None: ival3 = asInt(mpd)
         CHKERR( EPSSetDimensions(self.eps, ival1, ival2, ival3) )
 
     def getST(self):
@@ -786,7 +786,7 @@ cdef class EPS(Object):
         if isinstance(space, Vec): space = [space]
         nds = len(space)
         cdef tmp = allocate(nds*sizeof(Vec),<void**>&vds)
-        for i in range(nds): vds[i] = (<Vec?>space[i]).vec
+        for i in range(nds): vds[i] = (<Vec?>space[<Py_ssize_t>i]).vec
         CHKERR( EPSSetDeflationSpace(self.eps, nds, vds) )
 
     def removeDeflationSpace(self):
@@ -813,7 +813,7 @@ cdef class EPS(Object):
         if isinstance(space, Vec): space = [space]
         ns = len(space)
         cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
         CHKERR( EPSSetInitialSpace(self.eps, ns, vs) )
 
     def setInitialSpaceLeft(self, space):
@@ -832,7 +832,7 @@ cdef class EPS(Object):
         if isinstance(space, Vec): space = [space]
         ns = len(space)
         cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
         CHKERR( EPSSetInitialSpaceLeft(self.eps, ns, vs) )
 
     #
@@ -877,7 +877,7 @@ cdef class EPS(Object):
         """
         cdef PetscInt ival = 0
         CHKERR( EPSGetIterationNumber(self.eps, &ival) )
-        return ival
+        return toInt(ival)
 
     def getConvergedReason(self):
         """
@@ -908,7 +908,7 @@ cdef class EPS(Object):
         """
         cdef PetscInt ival = 0
         CHKERR( EPSGetConverged(self.eps, &ival) )
-        return ival
+        return toInt(ival)
 
     def getEigenvalue(self, int i):
         """
@@ -1268,7 +1268,7 @@ cdef class EPS(Object):
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
         CHKERR( EPSGetOperationCounters(self.eps, &ival1, &ival2, &ival3) )
-        return (ival1, ival2, ival3)
+        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     #
 

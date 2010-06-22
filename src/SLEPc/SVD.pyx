@@ -291,7 +291,7 @@ cdef class SVD(Object):
         cdef PetscReal rval = 0
         cdef PetscInt  ival = 0
         CHKERR( SVDGetTolerances(self.svd, &rval, &ival) )
-        return (toReal(rval), ival)
+        return (toReal(rval), toInt(ival))
 
     def setTolerances(self, tol=None, max_it=None):
         """
@@ -313,7 +313,7 @@ cdef class SVD(Object):
         cdef PetscReal rval = PETSC_IGNORE
         cdef PetscInt  ival = PETSC_IGNORE
         if tol    is not None: rval = asReal(tol)
-        if max_it is not None: ival = max_it
+        if max_it is not None: ival = asInt(max_it)
         CHKERR( SVDSetTolerances(self.svd, rval, ival) )
 
     def getDimensions(self):
@@ -335,7 +335,7 @@ cdef class SVD(Object):
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
         CHKERR( SVDGetDimensions(self.svd, &ival1, &ival2, &ival3) )
-        return (ival1, ival2, ival3)
+        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     def setDimensions(self, nsv=None, ncv=None, mpd=None):
         """
@@ -373,9 +373,9 @@ cdef class SVD(Object):
         cdef PetscInt ival1 = PETSC_IGNORE
         cdef PetscInt ival2 = PETSC_IGNORE
         cdef PetscInt ival3 = PETSC_IGNORE
-        if nsv is not None: ival1 = nsv
-        if ncv is not None: ival2 = ncv
-        if mpd is not None: ival3 = mpd
+        if nsv is not None: ival1 = asInt(nsv)
+        if ncv is not None: ival2 = asInt(ncv)
+        if mpd is not None: ival3 = asInt(mpd)
         CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival2) )
 
     def getIP(self):
@@ -443,7 +443,7 @@ cdef class SVD(Object):
         if isinstance(space, Vec): space = [space]
         ns = len(space)
         cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
         CHKERR( SVDSetInitialSpace(self.svd, ns, vs) )
 
     #
@@ -488,7 +488,7 @@ cdef class SVD(Object):
         """
         cdef PetscInt ival = 0
         CHKERR( SVDGetIterationNumber(self.svd, &ival) )
-        return ival
+        return toInt(ival)
 
     def getConvergedReason(self):
         """
@@ -519,7 +519,7 @@ cdef class SVD(Object):
         """
         cdef PetscInt ival = 0
         CHKERR( SVDGetConverged(self.svd, &ival) )
-        return ival
+        return toInt(ival)
 
     def getValue(self, int i):
         """
@@ -683,7 +683,7 @@ cdef class SVD(Object):
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
         CHKERR( SVDGetOperationCounters(self.svd, &ival1, &ival2) )
-        return (ival1, ival2)
+        return (toInt(ival1), toInt(ival2))
 
     #
 

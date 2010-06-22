@@ -353,7 +353,7 @@ cdef class IP(Object):
             tmp1 = allocate(n*sizeof(PetscVec),<void**>&V)
             tmp2 = allocate(n*sizeof(PetscScalar),<void**>&H)
             for i in range(n):
-                V[i] = (<Vec?>VS[i]).vec
+                V[i] = (<Vec?>VS[<Py_ssize_t>i]).vec
                 H[i] = 0
         CHKERR( IPOrthogonalize(self.ip,
                                 0, NULL, n, NULL, V, v.vec,
