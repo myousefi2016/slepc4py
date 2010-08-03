@@ -4,17 +4,19 @@ class STType(object):
     """
     ST types
 
+    - `SHELL`:  User-defined.
     - `SHIFT`:  Shift from origin.
-    - `SINV`:   Shift-and-invert.
+    - `SINVERT`: Shift-and-invert.
     - `CAYLEY`: Cayley transform.
     - `FOLD`:   Folded spectrum.
-    - `SHELL`:  User-defined.
+    - `PRECOND`: 
     """
-    SHIFT  = STSHIFT
-    SINV   = STSINV
-    CAYLEY = STCAYLEY
-    FOLD   = STFOLD
-    SHELL  = STSHELL
+    SHELL   = STSHELL
+    SHIFT   = STSHIFT
+    SINVERT = STSINVERT
+    CAYLEY  = STCAYLEY
+    FOLD    = STFOLD
+    PRECOND = STPRECOND
 
 class STMatMode(object):
     """
@@ -410,20 +412,6 @@ cdef class ST(Object):
         """
         cdef PetscScalar sval = asScalar(tau)
         CHKERR( STCayleySetAntishift(self.st, sval) )
-
-    def setFoldLeftSide(self, left):
-        """
-        Sets a flag to compute eigenvalues on the left side of shift.
-
-        Parameters
-        ----------
-        left: boolean
-              True if the wanted eigenvalues are on the left side
-              of the shift.
-        """
-        cdef PetscTruth tval = PETSC_FALSE
-        if left: tval = PETSC_TRUE
-        CHKERR( STFoldSetLeftSide(self.st, tval) )
 
     #
 

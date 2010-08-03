@@ -20,6 +20,13 @@ typedef struct _p_PetscFwk *PetscFwk;
 
 #if SLEPC_VERSION_(3,0,0)
 /**/
+#define STINVERT   STINV
+#define STPRECOND  "precond"
+/**/
+#endif
+
+#if SLEPC_VERSION_(3,0,0)
+/**/
 #define ST_MATMODE_COPY    STMATMODE_COPY
 #define ST_MATMODE_INPLACE STMATMODE_INPLACE
 #define ST_MATMODE_SHELL   STMATMODE_SHELL

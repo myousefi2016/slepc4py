@@ -3,9 +3,10 @@ cdef extern from "slepcst.h" nogil:
     ctypedef char* SlepcSTType "const char*"
     SlepcSTType STSHELL
     SlepcSTType STSHIFT
-    SlepcSTType STSINV
+    SlepcSTType STSINVERT
     SlepcSTType STCAYLEY
     SlepcSTType STFOLD
+    SlepcSTType STPRECOND
 
     ctypedef enum SlepcSTMatMode "STMatMode":
         ST_MATMODE_COPY
@@ -49,4 +50,3 @@ cdef extern from "slepcst.h" nogil:
     int STApplyTranspose(SlepcST,PetscVec,PetscVec)
 
     int STCayleySetAntishift(SlepcST,PetscScalar)
-    int STFoldSetLeftSide(SlepcST,PetscTruth)
