@@ -1,12 +1,3 @@
-#if !defined(PETSC_COMPAT_H)
-#define PETSC_COMPAT_H
-#ifndef __PETSCFWK_H
-struct _p_PetscFwk;
-typedef struct _p_PetscFwk *PetscFwk;
-#endif/*__PETSCFWK_H*/
-#endif /* !PETSC_COMPAT_H */
-
-
 #if !defined(SLEPC_COMPAT_H)
 #define SLEPC_COMPAT_H
 
@@ -20,12 +11,19 @@ typedef struct _p_PetscFwk *PetscFwk;
 
 #if SLEPC_VERSION_(3,0,0)
 /**/
-#define STINVERT   STINV
-#define STPRECOND  "precond"
+#define EPSGD  "gd"
+#define EPSJD  "jd"
+/**/
+#define EPS_HARMONIC_RELATIVE EPS_HARMONIC
+#define EPS_HARMONIC_RIGHT    EPS_HARMONIC
+#define EPS_HARMONIC_LARGEST  EPS_HARMONIC
 /**/
 #endif
 
 #if SLEPC_VERSION_(3,0,0)
+/**/
+#define STSINVERT  STSINV
+#define STPRECOND  "precond"
 /**/
 #define ST_MATMODE_COPY    STMATMODE_COPY
 #define ST_MATMODE_INPLACE STMATMODE_INPLACE

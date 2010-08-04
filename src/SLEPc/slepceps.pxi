@@ -6,7 +6,8 @@ cdef extern from "slepceps.h" nogil:
     SlepcEPSType EPSARNOLDI
     SlepcEPSType EPSLANCZOS
     SlepcEPSType EPSKRYLOVSCHUR
-    SlepcEPSType EPSDSITRLANCZOS
+    SlepcEPSType EPSGD
+    SlepcEPSType EPSJD
     SlepcEPSType EPSLAPACK
     SlepcEPSType EPSARPACK
     SlepcEPSType EPSBLZPACK
@@ -20,24 +21,26 @@ cdef extern from "slepceps.h" nogil:
         EPS_NHEP
         EPS_GNHEP
         EPS_PGNHEP
-        EPS_GHIEP
 
     ctypedef enum SlepcEPSExtraction "EPSExtraction":
         EPS_RITZ
         EPS_HARMONIC
+        EPS_HARMONIC_RELATIVE
+        EPS_HARMONIC_RIGHT
+        EPS_HARMONIC_LARGEST
         EPS_REFINED
         EPS_REFINED_HARMONIC
 
     ctypedef enum SlepcEPSWhich "EPSWhich":
-        EPS_LARGEST_MAGNITUDE,
-        EPS_LARGEST_REAL,
-        EPS_LARGEST_IMAGINARY,
-        EPS_SMALLEST_MAGNITUDE,
-        EPS_SMALLEST_REAL,
-        EPS_SMALLEST_IMAGINARY,
-        EPS_TARGET_MAGNITUDE,
-        EPS_TARGET_REAL,
-        EPS_TARGET_IMAGINARY,
+        EPS_LARGEST_MAGNITUDE
+        EPS_LARGEST_REAL
+        EPS_LARGEST_IMAGINARY
+        EPS_SMALLEST_MAGNITUDE
+        EPS_SMALLEST_REAL
+        EPS_SMALLEST_IMAGINARY
+        EPS_TARGET_MAGNITUDE
+        EPS_TARGET_REAL
+        EPS_TARGET_IMAGINARY
         EPS_WHICH_USER
 
     ctypedef enum SlepcEPSBalance "EPSBalance":

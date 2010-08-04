@@ -8,7 +8,6 @@ class EPSType(object):
 
     - `KRYLOVSCHUR`:  Krylov-Schur (default).
     - `LANCZOS`:      Lanczos.
-    - `DSITRLANCZOS`: Thick restart Lanczos.
     - `ARNOLDI`:      Arnoldi.
     - `SUBSPACE`:     Subspace Iteration.
     - `POWER`:        Power Iteration, Inverse Iteration, RQI.
@@ -24,12 +23,13 @@ class EPSType(object):
     - `PRIMME`:
     """
     # provided implementations
-    KRYLOVSCHUR  = EPSKRYLOVSCHUR
-    DSITRLANCZOS = EPSDSITRLANCZOS
-    LANCZOS      = EPSLANCZOS
-    ARNOLDI      = EPSARNOLDI
-    SUBSPACE     = EPSSUBSPACE
     POWER        = EPSPOWER
+    SUBSPACE     = EPSSUBSPACE
+    ARNOLDI      = EPSARNOLDI
+    LANCZOS      = EPSLANCZOS
+    KRYLOVSCHUR  = EPSKRYLOVSCHUR
+    GD           = EPSGD
+    JD           = EPSJD
     LAPACK       = EPSLAPACK
     # with external libraries
     ARPACK       = EPSARPACK
@@ -48,29 +48,32 @@ class EPSProblemType(object):
     - `GNHEP`:  Generalized Non-Hermitian eigenproblem.
     - `PGNHEP`: Generalized Non-Hermitian eigenproblem 
                 with positive definite ``B``.
-    - `GHIEP`:  Generalized Hermitian eigenproblem
-                with indefinite ``B``.
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
     GHEP   = EPS_GHEP
     GNHEP  = EPS_GNHEP
     PGNHEP = EPS_PGNHEP
-    GHIEP  = EPS_GHIEP
 
 class EPSExtraction(object):
     """
     EPS extraction technique
 
-    - `RITZ`:             Standard Rayleigh-Ritz extraction.
-    - `HARMONIC`:         Harmonic extraction.
-    - `REFINED`:          Refined extraction.
-    - `REFINED_HARMONIC`: Refined harmonic extraction.
+    - `RITZ`:              Standard Rayleigh-Ritz extraction.
+    - `HARMONIC`:          Harmonic extraction.
+    - `HARMONIC_RELATIVE`: 
+    - `HARMONIC_RIGHT`:    
+    - `HARMONIC_LARGEST`:  
+    - `REFINED`:           Refined extraction.
+    - `REFINED_HARMONIC`:  Refined harmonic extraction.
     """
-    RITZ             = EPS_RITZ
-    HARMONIC         = EPS_HARMONIC
-    REFINED          = EPS_REFINED
-    REFINED_HARMONIC = EPS_REFINED_HARMONIC
+    RITZ              = EPS_RITZ
+    HARMONIC          = EPS_HARMONIC
+    HARMONIC_RELATIVE = EPS_HARMONIC_RELATIVE
+    HARMONIC_RIGHT    = EPS_HARMONIC_RIGHT
+    HARMONIC_LARGEST  = EPS_HARMONIC_LARGEST
+    REFINED           = EPS_REFINED
+    REFINED_HARMONIC  = EPS_REFINED_HARMONIC
 
 class EPSBalance(object):
     """
