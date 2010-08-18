@@ -41,29 +41,36 @@ class SlepcConfig(PetscConfig):
 
     def configure_extension(self, extension):
         PetscConfig.configure_extension(self, extension)
+        SLEPC_DIR  = self.SLEPC_DIR
+        PETSC_ARCH = self.PETSC_ARCH
         # define macros
-        macros = [('SLEPC_DIR', self.SLEPC_DIR)]
+        macros = [('SLEPC_DIR', SLEPC_DIR)]
         extension.define_macros.extend(macros)
         # includes and libraries
-        if (os.path.exists(os.path.join(self.SLEPC_DIR, 'conf')) or
-            os.path.exists(os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'conf'))):
+        if (os.path.exists(os.path.join(SLEPC_DIR, 'conf')) or
+            os.path.exists(os.path.join(SLEPC_DIR, PETSC_ARCH, 'conf'))):
             SLEPC_INCLUDE = [
-                os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'include'),
-                os.path.join(self.SLEPC_DIR, 'include'),
+                os.path.join(SLEPC_DIR, PETSC_ARCH, 'include'),
+                os.path.join(SLEPC_DIR, 'include'),
                 ]
             SLEPC_LIB_DIR = [
-                os.path.join(self.SLEPC_DIR, self.PETSC_ARCH, 'lib'),
-                os.path.join(self.SLEPC_DIR, 'lib'),
+                os.path.join(SLEPC_DIR, PETSC_ARCH, 'lib'),
+                os.path.join(SLEPC_DIR, 'lib'),
                 ]
         else:
-            SLEPC_INCLUDE = [os.path.join(self.SLEPC_DIR, 'include'), self.SLEPC_DIR]
-            SLEPC_LIB_DIR = [os.path.join(self.SLEPC_DIR, 'lib', self.PETSC_ARCH)]
+            SLEPC_INCLUDE = [os.path.join(SLEPC_DIR, 'include'), SLEPC_DIR]
+            SLEPC_LIB_DIR = [os.path.join(SLEPC_DIR, 'lib', PETSC_ARCH)]
         slepc_cfg = { }
         slepc_cfg['include_dirs'] = SLEPC_INCLUDE
         slepc_cfg['library_dirs'] = SLEPC_LIB_DIR
         slepc_cfg['libraries']    = ['slepc']
         slepc_cfg['runtime_library_dirs'] = slepc_cfg['library_dirs']
-        self._configure_ext(extension, slepc_cfg)
+        self._configure_ext(extension, slepc_cfg, preppend=True)
+        if self['BUILDSHAREDLIB'] == 'no':
+            from petsc4py.lib import ImportPETSc
+            PETSc = ImportPETSc(PETSC_ARCH)
+            extension.extra_objects.append(PETSc.__file__)
+
         # extra configuration
         cflags = []
         extension.extra_compile_args.extend(cflags)
