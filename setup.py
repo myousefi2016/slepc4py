@@ -93,28 +93,41 @@ def run_setup():
                           'build_ext'  : build_ext},
           **metadata)
 
-def chk_cython(*C_SOURCE):
+def run_cython(source):
     import sys, os
-    if os.path.exists(os.path.join(*C_SOURCE)):
-        return
-    warn = lambda msg='': sys.stderr.write(msg+'\n')
-    warn("*"*80)
-    warn()
-    warn(" You need to generate C source files with Cython!!")
-    warn(" Download and install Cython <http://www.cython.org>")
-    warn(" and next execute in your shell:")
-    warn()
-    warn("   $ python ./conf/cythonize.py")
-    warn()
-    warn("*"*80)
+    source_c = os.path.splitext(source)[0] + '.c'
+    if (os.path.exists(source_c)):
+        return False
+    try:
+        import Cython
+    except ImportError:
+        warn = lambda msg='': sys.stderr.write(msg+'\n')
+        warn("*"*80)
+        warn()
+        warn(" You need to generate C source files with Cython!!")
+        warn(" Download and install Cython <http://www.cython.org>")
+        warn()
+        warn("*"*80)
+        raise SystemExit
+    from distutils import log
+    from conf.cythonize import run as cythonize
+    import petsc4py
+    log.info("cythonizing '%s' source" % source)
+    cythonize(source, includes=[petsc4py.get_include()])
+    return True
 
-if __name__ == '__main__':
+def main():
+    import os
     try:
         run_setup()
     except:
-        try:
-            chk_cython('src', 'slepc4py.SLEPc.c')
-        finally:
+        done = run_cython(os.path.join('src', 'slepc4py.SLEPc.pyx'))
+        if done:
+            run_setup()
+        else:
             raise
+
+if __name__ == '__main__':
+    main()
 
 # -----------------------------------------------------------------------------
