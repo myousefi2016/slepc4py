@@ -615,6 +615,33 @@ cdef class EPS(Object):
         if max_it is not None: ival = asInt(max_it)
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
 
+    def getTrackAll(self):
+        """
+        Returns the flag indicating whether all residuals must be
+        computed explicitly or not.
+
+        Returns
+        -------
+        trackall: bool
+            Whether the solver compute all residuals or not.
+        """
+        cdef PetscTruth tval = PETSC_FALSE
+        CHKERR( EPSGetTrackAll(self.eps, &tval) )
+        return <bint>tval
+
+    def setTrackAll(self, trackall):
+        """
+        Specifies if the solver must compute the residual of all
+        approximate eigenpairs or not.
+
+        Parameters
+        ----------
+        trackall: bool
+            Whether compute all residuals or not.
+        """
+        cdef PetscTruth tval = trackall
+        CHKERR( EPSSetTrackAll(self.eps, tval) )
+
     def getDimensions(self):
         """
         Gets the number of eigenvalues to compute and the dimension of

@@ -94,6 +94,9 @@ cdef extern from "slepceps.h" nogil:
     int EPSSetOperators(SlepcEPS,PetscMat,PetscMat)
     int EPSGetOperators(SlepcEPS,PetscMat*,PetscMat*)
 
+    int EPSSetTrackAll(SlepcEPS,PetscTruth)
+    int EPSGetTrackAll(SlepcEPS,PetscTruth*)
+
     int EPSSetDeflationSpace(SlepcEPS,PetscInt,PetscVec*)
     int EPSRemoveDeflationSpace(SlepcEPS)
 

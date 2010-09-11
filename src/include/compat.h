@@ -41,8 +41,7 @@
 /**/
 #undef __FUNCT__
 #define __FUNCT__ "IPOrthogonalize_300"
-PETSC_STATIC_INLINE
-PetscErrorCode IPOrthogonalize_300(IP ip,
+static PetscErrorCode IPOrthogonalize_300(IP ip,
 				   PetscInt nds,Vec *DS,
 				   PetscInt n,PetscTruth *which,Vec *V,
 				   Vec v,PetscScalar *H,PetscReal *norm,
@@ -87,7 +86,7 @@ PetscErrorCode IPOrthogonalize_300(IP ip,
 /**/
 #undef __FUNCT__  
 #define __FUNCT__ "EPSGetLeftVectorsWanted"
-PetscErrorCode EPSGetLeftVectorsWanted(EPS eps,PetscTruth *leftvecs)
+static PetscErrorCode EPSGetLeftVectorsWanted(EPS eps,PetscTruth *leftvecs)
 {
   EPSClass       epsclass;
   PetscErrorCode ierr;
@@ -100,7 +99,7 @@ PetscErrorCode EPSGetLeftVectorsWanted(EPS eps,PetscTruth *leftvecs)
 }
 #undef __FUNCT__  
 #define __FUNCT__ "EPSSetLeftVectorsWanted"
-PetscErrorCode EPSSetLeftVectorsWanted(EPS eps,PetscTruth leftvecs)
+static PetscErrorCode EPSSetLeftVectorsWanted(EPS eps,PetscTruth leftvecs)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -117,8 +116,7 @@ typedef enum {
 } EPSBalance;
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetBalance"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetBalance(EPS eps,EPSBalance b,PetscInt i,PetscReal c)
+static PetscErrorCode EPSSetBalance(EPS eps,EPSBalance b,PetscInt i,PetscReal c)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -127,8 +125,7 @@ PetscErrorCode EPSSetBalance(EPS eps,EPSBalance b,PetscInt i,PetscReal c)
 }
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetBalance"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSGetBalance(EPS eps,EPSBalance *b,PetscInt *i,PetscReal *c)
+static PetscErrorCode EPSGetBalance(EPS eps,EPSBalance *b,PetscInt *i,PetscReal *c)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -148,8 +145,7 @@ PetscErrorCode EPSGetBalance(EPS eps,EPSBalance *b,PetscInt *i,PetscReal *c)
 /**/
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetInitialSpace"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetInitialSpace(EPS eps, PetscInt n, Vec *is)
+static PetscErrorCode EPSSetInitialSpace(EPS eps, PetscInt n, Vec *is)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -166,8 +162,7 @@ PetscErrorCode EPSSetInitialSpace(EPS eps, PetscInt n, Vec *is)
 }
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetInitialSpaceLeft"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetInitialSpaceLeft(EPS eps, PetscInt n, Vec *is)
+static PetscErrorCode EPSSetInitialSpaceLeft(EPS eps, PetscInt n, Vec *is)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -182,14 +177,31 @@ PetscErrorCode EPSSetInitialSpaceLeft(EPS eps, PetscInt n, Vec *is)
                             (PetscObject)is[0]);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
+#undef __FUNCT__
+#define __FUNCT__ "EPSSetTrackAll"
+static PetscErrorCode EPSSetTrackAll(EPS eps,PetscTruth trackall)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(PETSC_ERR_SUP);
+}
+#undef __FUNCT__
+#define __FUNCT__ "EPSGetTrackAll"
+static PetscErrorCode EPSGetTrackAll(EPS eps,PetscTruth *trackall) 
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(PETSC_ERR_SUP);
+}
 #endif
 
 #if SLEPC_VERSION_(3,0,0)
 /**/
 #undef __FUNCT__
 #define __FUNCT__ "SVDSetInitialSpace"
-PETSC_STATIC_INLINE
-PetscErrorCode SVDSetInitialSpace(SVD svd, PetscInt n, Vec *is)
+static PetscErrorCode SVDSetInitialSpace(SVD svd, PetscInt n, Vec *is)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -214,8 +226,7 @@ PetscErrorCode SVDSetInitialSpace(SVD svd, PetscInt n, Vec *is)
 
 #undef __FUNCT__
 #define __FUNCT__ "IPGetOptionsPrefix"
-PETSC_STATIC_INLINE
-PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
+static PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -227,8 +238,7 @@ PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetOperators_233"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSGetOperators_233(EPS eps, Mat *A, Mat *B)
+static PetscErrorCode EPSGetOperators_233(EPS eps, Mat *A, Mat *B)
 {
   ST st;
   PetscErrorCode ierr;
@@ -244,8 +254,7 @@ PetscErrorCode EPSGetOperators_233(EPS eps, Mat *A, Mat *B)
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetOperators_233"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetOperators_233(EPS eps, Mat A, Mat B)
+static PetscErrorCode EPSSetOperators_233(EPS eps, Mat A, Mat B)
 {
   ST st;
   PetscErrorCode ierr;
@@ -263,8 +272,7 @@ PetscErrorCode EPSSetOperators_233(EPS eps, Mat A, Mat B)
 
 #undef __FUNCT__
 #define __FUNCT__ "STSetOperators_233"
-PETSC_STATIC_INLINE
-PetscErrorCode STSetOperators_233(ST st, Mat A, Mat B)
+static PetscErrorCode STSetOperators_233(ST st, Mat A, Mat B)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -292,8 +300,7 @@ typedef enum {
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetExtraction"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetExtraction(EPS eps,EPSExtraction ext)
+static PetscErrorCode EPSSetExtraction(EPS eps,EPSExtraction ext)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -303,8 +310,7 @@ PetscErrorCode EPSSetExtraction(EPS eps,EPSExtraction ext)
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetExtraction"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSGetExtraction(EPS eps,EPSExtraction *ext)
+static PetscErrorCode EPSGetExtraction(EPS eps,EPSExtraction *ext)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -314,8 +320,7 @@ PetscErrorCode EPSGetExtraction(EPS eps,EPSExtraction *ext)
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetTarget"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetTarget(EPS eps,PetscScalar target)
+static PetscErrorCode EPSSetTarget(EPS eps,PetscScalar target)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -325,8 +330,7 @@ PetscErrorCode EPSSetTarget(EPS eps,PetscScalar target)
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetTarget"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSGetTarget(EPS eps,PetscScalar *target)
+static PetscErrorCode EPSGetTarget(EPS eps,PetscScalar *target)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -341,8 +345,7 @@ PetscErrorCode EPSGetTarget(EPS eps,PetscScalar *target)
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetDimensions_233"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSSetDimensions_233(EPS eps,PetscInt nev,PetscInt ncv,PetscInt mpd)
+static PetscErrorCode EPSSetDimensions_233(EPS eps,PetscInt nev,PetscInt ncv,PetscInt mpd)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -354,8 +357,7 @@ PetscErrorCode EPSSetDimensions_233(EPS eps,PetscInt nev,PetscInt ncv,PetscInt m
 
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetDimensions_233"
-PETSC_STATIC_INLINE
-PetscErrorCode EPSGetDimensions_233(EPS eps, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
+static PetscErrorCode EPSGetDimensions_233(EPS eps, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -368,8 +370,7 @@ PetscErrorCode EPSGetDimensions_233(EPS eps, PetscInt *nev,PetscInt *ncv,PetscIn
 
 #undef __FUNCT__
 #define __FUNCT__ "SVDSetDimensions_233"
-PETSC_STATIC_INLINE
-PetscErrorCode SVDSetDimensions_233(SVD svd,PetscInt nev,PetscInt ncv,PetscInt mpd)
+static PetscErrorCode SVDSetDimensions_233(SVD svd,PetscInt nev,PetscInt ncv,PetscInt mpd)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -381,8 +382,7 @@ PetscErrorCode SVDSetDimensions_233(SVD svd,PetscInt nev,PetscInt ncv,PetscInt m
 
 #undef __FUNCT__
 #define __FUNCT__ "SVDGetDimensions_233"
-PETSC_STATIC_INLINE
-PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
+static PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -399,12 +399,11 @@ PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscIn
 #if SLEPC_VERSION_(2,3,3)
 #undef __FUNCT__
 #define __FUNCT__ "IPOrthogonalize_233"
-PETSC_STATIC_INLINE
-PetscErrorCode IPOrthogonalize_233(IP ip,
-				   PetscInt nds,Vec *DS,
-				   PetscInt n,PetscTruth *which,Vec *V,
-				   Vec v,PetscScalar *H,PetscReal *norm,
-				   PetscTruth *lindep)
+static PetscErrorCode IPOrthogonalize_233(IP ip,
+                                          PetscInt nds,Vec *DS,
+                                          PetscInt n,PetscTruth *which,Vec *V,
+                                          Vec v,PetscScalar *H,PetscReal *norm,
+                                          PetscTruth *lindep)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
