@@ -113,17 +113,25 @@ class BaseTestObject(object):
 
 # --------------------------------------------------------------------
 
+class TestObjectST(BaseTestObject, unittest.TestCase):
+    CLASS = SLEPc.ST
+
+class TestObjectIP(BaseTestObject, unittest.TestCase):
+    CLASS = SLEPc.IP
+
 class TestObjectEPS(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.EPS
 
 class TestObjectSVD(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.SVD
 
-class TestObjectST(BaseTestObject, unittest.TestCase):
-    CLASS = SLEPc.ST
+class TestObjectQEP(BaseTestObject, unittest.TestCase):
+    CLASS = SLEPc.QEP
 
-class TestObjectIP(BaseTestObject, unittest.TestCase):
-    CLASS = SLEPc.IP
+try:
+    SLEPc.QEP().create().destroy()
+except:
+    del TestObjectQEP
 
 # --------------------------------------------------------------------
 

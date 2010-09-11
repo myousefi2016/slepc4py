@@ -9,6 +9,19 @@
    (SLEPC_VERSION_RELEASE  == 1))
 #endif
 
+#undef  __FUNCT__
+#define __FUNCT__ "SlepcInitializePackage"
+static PetscErrorCode SlepcInitializePackage(char *path)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  ierr = 0;
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+  ierr = PetscCookieRegister("Quadratic Eigenproblem Solver",&QEP_COOKIE);CHKERRQ(ierr);
+#endif
+  PetscFunctionReturn(0);
+}
+
 #if SLEPC_VERSION_(3,0,0)
 /**/
 #define EPSGD  "gd"
