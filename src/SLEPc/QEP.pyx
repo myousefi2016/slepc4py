@@ -266,8 +266,8 @@ cdef class QEP(Object):
 
     def getTrackAll(self):
         """
-        Returns the flag indicating whether all residuals must be
-        computed explicitly or not.
+        Returns the flag indicating whether all residual norms must be
+        computed or not.
 
         Returns
         -------
@@ -336,6 +336,12 @@ cdef class QEP(Object):
 
     def getScaleFactor(self):
         """
+        Gets the factor used for scaling the quadratic eigenproblem.
+
+        Returns
+        -------
+        alpha: real
+            The scaling factor.
         """
         cdef PetscReal rval = 0
         CHKERR( QEPGetScaleFactor(self.qep, &rval) )
@@ -343,6 +349,13 @@ cdef class QEP(Object):
 
     def setScaleFactor(self, alpha):
         """
+        Sets the scaling factor to be used for scaling the quadratic problem
+        before attempting to solve.
+
+        Parameters
+        ----------
+        alpha: real
+            The scaling factor.
         """
         cdef PetscReal rval = asReal(alpha)
         CHKERR( QEPSetScaleFactor(self.qep, rval) )
@@ -600,7 +613,7 @@ cdef class QEP(Object):
     def getOperationCounters(self):
         """
         Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `ST` object
+        operations and linear iterations used by the `QEP` object
         during the last `solve()` call.
 
         Returns

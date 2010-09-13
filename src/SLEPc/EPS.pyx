@@ -7,6 +7,8 @@ class EPSType(object):
     Native sparse eigensolvers.
 
     - `KRYLOVSCHUR`:  Krylov-Schur (default).
+    - `GD`:           Generalized Davidson.
+    - `JD`:           Jacobi-Davidson.
     - `LANCZOS`:      Lanczos.
     - `ARNOLDI`:      Arnoldi.
     - `SUBSPACE`:     Subspace Iteration.
@@ -61,9 +63,9 @@ class EPSExtraction(object):
 
     - `RITZ`:              Standard Rayleigh-Ritz extraction.
     - `HARMONIC`:          Harmonic extraction.
-    - `HARMONIC_RELATIVE`: 
-    - `HARMONIC_RIGHT`:    
-    - `HARMONIC_LARGEST`:  
+    - `HARMONIC_RELATIVE`: Harmonic extraction relative to the eigenvalue.
+    - `HARMONIC_RIGHT`:    Harmonic extraction for rightmost eigenvalues.
+    - `HARMONIC_LARGEST`:  Harmonic extraction for largest magnitude (without target).
     - `REFINED`:           Refined extraction.
     - `REFINED_HARMONIC`:  Refined harmonic extraction.
     """
@@ -100,7 +102,7 @@ class EPSWhich(object):
     - `SMALLEST_MAGNITUDE`: Smallest magnitude.
     - `SMALLEST_REAL`:      Smallest real parts.
     - `SMALLEST_IMAGINARY`: Smallest imaginary parts in magnitude.
-    - `TARGET_MAGNITUDE`:   Magnitude closest to target.
+    - `TARGET_MAGNITUDE`:   Closest to target (in magnitude).
     - `TARGET_REAL`:        Real part closest to target.
     - `TARGET_IMAGINARY`:   Imaginary part closest to target.
     - `USER`:               User defined ordering.
@@ -562,13 +564,8 @@ cdef class EPS(Object):
         Notes
         -----
         The target is a scalar value used to determine the portion of
-        the spectrum of interest.
-
-        If the target is not specified, then eigenvalues are computed
-        according to the which parameter, see `setWhichEigenpairs()`.
-
-        If the target is specified, then the sought-after eigenvalues
-        are those closest to the target.
+        the spectrum of interest. It is used in combination with
+        `setWhichEigenpairs()`.
         """
         cdef PetscScalar sval = asScalar(target)
         CHKERR( EPSSetTarget(self.eps, sval) )
@@ -617,8 +614,8 @@ cdef class EPS(Object):
 
     def getTrackAll(self):
         """
-        Returns the flag indicating whether all residuals must be
-        computed explicitly or not.
+        Returns the flag indicating whether all residual norms must be
+        computed or not.
 
         Returns
         -------
@@ -805,11 +802,14 @@ cdef class EPS(Object):
         instance in the case that an invariant subspace is known
         beforehand (such as the nullspace of the matrix).
 
-        The basis vectors can be provided all at once or incrementally
-        with several calls to `attachDeflationSpace()`.
+        Basis vectors set by a previous call to `setDeflationSpace()`
+        are replaced.
 
         The vectors do not need to be mutually orthonormal, since they
         are explicitly orthonormalized internally.
+
+        These vectors persist from one `solve()` call to the other,
+        use `removeDeflationSpace()` to eliminate them. 
         """
         cdef PetscInt i = 0, nds = 0
         cdef PetscVec* vds = NULL
@@ -822,7 +822,7 @@ cdef class EPS(Object):
     def removeDeflationSpace(self):
         """
         Removes the deflation space previously set with
-        `attachDeflationSpace()`.
+        `setDeflationSpace()`.
         """
         CHKERR( EPSRemoveDeflationSpace(self.eps) )
 
@@ -837,6 +837,21 @@ cdef class EPS(Object):
         ----------
         space: Vec or sequence of Vec
            The initial space
+
+        Notes
+        -----
+        Some solvers start to iterate on a single vector (initial vector). 
+        In that case, the other vectors are ignored.
+
+        In contrast to `setDeflationSpace()`, these vectors do not persist
+        from one `solve()` call to the other, so the initial space should be
+        set every time.
+
+        The vectors do not need to be mutually orthonormal, since they are
+        explicitly orthonormalized internally.
+
+        Common usage of this function is when the user can provide a rough
+        approximation of the wanted eigenspace. Then, convergence may be faster.
         """
         cdef PetscInt i = 0, ns = 0
         cdef PetscVec *vs = NULL
@@ -848,9 +863,9 @@ cdef class EPS(Object):
 
     def setInitialSpaceLeft(self, space):
         """
-        Sets the left initial space from which the eigensolver starts
-        to iterate, corresponding to the left recurrence (two-sided
-        solvers).
+        Sets a basis of vectors that constitute the initial left space, that
+        is, the subspace from which the solver starts to iterate for building
+        the left subspace (in methods that work with two subspaces).
 
         Parameters
         ----------

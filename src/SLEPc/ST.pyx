@@ -9,7 +9,7 @@ class STType(object):
     - `SINVERT`: Shift-and-invert.
     - `CAYLEY`: Cayley transform.
     - `FOLD`:   Folded spectrum.
-    - `PRECOND`: 
+    - `PRECOND`: Preconditioner.
     """
     SHELL   = STSHELL
     SHIFT   = STSHIFT
