@@ -9,7 +9,10 @@ __all__ = ['PetscConfig',
 # --------------------------------------------------------------------
 
 import sys, os, re
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 from copy import deepcopy
 
 from distutils.core import setup
@@ -21,7 +24,7 @@ from distutils.util import split_quoted, execute
 from distutils import log
 from distutils.errors import DistutilsError
 
-import confutils as cfgutils
+from conf.core import confutils as cfgutils
 
 # --------------------------------------------------------------------
 
