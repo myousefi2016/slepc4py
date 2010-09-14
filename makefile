@@ -30,8 +30,9 @@ clean:
 distclean: clean docsclean
 	-${RM} -r build  _configtest.* *.py[co]
 	-${RM} -r MANIFEST dist slepc4py.egg-info
-	-${RM} `find . -name '*~'`
+	-${RM} -r `find . -name '__pycache__'`
 	-${RM} `find . -name '*.py[co]'`
+	-${RM} `find . -name '*~'`
 
 fullclean: distclean srcclean docsclean
 
