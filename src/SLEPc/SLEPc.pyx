@@ -21,16 +21,30 @@ from petsc4py.PETSc cimport KSP, PC
 # -----------------------------------------------------------------------------
 
 cdef extern from *:
-    ctypedef char* char_p       "char*"
-    ctypedef char* const_char_p "const char*"
+    ctypedef char const_char "const char"
 
-cdef inline object cp2str(const_char_p p):
-    if p == NULL: return None
-    else:         return p
+cdef inline object bytes2str(const_char p[]):
+     if p == NULL: 
+         return None
+     cdef bytes s = <char*>p
+     if isinstance(s, str):
+         return s
+     else:
+         return s.decode()
 
-cdef inline char_p str2cp(object s) except ? NULL:
-    if s is None: return NULL
-    else:         return s
+cdef inline object str2bytes(object s, const_char *p[]):
+    if s is None:
+        p[0] = NULL
+        return None
+    if not isinstance(s, bytes):
+        s = s.encode()
+    p[0] = <const_char*>(<char*>s)
+    return s
+
+cdef inline str S_(const_char p[]):
+     if p == NULL: return None
+     cdef bytes s = <char*>p
+     return s if isinstance(s, str) else s.decode()
 
 include "allocate.pxi"
 

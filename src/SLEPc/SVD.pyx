@@ -10,11 +10,11 @@ class SVDType(object):
     - `LANCZOS`:   Lanczos.
     - `TRLANCZOS`: Thick-restart Lanczos.
     """
-    CROSS     = SVDCROSS
-    CYCLIC    = SVDCYCLIC
-    LAPACK    = SVDLAPACK
-    LANCZOS   = SVDLANCZOS
-    TRLANCZOS = SVDTRLANCZOS
+    CROSS     = S_(SVDCROSS)
+    CYCLIC    = S_(SVDCYCLIC)
+    LAPACK    = S_(SVDLAPACK)
+    LANCZOS   = S_(SVDLANCZOS)
+    TRLANCZOS = S_(SVDTRLANCZOS)
 
 class SVDWhich(object):
     """
@@ -123,7 +123,9 @@ cdef class SVD(Object):
         with maximum flexibility in evaluating the different available
         methods.
         """
-        CHKERR( SVDSetType(self.svd, str2cp(svd_type)) )
+        cdef SlepcSVDType cval = NULL
+        svd_type = str2bytes(svd_type, &cval)
+        CHKERR( SVDSetType(self.svd, cval) )
 
     def getType(self):
         """
@@ -136,7 +138,7 @@ cdef class SVD(Object):
         """
         cdef SlepcSVDType svd_type = NULL
         CHKERR( SVDGetType(self.svd, &svd_type) )
-        return cp2str(svd_type)
+        return bytes2str(svd_type)
 
     def getOptionsPrefix(self):
         """
@@ -148,9 +150,9 @@ cdef class SVD(Object):
         prefix: string
                 The prefix string set for this SVD object.
         """
-        cdef const_char_p prefix = NULL
+        cdef const_char *prefix = NULL
         CHKERR( SVDGetOptionsPrefix(self.svd, &prefix) )
-        return cp2str(prefix)
+        return bytes2str(prefix)
 
     def setOptionsPrefix(self, prefix):
         """
@@ -175,7 +177,8 @@ cdef class SVD(Object):
             S1.setOptionsPrefix("svd1_")
             S2.setOptionsPrefix("svd2_")
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( SVDSetOptionsPrefix(self.svd, cval) )
 
     def appendOptionsPrefix(self, prefix):
@@ -188,7 +191,8 @@ cdef class SVD(Object):
         prefix: string
                 The prefix string to prepend to all SVD option requests.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( SVDAppendOptionsPrefix(self.svd, cval) )
 
     def setFromOptions(self):

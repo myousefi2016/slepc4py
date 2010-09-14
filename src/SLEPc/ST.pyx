@@ -11,12 +11,12 @@ class STType(object):
     - `FOLD`:   Folded spectrum.
     - `PRECOND`: Preconditioner.
     """
-    SHELL   = STSHELL
-    SHIFT   = STSHIFT
-    SINVERT = STSINVERT
-    CAYLEY  = STCAYLEY
-    FOLD    = STFOLD
-    PRECOND = STPRECOND
+    SHELL   = S_(STSHELL)
+    SHIFT   = S_(STSHIFT)
+    SINVERT = S_(STSINVERT)
+    CAYLEY  = S_(STCAYLEY)
+    FOLD    = S_(STFOLD)
+    PRECOND = S_(STPRECOND)
 
 class STMatMode(object):
     """
@@ -118,7 +118,9 @@ cdef class ST(Object):
         options database provides the user with maximum flexibility in
         evaluating the different available methods.
         """
-        CHKERR( STSetType(self.st, str2cp(st_type)) )
+        cdef SlepcSTType cval = NULL
+        st_type = str2bytes(st_type, &cval)
+        CHKERR( STSetType(self.st, cval) )
 
     def getType(self):
         """
@@ -131,7 +133,7 @@ cdef class ST(Object):
         """
         cdef SlepcSTType st_type = NULL
         CHKERR( STGetType(self.st, &st_type) )
-        return cp2str(st_type)
+        return bytes2str(st_type)
 
     def setOptionsPrefix(self, prefix):
         """
@@ -150,7 +152,8 @@ cdef class ST(Object):
         prefix name.  The first character of all runtime options is
         AUTOMATICALLY the hyphen.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( STSetOptionsPrefix(self.st, cval) )
 
     def getOptionsPrefix(self):
@@ -163,9 +166,9 @@ cdef class ST(Object):
         prefix: string
                 The prefix string set for this ST object.
         """
-        cdef const_char_p prefix = NULL
+        cdef const_char *prefix = NULL
         CHKERR( STGetOptionsPrefix(self.st, &prefix) )
-        return cp2str(prefix)
+        return bytes2str(prefix)
 
     def setFromOptions(self):
         """

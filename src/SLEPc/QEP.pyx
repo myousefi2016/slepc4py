@@ -1,8 +1,8 @@
 # -----------------------------------------------------------------------------
 
 class QEPType(object):
-    LINEAR   = QEPLINEAR
-    QARNOLDI = QEPQARNOLDI
+    LINEAR   = S_(QEPLINEAR)
+    QARNOLDI = S_(QEPQARNOLDI)
 
 class QEPProblemType(object):
     GENERAL    = QEP_GENERAL
@@ -86,9 +86,10 @@ cdef class QEP(Object):
         Parameters
         ----------
         qep_type: QEP.Type enumerate
-            The solver to be used.
+            T5he solver to be used.
         """
-        cdef SlepcQEPType cval = str2cp(qep_type)
+        cdef SlepcQEPType cval = NULL
+        qep_type = str2bytes(qep_type, &cval)
         CHKERR( QEPSetType(self.qep, cval) )
 
     def getType(self):
@@ -102,7 +103,7 @@ cdef class QEP(Object):
         """
         cdef SlepcQEPType qep_type = NULL
         CHKERR( QEPGetType(self.qep, &qep_type) )
-        return cp2str(qep_type)
+        return bytes2str(qep_type)
 
     def getOptionsPrefix(self):
         """
@@ -114,9 +115,9 @@ cdef class QEP(Object):
         prefix: string
             The prefix string set for this QEP object.
         """
-        cdef const_char_p prefix = NULL
+        cdef const_char *prefix = NULL
         CHKERR( QEPGetOptionsPrefix(self.qep, &prefix) )
-        return cp2str(prefix)
+        return bytes2str(prefix)
 
     def setOptionsPrefix(self, prefix):
         """
@@ -128,7 +129,8 @@ cdef class QEP(Object):
         prefix: string
             The prefix string to prepend to all QEP option requests.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( QEPSetOptionsPrefix(self.qep, cval) )
 
     def appendOptionsPrefix(self, prefix):
@@ -141,7 +143,8 @@ cdef class QEP(Object):
         prefix: string
             The prefix string to prepend to all QEP option requests.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( QEPAppendOptionsPrefix(self.qep, cval) )
 
     def setFromOptions(self):

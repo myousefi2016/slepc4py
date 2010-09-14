@@ -25,20 +25,20 @@ class EPSType(object):
     - `PRIMME`:
     """
     # provided implementations
-    POWER        = EPSPOWER
-    SUBSPACE     = EPSSUBSPACE
-    ARNOLDI      = EPSARNOLDI
-    LANCZOS      = EPSLANCZOS
-    KRYLOVSCHUR  = EPSKRYLOVSCHUR
-    GD           = EPSGD
-    JD           = EPSJD
-    LAPACK       = EPSLAPACK
+    POWER        = S_(EPSPOWER)
+    SUBSPACE     = S_(EPSSUBSPACE)
+    ARNOLDI      = S_(EPSARNOLDI)
+    LANCZOS      = S_(EPSLANCZOS)
+    KRYLOVSCHUR  = S_(EPSKRYLOVSCHUR)
+    GD           = S_(EPSGD)
+    JD           = S_(EPSJD)
+    LAPACK       = S_(EPSLAPACK)
     # with external libraries
-    ARPACK       = EPSARPACK
-    BLZPACK      = EPSBLZPACK
-    TRLAN        = EPSTRLAN
-    BLOPEX       = EPSBLOPEX
-    PRIMME       = EPSPRIMME
+    ARPACK       = S_(EPSARPACK)
+    BLZPACK      = S_(EPSBLZPACK)
+    TRLAN        = S_(EPSTRLAN)
+    BLOPEX       = S_(EPSBLOPEX)
+    PRIMME       = S_(EPSPRIMME)
 
 class EPSProblemType(object):
     """
@@ -243,7 +243,9 @@ cdef class EPS(Object):
         database provides the user with maximum flexibility in
         evaluating the different available methods.
         """
-        CHKERR( EPSSetType(self.eps, str2cp(eps_type)) )
+        cdef SlepcEPSType cval = NULL
+        eps_type = str2bytes(eps_type, &cval)
+        CHKERR( EPSSetType(self.eps, cval) )
 
     def getType(self):
         """
@@ -256,7 +258,7 @@ cdef class EPS(Object):
         """
         cdef SlepcEPSType eps_type = NULL
         CHKERR( EPSGetType(self.eps, &eps_type) )
-        return cp2str(eps_type)
+        return bytes2str(eps_type)
 
     def getOptionsPrefix(self):
         """
@@ -268,9 +270,9 @@ cdef class EPS(Object):
         prefix: string
                 The prefix string set for this EPS object.
         """
-        cdef const_char_p prefix = NULL
+        cdef const_char *prefix = NULL
         CHKERR( EPSGetOptionsPrefix(self.eps, &prefix) )
-        return cp2str(prefix)
+        return bytes2str(prefix)
 
     def setOptionsPrefix(self, prefix):
         """
@@ -295,7 +297,8 @@ cdef class EPS(Object):
             E1.setOptionsPrefix("eig1_")
             E2.setOptionsPrefix("eig2_")
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( EPSSetOptionsPrefix(self.eps, cval) )
 
     def appendOptionsPrefix(self, prefix):
@@ -308,7 +311,8 @@ cdef class EPS(Object):
         prefix: string
                 The prefix string to prepend to all EPS option requests.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( EPSAppendOptionsPrefix(self.eps, cval) )
 
     def setFromOptions(self):

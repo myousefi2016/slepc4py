@@ -103,7 +103,8 @@ cdef class IP(Object):
         prefix name.  The first character of all runtime options is
         AUTOMATICALLY the hyphen.
         """
-        cdef char *cval= str2cp(prefix)
+        cdef const_char *cval = NULL
+        prefix = str2bytes(prefix, &cval)
         CHKERR( IPSetOptionsPrefix(self.ip, cval) )
 
     def getOptionsPrefix(self):
@@ -116,9 +117,9 @@ cdef class IP(Object):
         prefix: string
                 The prefix string set for this IP object.
         """
-        cdef const_char_p prefix = NULL
+        cdef const_char *prefix = NULL
         CHKERR( IPGetOptionsPrefix(self.ip, &prefix) )
-        return cp2str(prefix)
+        return bytes2str(prefix)
 
     def setFromOptions(self):
         """
