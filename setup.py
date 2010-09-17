@@ -77,6 +77,14 @@ from conf.slepcconf import setup, Extension
 from conf.slepcconf import config, build, build_ext
 
 def run_setup():
+    import sys, os
+    if (('distribute' in sys.modules) or
+        ('setuptools' in sys.modules)):
+        metadata['install_requires'] = ['petsc4py']
+        if not os.environ.get('SLEPC_DIR'):
+            metadata['install_requires'].append('slepc')
+    if 'setuptools' in sys.modules:
+        metadata['zip_safe'] = False
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],
           package_dir  = {'slepc4py'     : 'src',

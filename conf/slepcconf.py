@@ -34,7 +34,7 @@ class SlepcConfig(PetscConfig):
         PetscConfig.__init__(self, petsc_dir, petsc_arch)
         if not slepc_dir:
             raise DistutilsError("SLEPc not found")
-        elif not os.path.isdir(slepc_dir):
+        if not os.path.isdir(slepc_dir):
             raise DistutilsError("invalid SLEPC_DIR")
         self.configdict['SLEPC_DIR'] = slepc_dir
         self.SLEPC_DIR = self['SLEPC_DIR']
@@ -116,13 +116,15 @@ class config(_config):
 
     @staticmethod
     def get_slepc_dir(slepc_dir):
-        if not slepc_dir:
-            log.warn("SLEPC_DIR not specified")
-            return None
+        if not slepc_dir: return None
         slepc_dir = os.path.expandvars(slepc_dir)
-        if '$SLEPC_DIR' in slepc_dir:
-            log.warn("SLEPC_DIR not specified")
-            return None
+        if not slepc_dir or '$SLEPC_DIR' in slepc_dir:
+            try:
+                import slepc
+                slepc_dir = slepc.get_slepc_dir()
+            except ImportError:
+                log.warn("SLEPC_DIR not specified")
+                return None
         slepc_dir = os.path.expanduser(slepc_dir)
         slepc_dir = os.path.abspath(slepc_dir)
         if not os.path.isdir(slepc_dir):
