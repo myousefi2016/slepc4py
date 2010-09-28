@@ -10,9 +10,9 @@ build *SLEPc for Python*:
 * Any MPI_ implementation [#]_ (e.g., MPICH_ or `Open MPI`_), 
   built with shared libraries.
 
-* PETSc_ 2.3.3/3.0.0 release, built with shared libraries.
+* PETSc_ 2.3.3/3.0.0/3.1 release, built with shared libraries.
 
-* SLEPc_ 2.3.3/3.0.0 release, built with shared libraries.
+* SLEPc_ 2.3.3/3.0.0/3.1 release, built with shared libraries.
 
 * Python_ 2.4/2.5/2.6 [#]_.
 
@@ -71,16 +71,16 @@ environmental variables :envvar:`SLEPC_DIR``, :envvar:`PETSC_DIR`, and
 :envvar:`PETSC_ARCH` indicating where you have built/installed SLEPc
 and PETSc::
 
-   $ export SLEPC_DIR=/usr/local/slepc/3.0.0
-   $ export PETSC_DIR=/usr/local/petsc/3.0.0
+   $ export SLEPC_DIR=/usr/local/slepc/3.1
+   $ export PETSC_DIR=/usr/local/petsc/3.1
    $ export PETSC_ARCH=linux-gnu
 
 Alternatively, you can edit the file :file:`setup.cfg` and provide the
 required information below the ``[config]`` section::
 
    [config]
-   slepc_dir  = /usr/local/slepc/3.0.0
-   petsc_dir  = /usr/local/petsc/3.0.0
+   slepc_dir  = /usr/local/slepc/3.1
+   petsc_dir  = /usr/local/petsc/3.1
    petsc_arch = linux-gnu
    ...
 

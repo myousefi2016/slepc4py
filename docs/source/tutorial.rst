@@ -66,7 +66,7 @@ documentation for details about matrix objects::
 The solver object is created in a similar way as other objects in
 petsc4py::
 
-    E = SLEPc.EPS().create()
+    E = SLEPc.EPS(); E.create()
 
 Once the object is created, the eigenvalue problem must be
 specified. At least one matrix must be provided. The problem type must
@@ -194,7 +194,8 @@ view the particular settings that are currently being used::
       maximum dimension of projected problem (mpd): 16
       maximum number of iterations: 100
       tolerance: 1e-07
-      dimension of user-provided deflation space: 0
+      convergence test: relative to the eigenvalue
+      estimates of matrix norms (constant): norm(A)=1
       IP Object:
         orthogonalization method:   classical Gram-Schmidt
         orthogonalization refinement:   if needed (eta: 0.707100)
@@ -216,4 +217,4 @@ other than the default. In the command-line, this is indicated with
 the ``-st_`` prefix. For example, shift-and-invert with a value of the
 shift equal to 0.6 would be::
 
-    $ python demo/ex1.py -st_type sinvert -st_shift 0.6
+    $ python demo/ex1.py -st_type sinvert -eps_target 0.6

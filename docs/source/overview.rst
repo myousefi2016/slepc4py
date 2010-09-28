@@ -8,7 +8,7 @@ SLEPc [1]_, [2]_ implements algorithms and tools for the numerical
 solution of large, sparse eigenvalue problems on parallel
 computers. It covers both standard and generalized eigenproblems
 (either symmetric or non-symmetric) as well as the singular value
-decomposition (SVD).
+decomposition (SVD) and the quadratic eigenvalue problem (QEP).
 
 SLEPc is intended for computing a subset of the spectrum of a matrix
 (or matrix pair). One can for instance approximate the largest
@@ -19,9 +19,9 @@ such method is to use a spectral transformation. Cheaper alternatives
 are also available.
 
 .. [1] V. Hernandez, J. E. Roman, E. Romero, A. Tomas and
-   V. Vidal. SLEPc Users Manual. DISC-II/24/02 - Revision 3.0.0.
+   V. Vidal. SLEPc Users Manual. DISC-II/24/02 - Revision 3.1
    D. Sistemas Informáticos y Computación, Universidad Politécnica de
-   Valencia. 2009.
+   Valencia. 2010.
 
 .. [2] Vicente Hernandez, Jose E. Roman and Vicente Vidal.
    SLEPc: A Scalable and Flexible Toolkit for the Solution of
@@ -45,10 +45,15 @@ Currently, the following types of eigenproblems can be addressed:
 * Partial singular value decomposition of a rectangular matrix,
   *Au=sv*.
 
+* Quadratic eigenvalue problem, *(k^2M+kC+K)x=0*.
+
 For the eigenvalue problem, the following methods are available:
 
 * Krylov eigensolvers, particularly Krylov-Schur, Arnoldi, and
   Lanczos.
+
+* Davidson-type eigensolvers, including Generalized Davidson and
+  Jacobi-Davidson.
 
 * Subspace iteration and single vector iterations (inverse iteration,
   RQI).
@@ -63,6 +68,13 @@ used:
 
 * Implicitly restarted Lanczos bidiagonalization (thick-restart
   Lanczos).
+
+For quadratic eigenvalue problems, the following methods are available:
+
+* Use an eigensolver to solve the generalized eigenvalue problem 
+  obtained after linearization.
+
+* Q-Arnoldi, a memory efficient variant of Arnoldi for quadratic problems.
 
 Computation of interior eigenvalues is supported by means of the
 following methodologies:
@@ -114,6 +126,12 @@ slepc4py for its use from Python.
       computed, whether the largest or smallest ones, as well as some
       other parameters for fine tuning the computation. Different
       solvers are available, as in the case of EPS.
+
+:QEP: This component is the analog of EPS for the case of Quadratic
+      Eigenvalue Problems. The user provides three square matrices that
+      define the problem. Several parameters can be specified, as in
+      the case of EPS. It is also possible to indicate whether the
+      problem belongs to a special type, e.g., symmetric or gyroscopic.
 
 :ST:  The Spectral Transformation is a component that provides
       convenient implementations of common spectral
