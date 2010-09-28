@@ -90,7 +90,7 @@ def runtestsleak(repeats, *args, **kargs):
     import gc
     alltests = test_cases()
     gc.collect()
-    for i in xrange(repeats):
+    for i in range(repeats):
         gc.collect()
         r1 = sys.gettotalrefcount()
         for test in alltests:
@@ -105,7 +105,11 @@ def runtestsleak(repeats, *args, **kargs):
 if __name__ == '__main__':
     runtests()
     if hasattr(sys, 'gettotalrefcount'):
+        try:
+            from unittest.runner import _WritelnDecorator
+        except ImportError:
+            from unittest import _WritelnDecorator
         def dummy_write(self,*args): pass
-        unittest._WritelnDecorator.write   = dummy_write
-        unittest._WritelnDecorator.writeln = dummy_write
+        _WritelnDecorator.write   = dummy_write
+        _WritelnDecorator.writeln = dummy_write
         runtestsleak(5)
