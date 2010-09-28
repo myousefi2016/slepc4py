@@ -8,7 +8,7 @@
 /* ---------------------------------------------------------------- */
 
 %header %{#include "slepc4py/slepc4py.h"%}
-%init   %{if (import_slepc4py() < 0) return;%}
+%init   %{import_slepc4py();%}
 
 %define SWIG_TYPECHECK_SLEPC_ST  550 %enddef
 %define SWIG_TYPECHECK_SLEPC_IP  551 %enddef
