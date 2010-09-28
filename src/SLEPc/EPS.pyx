@@ -83,8 +83,8 @@ class EPSBalance(object):
 
 
     - `NONE`:     None.
-    - `ONE_SIDE`: One-sided eigensolver, only right eigenvectors.
-    - `TWO_SIDE`: Two-sided eigensolver, right and left eigenvectors.
+    - `ONESIDE`:  One-sided eigensolver, only right eigenvectors.
+    - `TWOSIDE`:  Two-sided eigensolver, right and left eigenvectors.
     - `USER`:     User-defined.
     """
     NONE    = EPS_BALANCE_NONE
