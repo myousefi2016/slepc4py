@@ -49,6 +49,7 @@ class SVDConvergedReason(object):
     DIVERGED_ITS        = SVD_DIVERGED_ITS
     DIVERGED_BREAKDOWN  = SVD_DIVERGED_BREAKDOWN
     CONVERGED_ITERATING = SVD_CONVERGED_ITERATING
+    ITERATING           = SVD_CONVERGED_ITERATING
 
 # -----------------------------------------------------------------------------
 
