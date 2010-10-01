@@ -14,7 +14,7 @@ build *SLEPc for Python*:
 
 * SLEPc_ 2.3.3/3.0.0/3.1 release, built with shared libraries.
 
-* Python_ 2.4/2.5/2.6 [#]_.
+* Python_ 2.4 to 2.7 or 3.1 [#]_.
 
 * NumPy_ package.
 

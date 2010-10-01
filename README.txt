@@ -24,7 +24,7 @@ subject to change at any time.
 
   + A recent SLEPc_ distribution, built with *shared libraries*.
 
-  + Python_ 2.4/2.5/2.6.
+  + Python_ 2.4 to 2.7 or 3.1.
 
   + NumPy_ 1.0.1 and above.
 
