@@ -29,17 +29,28 @@ build *SLEPc for Python*:
 .. include:: links.txt
 
 
-Using **setuptools**
---------------------
+Using **pip** or **easy_install**
+---------------------------------
 
-If you already have a working SLEPc and PETSc you can take advantage
-of setuptools's :program:`easy_install` command::
+If you already have a working PETSc, set environment variables
+:envvar:`PETSC_DIR` and perhaps :envvar:`PETSC_ARCH` to appropriate
+values::
 
-   $ export SLEPC_DIR=/path/to/slepc
-   $ export PETSC_DIR=/path/to/petsc
-   $ export PETSC_ARCH=linux-gnu # may not be requiered
+    $ export SLEPC_DIR=/path/to/slepc
+    $ export PETSC_DIR=/path/to/petsc
+    $ export PETSC_ARCH=linux-gnu
 
-   $ easy_install slepc4py
+.. note:: If you do not set these environment variables, the install
+   process will attempt to download and install PETSc for you.
+
+Now you can use :program:`pip`::
+
+    $ [sudo] pip install [--user] slepc4py
+
+Alternatively, you can use *setuptools* :program:`easy_install`
+(deprecated)::
+
+    $ [sudo] easy_install slepc4py
 
 
 Using **distutils**
@@ -104,11 +115,17 @@ or, in case you need root privileges::
 This will install the :mod:`slepc4py` package in the standard location
 :file:`{prefix}/lib/python{X}.{X}/site-packages`.
 
-You can also do a user-install type::
+You can also do a user-install type. Threre are two options depending
+on the target Python version.
 
-   $ python setup.py install --home=$HOME
+* For Python 2.6 and up::
 
-This will install the :mod:`slepc4py` package in the standard location
-:file:`$HOME/lib/python` (or perhaps :file:`$HOME/lib64/python`). This
-location should be listed in the :envvar:`PYTHONPATH` environmental
-variable.
+      $ python setup.py install --user
+
+* For Python 2.5 and below (assuming your home directory is available
+  through the :envvar:`HOME` environment variable)::
+
+      $ python setup.py install --home=$HOME
+
+  and then add :file:`$HOME/lib/python` or :file:`$HOME/lib64/python`
+  to your :envvar:`PYTHONPATH` environment variable.
