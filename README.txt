@@ -6,7 +6,7 @@ README: SLEPc for Python
 :Contact:      dalcinl@gmail.com
 :Web Site:     http://slepc4py.googlecode.com/
 :Organization: CIMEC <http://www.cimec.org.ar>
-:Address:      PTLC, (3000) Santa Fe, Argentina
+:Address:      CCT CONICET, (3000) Santa Fe, Argentina
 
 Thank you for downloading the *SLEPc for Python* project archive. As
 this is a work in progress, please check the `project website`_ for
