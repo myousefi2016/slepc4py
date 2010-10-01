@@ -9,6 +9,18 @@ HISTORY: SLEPc for Python
 :Address:      CCT CONICET, 3000 Santa Fe, Argentina
 
 
+Release 1.1
+===========
+
+* Support for new QEP quadratic eigenproblem solver in SLEPc.
+
+* Support for ``pip install slepc4py`` to download and install SLEPc.
+
+* Support for PETSc/SLEPc static library builds (Linux-only).
+
+* Preliminar support for Python 3.
+
+
 Release 1.0.0
 =============
 
