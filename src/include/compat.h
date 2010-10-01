@@ -11,18 +11,20 @@
 
 #undef  __FUNCT__
 #define __FUNCT__ "SlepcInitializePackage"
-static PetscErrorCode SlepcInitializePackage(char *path)
+static PetscErrorCode SlepcInitializePackage(const char path[])
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
   ierr = 0;
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#if SLEPC_VERSION_(3,0,0)
   ierr = PetscCookieRegister("Quadratic Eigenproblem Solver",&QEP_COOKIE);CHKERRQ(ierr);
+#elif SLEPC_VERSION_(2,3,3)
+  ierr = PetscLogClassRegister(&QEP_COOKIE,"Quadratic Eigenproblem Solver");CHKERRQ(ierr);
 #endif
   PetscFunctionReturn(0);
 }
 
-#if SLEPC_VERSION_(3,0,0)
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #define EPSGD  "gd"
 #define EPSJD  "jd"
@@ -33,7 +35,7 @@ static PetscErrorCode SlepcInitializePackage(char *path)
 /**/
 #endif
 
-#if SLEPC_VERSION_(3,0,0)
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #define STSINVERT  STSINV
 #define STPRECOND  "precond"
@@ -44,7 +46,7 @@ static PetscErrorCode SlepcInitializePackage(char *path)
 /**/
 #endif
 
-#if SLEPC_VERSION_(3,0,0)
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #define IP_ORTH_MGS IP_MGS_ORTH
 #define IP_ORTH_CGS IP_CGS_ORTH
@@ -55,10 +57,10 @@ static PetscErrorCode SlepcInitializePackage(char *path)
 #undef __FUNCT__
 #define __FUNCT__ "IPOrthogonalize_300"
 static PetscErrorCode IPOrthogonalize_300(IP ip,
-				   PetscInt nds,Vec *DS,
-				   PetscInt n,PetscTruth *which,Vec *V,
-				   Vec v,PetscScalar *H,PetscReal *norm,
-				   PetscTruth *lindep)
+                                          PetscInt nds,Vec *DS,
+                                          PetscInt n,PetscTruth *which,Vec *V,
+                                          Vec v,PetscScalar *H,PetscReal *norm,
+                                          PetscTruth *lindep)
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
@@ -66,8 +68,13 @@ static PetscErrorCode IPOrthogonalize_300(IP ip,
   if (nds > 0) {
     SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
   }
+  #if SLEPC_VERSION_(3,0,0)
   ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,
 			 PETSC_NULL,0);CHKERRQ(ierr);
+  #elif SLEPC_VERSION_(2,3,3)
+  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,
+                         /*work*/0);CHKERRQ(ierr);
+  #endif
   PetscFunctionReturn(0);
 }
 #define IPOrthogonalize IPOrthogonalize_300
@@ -75,7 +82,7 @@ static PetscErrorCode IPOrthogonalize_300(IP ip,
 #endif
 
 
-#if SLEPC_VERSION_(3,0,0)
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #define EPSDSITRLANCZOS "dsitrlanczos"
 /**/
@@ -210,7 +217,7 @@ static PetscErrorCode EPSGetTrackAll(EPS eps,PetscTruth *trackall)
 }
 #endif
 
-#if SLEPC_VERSION_(3,0,0)
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #undef __FUNCT__
 #define __FUNCT__ "SVDSetInitialSpace"
@@ -406,28 +413,6 @@ static PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,
 }
 #define SVDGetDimensions SVDGetDimensions_233
 
-#endif
-
-
-#if SLEPC_VERSION_(2,3,3)
-#undef __FUNCT__
-#define __FUNCT__ "IPOrthogonalize_233"
-static PetscErrorCode IPOrthogonalize_233(IP ip,
-                                          PetscInt nds,Vec *DS,
-                                          PetscInt n,PetscTruth *which,Vec *V,
-                                          Vec v,PetscScalar *H,PetscReal *norm,
-                                          PetscTruth *lindep)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(ip,IP_COOKIE,1);
-  if (nds > 0) {
-    SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  }
-  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,/*work*/0);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define IPOrthogonalize IPOrthogonalize_233
 #endif
 
 #endif /* !SLEPC_COMPAT_H */

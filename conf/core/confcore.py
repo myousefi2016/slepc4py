@@ -92,7 +92,26 @@ class PetscConfig:
         if compiler is not None:
             self.configure_compiler(compiler)
 
+    def _get_petsc_conf_old(self, petsc_dir, petsc_arch):
+        variables = os.path.join(petsc_dir, 'bmake','common',    'variables')
+        petscconf = os.path.join(petsc_dir, 'bmake', petsc_arch, 'petscconf')
+        #
+        variables = open(variables)
+        contents = variables.read()
+        variables.close()
+        petscconf = open(petscconf)
+        contents += petscconf.read()
+        petscconf.close()
+        #
+        confstr  = 'PETSC_DIR = %s\n'  % petsc_dir
+        confstr += 'PETSC_ARCH = %s\n' % petsc_arch
+        confstr += contents
+        confdct = cfgutils.makefile(StringIO(confstr))
+        return confdct
+
     def _get_petsc_conf(self, petsc_dir, petsc_arch):
+        if os.path.isdir(os.path.join(petsc_dir, 'bmake')):
+            return self._get_petsc_conf_old(petsc_dir, petsc_arch)
         PETSC_DIR = petsc_dir
         if (not petsc_arch or
             not os.path.isdir(os.path.join(petsc_dir, petsc_arch))):
@@ -259,7 +278,8 @@ class config(_config):
         log.info('-' * 70)
         log.info('PETSC_DIR:   %s' % self.petsc_dir)
         arch_list = petsc_arch
-        if not arch_list :
+        if (not arch_list and  
+            os.path.isdir(os.path.join(self.petsc_dir, 'bmake'))):
             arch_list = [ None ]
         for arch in arch_list:
             conf = self.get_config_arch(arch)
@@ -312,6 +332,18 @@ class config(_config):
                     conf = StringIO(open(petscvars).read())
                     conf = cfgutils.makefile(conf)
                     petsc_arch = conf.get('PETSC_ARCH', '')
+            elif os.path.isdir(os.path.join(petsc_dir, 'bmake')):
+                log.warn("PETSC_ARCH not specified, trying default")
+                petscconf = os.path.join(petsc_dir, 'bmake', 'petscconf')
+                if not os.path.exists(petscconf):
+                    log.warn("file '%s' not found" % petscconf)
+                    return None
+                conf = StringIO(open(petscconf).read())
+                conf = cfgutils.makefile(conf)
+                petsc_arch = conf.get('PETSC_ARCH', '')
+                if not petsc_arch:
+                    log.warn("default PETSC_ARCH not found")
+                    return None
             else:
                 petsc_arch = ''
         petsc_arch = petsc_arch.split(os.pathsep)
@@ -321,13 +353,18 @@ class config(_config):
 
     @staticmethod
     def chk_petsc_arch(petsc_dir, petsc_arch):
+        have_bmake = os.path.isdir(os.path.join(petsc_dir, 'bmake'))
         valid_archs = []
         for arch in petsc_arch:
             arch_path = os.path.join(petsc_dir, arch)
+            if have_bmake:
+                arch_path = os.path.join(petsc_dir, 'bmake', arch)
             if os.path.isdir(arch_path):
                 valid_archs.append(arch)
             else:
                 log.warn("invalid PETSC_ARCH: %s (ignored)" % arch)
+        if have_bmake and not valid_archs:
+            log.warn("could not find any valid PETSC_ARCH")
         return valid_archs
 
 
