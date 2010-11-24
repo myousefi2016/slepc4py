@@ -101,39 +101,61 @@ def run_setup():
                           'build_ext'  : build_ext},
           **metadata)
 
-def run_cython(source):
+def chk_cython(CYTHON_VERSION_REQUIRED):
     import sys, os
-    source_c = os.path.splitext(source)[0] + '.c'
-    if (os.path.exists(source_c)):
-        return False
+    from distutils.version import StrictVersion as Version
+    warn = lambda msg='': sys.stderr.write(msg+'\n')
+    #
     try:
         import Cython
     except ImportError:
-        warn = lambda msg='': sys.stderr.write(msg+'\n')
         warn("*"*80)
         warn()
         warn(" You need to generate C source files with Cython!!")
         warn(" Download and install Cython <http://www.cython.org>")
         warn()
         warn("*"*80)
-        raise SystemExit
-    from distutils import log
-    from conf.cythonize import run as cythonize
-    import petsc4py
-    log.info("cythonizing '%s' source" % source)
-    cythonize(source, includes=[petsc4py.get_include()])
+        return False
+    #
+    try:
+        CYTHON_VERSION = Cython.__version__
+    except AttributeError:
+        from Cython.Compiler.Version import version as CYTHON_VERSION
+    if Version(CYTHON_VERSION) < Version(CYTHON_VERSION_REQUIRED):
+        warn("*"*80)
+        warn()
+        warn(" You need to install Cython %s (you have version %s)"
+             % (CYTHON_VERSION_REQUIRED, CYTHON_VERSION))
+        warn(" Download and install Cython <http://www.cython.org>")
+        warn()
+        warn("*"*80)
+        return False
+    #
     return True
 
+def run_cython(source):
+    from conf.cythonize import run as cythonize
+    from distutils import log
+    log.set_verbosity(1)
+    log.info("cythonizing '%s' source" % source)
+    import petsc4py
+    cythonize(source, includes=[petsc4py.get_include()])
+
 def main():
-    import os
-    try:
-        run_setup()
-    except:
-        done = run_cython(os.path.join('src', 'slepc4py.SLEPc.pyx'))
-        if done:
-            run_setup()
-        else:
-            raise
+    CYTHON_VERSION_REQUIRED = '0.13'
+    import sys, os, glob
+    from distutils import dep_util
+    source = os.path.join('src', 'slepc4py.SLEPc.pyx')
+    target = os.path.splitext(source)[0]+".c"
+    depends = (glob.glob("src/include/*/*.pxd") +
+               glob.glob("src/*/*.pyx") +
+               glob.glob("src/*/*.pxi"))
+    if ((os.path.isdir('.hg') or os.path.isdir('.git')) and
+        dep_util.newer_group([source]+depends, target)):
+        if not chk_cython(CYTHON_VERSION_REQUIRED):
+            sys.exit(1)
+        run_cython(source)
+    run_setup()
 
 if __name__ == '__main__':
     main()
