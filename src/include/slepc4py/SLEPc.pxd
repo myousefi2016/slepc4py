@@ -3,34 +3,26 @@
 
 # -----------------------------------------------------------------------------
 
-from petsc4py.PETSc cimport Object
-
-# -----------------------------------------------------------------------------
-
 cdef extern from "slepc.h":
-    pass
 
-cdef extern from "slepcst.h":
     struct _p_ST
     ctypedef _p_ST* SlepcST "ST"
 
-cdef extern from "slepcip.h":
     struct _p_IP
     ctypedef _p_IP* SlepcIP "IP"
 
-cdef extern from "slepceps.h":
     struct _p_EPS
     ctypedef _p_EPS* SlepcEPS "EPS"
 
-cdef extern from "slepcsvd.h":
     struct _p_SVD
     ctypedef _p_SVD* SlepcSVD "SVD"
 
-cdef extern from "slepcqep.h":
     struct _p_QEP
     ctypedef _p_QEP* SlepcQEP "QEP"
 
 # -----------------------------------------------------------------------------
+
+from petsc4py.PETSc cimport Object
 
 ctypedef public api class ST(Object) [
     type   PySlepcST_Type,

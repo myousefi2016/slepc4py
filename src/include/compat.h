@@ -9,6 +9,16 @@
    (SLEPC_VERSION_RELEASE  == 1))
 #endif
 
+#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#include <petscts.h>
+#include <petscda.h>
+#include <slepc.h>
+#include <slepcsvd.h>
+#include "compat/slepcqep.h"
+#else
+#include <slepcqep.h>
+#endif
+
 #undef  __FUNCT__
 #define __FUNCT__ "SlepcInitializePackage"
 static PetscErrorCode SlepcInitializePackage(const char path[])

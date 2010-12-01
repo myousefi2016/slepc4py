@@ -1,4 +1,4 @@
-cdef extern from "petsc.h":
+cdef extern from * :
     enum: PETSC_DECIDE
     enum: PETSC_DEFAULT
     enum: PETSC_DETERMINE
@@ -8,19 +8,19 @@ cdef extern from "petsc.h":
         PETSC_TRUE,  PETSC_YES,
         PETSC_FALSE, PETSC_NO,
 
-cdef extern from "petsc.h" nogil:
+cdef extern from * nogil:
     int PetscMalloc(size_t,void*)
     int PetscFree(void*)
     int PetscMemcpy(void*,void*,size_t)
     int PetscMemzero(void*,size_t)
 
-cdef extern from "petsc.h" nogil:
+cdef extern from * nogil:
     ctypedef int PetscCookie
     int PetscObjectReference(PetscObject)
     int PetscObjectDereference(PetscObject)
     int PetscObjectDestroy(PetscObject)
 
-cdef extern from "slepc.h" nogil:
+cdef extern from * nogil:
     enum: SLEPC_VERSION_MAJOR
     enum: SLEPC_VERSION_MINOR
     enum: SLEPC_VERSION_SUBMINOR

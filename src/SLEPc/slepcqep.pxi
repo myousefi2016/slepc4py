@@ -1,4 +1,4 @@
-cdef extern from "slepcqep.h":
+cdef extern from * nogil:
 
     ctypedef char* SlepcQEPType "const char*"
     SlepcQEPType QEPLINEAR

@@ -82,7 +82,7 @@ if 0: raise RuntimeError # Do not remove this line !!!
 
 # -----------------------------------------------------------------------------
 
-cdef extern from "petsc.h":
+cdef extern from *:
     ctypedef long   PetscInt
     ctypedef double PetscReal
     ctypedef double PetscScalar

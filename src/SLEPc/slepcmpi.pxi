@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
 
-cdef extern from "mpi.h":
+cdef extern from *:
     MPI_Comm MPI_COMM_NULL
     MPI_Comm MPI_COMM_SELF
     MPI_Comm MPI_COMM_WORLD
 
-cdef extern from "petsc.h":
+cdef extern from *:
     MPI_Comm PETSC_COMM_SELF
     MPI_Comm PETSC_COMM_WORLD
 
