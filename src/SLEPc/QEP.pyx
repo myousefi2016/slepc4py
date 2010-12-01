@@ -215,7 +215,7 @@ cdef class QEP(Object):
         wanted: boolean
                 Whether left eigenvectors are required or not.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( QEPGetLeftVectorsWanted(self.qep, &tval) )
         return <bint>tval
 
@@ -229,7 +229,7 @@ cdef class QEP(Object):
         wanted: boolean
                 Whether left eigenvectors are required or not.
         """
-        cdef PetscTruth tval = wanted
+        cdef PetscBool tval = wanted
         CHKERR( QEPSetLeftVectorsWanted(self.qep, tval) )
 
     def getTolerances(self):
@@ -277,7 +277,7 @@ cdef class QEP(Object):
         trackall: bool
             Whether the solver compute all residuals or not.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( QEPGetTrackAll(self.qep, &tval) )
         return <bint>tval
 
@@ -291,7 +291,7 @@ cdef class QEP(Object):
         trackall: bool
             Whether compute all residuals or not.
         """
-        cdef PetscTruth tval = trackall
+        cdef PetscBool tval = trackall
         CHKERR( QEPSetTrackAll(self.qep, tval) )
 
     def getDimensions(self):

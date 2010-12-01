@@ -339,11 +339,11 @@ cdef class IP(Object):
         This routine does not normalize the resulting vector.
         """
         cdef PetscInt i = 0, n = 0
-        cdef PetscTruth* which = NULL
+        cdef PetscBool* which = NULL
         cdef PetscVec* V = NULL
         cdef PetscScalar* H = NULL, h = 0
         cdef PetscReal rval = 0
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         cdef object tmp1 = None, tmp2 = None
         if isinstance(VS, Vec):
             n = 1

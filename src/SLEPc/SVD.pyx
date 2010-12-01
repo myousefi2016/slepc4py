@@ -754,7 +754,7 @@ cdef class SVD(Object):
         flag: boolean
               True if ``H(A)`` is built explicitly.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE
         CHKERR( SVDCyclicSetExplicitMatrix(self.svd, tval) )
 
@@ -768,7 +768,7 @@ cdef class SVD(Object):
         flag: boolean
               True if ``H(A)`` is built explicitly.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( SVDCyclicGetExplicitMatrix(self.svd, &tval) )
         return <bint>tval
 
@@ -790,7 +790,7 @@ cdef class SVD(Object):
         to left singular vectors. It also saves the memory required
         for storing such vectors.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE
         CHKERR( SVDLanczosSetOneSide(self.svd, tval) )
 
@@ -811,7 +811,7 @@ cdef class SVD(Object):
         is faster because it avoids the orthogonalization associated
         to left singular vectors.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         if flag: tval = PETSC_TRUE
         CHKERR( SVDLanczosSetOneSide(self.svd, tval) )
 

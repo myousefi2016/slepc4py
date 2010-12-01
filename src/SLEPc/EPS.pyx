@@ -381,7 +381,7 @@ cdef class EPS(Object):
         flag: boolean
               True if two matrices were set with `setOperators()`.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSIsGeneralized(self.eps, &tval) )
         return <bint> tval
 
@@ -396,7 +396,7 @@ cdef class EPS(Object):
               True if the problem type set with `setProblemType()` was
               Hermitian.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSIsHermitian(self.eps, &tval) )
         return <bint> tval
 
@@ -522,7 +522,7 @@ cdef class EPS(Object):
         wanted: boolean
                 Whether left eigenvectors are required or not.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSGetLeftVectorsWanted(self.eps, &tval) )
         return <bint>tval
 
@@ -536,7 +536,7 @@ cdef class EPS(Object):
         wanted: boolean
                 Whether left eigenvectors are required or not.
         """
-        cdef PetscTruth tval = wanted
+        cdef PetscBool tval = wanted
         CHKERR( EPSSetLeftVectorsWanted(self.eps, tval) )
 
     def getTarget(self):
@@ -626,7 +626,7 @@ cdef class EPS(Object):
         trackall: bool
             Whether the solver compute all residuals or not.
         """
-        cdef PetscTruth tval = PETSC_FALSE
+        cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSGetTrackAll(self.eps, &tval) )
         return <bint>tval
 
@@ -640,7 +640,7 @@ cdef class EPS(Object):
         trackall: bool
             Whether compute all residuals or not.
         """
-        cdef PetscTruth tval = trackall
+        cdef PetscBool tval = trackall
         CHKERR( EPSSetTrackAll(self.eps, tval) )
 
     def getDimensions(self):
@@ -1383,7 +1383,7 @@ cdef class EPS(Object):
         but sometimes makes the solver converge less than the default
         algorithm.
         """
-        cdef PetscTruth val = PETSC_FALSE
+        cdef PetscBool val = PETSC_FALSE
         if delayed: val = PETSC_TRUE
         CHKERR( EPSArnoldiSetDelayed(self.eps, val) )
 
@@ -1397,7 +1397,7 @@ cdef class EPS(Object):
         delayed: boolean
                  True if delayed reorthogonalization is to be used.
         """
-        cdef PetscTruth val = PETSC_FALSE
+        cdef PetscBool val = PETSC_FALSE
         CHKERR( EPSArnoldiGetDelayed(self.eps, &val) )
         return val
 

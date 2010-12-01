@@ -168,21 +168,21 @@ from petsc4py.PETSc cimport TypeRegistryAdd
 
 cdef extern from *:
     int SlepcInitializePackage(char[])
-    PetscCookie SLEPC_ST_COOKIE  "ST_COOKIE"
-    PetscCookie SLEPC_IP_COOKIE  "IP_COOKIE"
-    PetscCookie SLEPC_EPS_COOKIE "EPS_COOKIE"
-    PetscCookie SLEPC_SVD_COOKIE "SVD_COOKIE"
-    PetscCookie SLEPC_QEP_COOKIE "QEP_COOKIE"
+    PetscClassId SLEPC_ST_CLASSID  "ST_CLASSID"
+    PetscClassId SLEPC_IP_CLASSID  "IP_CLASSID"
+    PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
+    PetscClassId SLEPC_SVD_CLASSID "SVD_CLASSID"
+    PetscClassId SLEPC_QEP_CLASSID "QEP_CLASSID"
 
 cdef int register(char path[]) except -1:
     # make sure all SLEPc packages are initialized
     CHKERR( SlepcInitializePackage  (NULL) )
     # register Python types
-    TypeRegistryAdd(SLEPC_ST_COOKIE,  ST)
-    TypeRegistryAdd(SLEPC_IP_COOKIE,  IP)
-    TypeRegistryAdd(SLEPC_EPS_COOKIE, EPS)
-    TypeRegistryAdd(SLEPC_SVD_COOKIE, SVD)
-    TypeRegistryAdd(SLEPC_QEP_COOKIE, QEP)
+    TypeRegistryAdd(SLEPC_ST_CLASSID,  ST)
+    TypeRegistryAdd(SLEPC_IP_CLASSID,  IP)
+    TypeRegistryAdd(SLEPC_EPS_CLASSID, EPS)
+    TypeRegistryAdd(SLEPC_SVD_CLASSID, SVD)
+    TypeRegistryAdd(SLEPC_QEP_CLASSID, QEP)
     return 0
 
 cdef void finalize() nogil:

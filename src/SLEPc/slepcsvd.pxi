@@ -64,11 +64,11 @@ cdef extern from * nogil:
     int SVDCrossSetEPS(SlepcSVD,SlepcEPS)
     int SVDCrossGetEPS(SlepcSVD,SlepcEPS*)
 
-    int SVDCyclicSetExplicitMatrix(SlepcSVD,PetscTruth)
-    int SVDCyclicGetExplicitMatrix(SlepcSVD,PetscTruth*)
+    int SVDCyclicSetExplicitMatrix(SlepcSVD,PetscBool)
+    int SVDCyclicGetExplicitMatrix(SlepcSVD,PetscBool*)
     int SVDCyclicSetEPS(SlepcSVD,SlepcEPS)
     int SVDCyclicGetEPS(SlepcSVD,SlepcEPS*)
 
-    int SVDLanczosSetOneSide(SlepcSVD,PetscTruth)
+    int SVDLanczosSetOneSide(SlepcSVD,PetscBool)
 
-    int SVDTRLanczosSetOneSide(SlepcSVD,PetscTruth)
+    int SVDTRLanczosSetOneSide(SlepcSVD,PetscBool)

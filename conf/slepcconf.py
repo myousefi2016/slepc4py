@@ -77,10 +77,6 @@ class SlepcConfig(PetscConfig):
         lflags = []
         extension.extra_link_args.extend(lflags)
 
-        slepcqep_h = os.path.join(SLEPC_DIR, 'include', 'slepcqep.h')
-        if not os.path.exists(slepcqep_h):
-            extension.include_dirs.append("src/include/compat")
-
     def log_info(self):
         if not self.SLEPC_DIR: return
         log.info('SLEPC_DIR:   %s' % self.SLEPC_DIR)

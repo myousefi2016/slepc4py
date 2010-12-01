@@ -68,16 +68,16 @@ cdef extern from * nogil:
 
     int EPSSetProblemType(SlepcEPS,SlepcEPSProblemType)
     int EPSGetProblemType(SlepcEPS,SlepcEPSProblemType*)
-    int EPSIsGeneralized(SlepcEPS,PetscTruth*)
-    int EPSIsHermitian(SlepcEPS,PetscTruth*)
+    int EPSIsGeneralized(SlepcEPS,PetscBool*)
+    int EPSIsHermitian(SlepcEPS,PetscBool*)
     int EPSSetExtraction(SlepcEPS,SlepcEPSExtraction)
     int EPSGetExtraction(SlepcEPS,SlepcEPSExtraction*)
     int EPSSetBalance(SlepcEPS,SlepcEPSBalance,PetscInt,PetscReal)
     int EPSGetBalance(SlepcEPS,SlepcEPSBalance*,PetscInt*,PetscReal*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
     int EPSGetWhichEigenpairs(SlepcEPS,SlepcEPSWhich*)
-    int EPSSetLeftVectorsWanted(SlepcEPS,PetscTruth)
-    int EPSGetLeftVectorsWanted(SlepcEPS,PetscTruth*)
+    int EPSSetLeftVectorsWanted(SlepcEPS,PetscBool)
+    int EPSGetLeftVectorsWanted(SlepcEPS,PetscBool*)
     int EPSSetTarget(SlepcEPS,PetscScalar)
     int EPSGetTarget(SlepcEPS,PetscScalar*)
 
@@ -94,8 +94,8 @@ cdef extern from * nogil:
     int EPSSetOperators(SlepcEPS,PetscMat,PetscMat)
     int EPSGetOperators(SlepcEPS,PetscMat*,PetscMat*)
 
-    int EPSSetTrackAll(SlepcEPS,PetscTruth)
-    int EPSGetTrackAll(SlepcEPS,PetscTruth*)
+    int EPSSetTrackAll(SlepcEPS,PetscBool)
+    int EPSGetTrackAll(SlepcEPS,PetscBool*)
 
     int EPSSetDeflationSpace(SlepcEPS,PetscInt,PetscVec*)
     int EPSRemoveDeflationSpace(SlepcEPS)
@@ -134,8 +134,8 @@ cdef extern from * nogil:
     int EPSPowerSetShiftType(SlepcEPS,SlepcEPSPowerShiftType)
     int EPSPowerGetShiftType(SlepcEPS,SlepcEPSPowerShiftType*)
 
-    int EPSArnoldiSetDelayed(SlepcEPS,PetscTruth)
-    int EPSArnoldiGetDelayed(SlepcEPS,PetscTruth*)
+    int EPSArnoldiSetDelayed(SlepcEPS,PetscBool)
+    int EPSArnoldiGetDelayed(SlepcEPS,PetscBool*)
 
     ctypedef enum SlepcEPSLanczosReorthogType "EPSLanczosReorthogType":
         EPS_LANCZOS_REORTHOG_LOCAL

@@ -4,7 +4,7 @@ cdef extern from * :
     enum: PETSC_DETERMINE
     enum: PETSC_IGNORE
 
-    ctypedef enum PetscTruth:
+    ctypedef enum PetscBool:
         PETSC_TRUE,  PETSC_YES,
         PETSC_FALSE, PETSC_NO,
 
@@ -15,7 +15,7 @@ cdef extern from * nogil:
     int PetscMemzero(void*,size_t)
 
 cdef extern from * nogil:
-    ctypedef int PetscCookie
+    ctypedef int PetscClassId
     int PetscObjectReference(PetscObject)
     int PetscObjectDereference(PetscObject)
     int PetscObjectDestroy(PetscObject)

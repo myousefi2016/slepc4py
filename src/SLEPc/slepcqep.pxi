@@ -45,8 +45,8 @@ cdef extern from * nogil:
     int QEPSetTolerances(SlepcQEP,PetscReal,PetscInt)
     int QEPGetTolerances(SlepcQEP,PetscReal*,PetscInt*)
 
-    int QEPSetTrackAll(SlepcQEP,PetscTruth)
-    int QEPGetTrackAll(SlepcQEP,PetscTruth*)
+    int QEPSetTrackAll(SlepcQEP,PetscBool)
+    int QEPGetTrackAll(SlepcQEP,PetscBool*)
 
     int QEPSetDimensions(SlepcQEP,PetscInt,PetscInt,PetscInt)
     int QEPGetDimensions(SlepcQEP,PetscInt*,PetscInt*,PetscInt*)
@@ -67,15 +67,15 @@ cdef extern from * nogil:
     int QEPSetInitialSpaceLeft(SlepcQEP,PetscInt,PetscVec*)
     int QEPSetWhichEigenpairs(SlepcQEP,SlepcQEPWhich)
     int QEPGetWhichEigenpairs(SlepcQEP,SlepcQEPWhich*)
-    int QEPSetLeftVectorsWanted(SlepcQEP,PetscTruth)
-    int QEPGetLeftVectorsWanted(SlepcQEP,PetscTruth*)
+    int QEPSetLeftVectorsWanted(SlepcQEP,PetscBool)
+    int QEPGetLeftVectorsWanted(SlepcQEP,PetscBool*)
 
     int QEPGetConvergedReason(SlepcQEP,SlepcQEPConvergedReason*)
 
     int QEPLinearSetCompanionForm(SlepcQEP,PetscInt)
     int QEPLinearGetCompanionForm(SlepcQEP,PetscInt*)
-    int QEPLinearSetExplicitMatrix(SlepcQEP,PetscTruth)
-    int QEPLinearGetExplicitMatrix(SlepcQEP,PetscTruth*)
+    int QEPLinearSetExplicitMatrix(SlepcQEP,PetscBool)
+    int QEPLinearGetExplicitMatrix(SlepcQEP,PetscBool*)
     int QEPLinearSetEPS(SlepcQEP,SlepcEPS)
     int QEPLinearGetEPS(SlepcQEP,SlepcEPS*)
 
