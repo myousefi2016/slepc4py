@@ -24,7 +24,7 @@ def cythonize(source, includes=(),
         if result.num_errors > 0:
             any_failures = 1
     except (EnvironmentError, PyrexError):
-        e = sys.exc_info[1]
+        e = sys.exc_info()[1]
         sys.stderr.write(str(e) + '\n')
         any_failures = 1
     if any_failures:
@@ -71,5 +71,5 @@ def run(source, includes=(), wdir=None):
 
 if __name__ == "__main__":
     import petsc4py
-    run(os.path.join('src','slepc4py.SLEPc.pyx'),
+    run(os.path.join('src', 'slepc4py.SLEPc.pyx'),
         includes=[petsc4py.get_include()])
