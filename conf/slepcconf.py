@@ -4,7 +4,9 @@ __all__ = ['setup',
            'Extension',
            'config',
            'build',
+           'build_src',
            'build_ext',
+           'sdist',
            ]
 
 # --------------------------------------------------------------------
@@ -17,11 +19,13 @@ if not hasattr(sys, 'version_info') or \
 
 # --------------------------------------------------------------------
 
-from conf.core import PetscConfig
-from conf.core import setup, Extension, log
-from conf.core import config     as _config
-from conf.core import build      as _build
-from conf.core import build_ext  as _build_ext
+from conf.baseconf import PetscConfig
+from conf.baseconf import setup, Extension, log
+from conf.baseconf import config     as _config
+from conf.baseconf import build      as _build
+from conf.baseconf import build_src  as _build_src
+from conf.baseconf import build_ext  as _build_ext
+from conf.baseconf import sdist      as _sdist
 
 from distutils.errors import DistutilsError
 
@@ -128,7 +132,6 @@ class config(_config):
             return None
         return slepc_dir
 
-
 class build(_build):
 
     user_options = _build.user_options + cmd_slepc_opts
@@ -142,6 +145,10 @@ class build(_build):
         self.set_undefined_options('config',
                                    ('slepc_dir', 'slepc_dir'),)
         self.slepc_dir = config.get_slepc_dir(self.slepc_dir)
+
+
+class build_src(_build_src):
+    pass
 
 
 class build_ext(_build_ext):
@@ -170,5 +177,9 @@ PETSC_ARCH = %(PETSC_ARCH)s
                      'PETSC_DIR'  : self.petsc_dir,
                      'PETSC_ARCH' : os.path.pathsep.join(arch_list)}
         return template, variables
+
+
+class sdist(_sdist):
+    pass
 
 # --------------------------------------------------------------------

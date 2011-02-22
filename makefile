@@ -1,5 +1,4 @@
 .PHONY: default \
-	src cython \
 	config build test install sdist \
 	docs rst2html sphinx sphinx-html sphinx-pdf epydoc epydoc-html \
 	clean distclean srcclean docsclean fullclean uninstall
@@ -11,7 +10,7 @@ default: build
 config: 
 	${PYTHON} setup.py config ${CONFIGOPT}
 
-build: src
+build:
 	${PYTHON} setup.py build ${BUILDOPT}
 
 test:
@@ -21,43 +20,29 @@ install: build
 	${PYTHON} setup.py install ${INSTALLOPT} --home=${HOME}
 
 
-sdist: src docs
+sdist: docs
 	${PYTHON} setup.py sdist ${SDISTOPT}
 
 clean:
 	${PYTHON} setup.py clean --all
 
-distclean: clean docsclean
+distclean: clean
 	-${RM} -r build  _configtest.* *.py[co]
 	-${RM} -r MANIFEST dist slepc4py.egg-info
 	-${RM} -r `find . -name '__pycache__'`
 	-${RM} `find . -name '*.py[co]'`
 	-${RM} `find . -name '*~'`
 
-fullclean: distclean srcclean docsclean
-
-uninstall:
-	-${RM} -r ${HOME}/lib/python/slepc4py
-	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
-
-# ----
-
-src: src/SLEPc.c
-
 srcclean:
 	-${RM} src/slepc4py.SLEPc.c
 	-${RM} src/include/slepc4py/slepc4py.SLEPc.h
 	-${RM} src/include/slepc4py/slepc4py.SLEPc_api.h
 
-CY_SRC_PXD = $(wildcard src/include/slepc4py/*.pxd)
-CY_SRC_PXI = $(wildcard src/SLEPc/*.pxi)
-CY_SRC_PYX = $(wildcard src/SLEPc/*.pyx)
-src/SLEPc.c: src/slepc4py.SLEPc.c
-src/slepc4py.SLEPc.c: ${CY_SRC_PXD} ${CY_SRC_PXI} ${CY_SRC_PYX}
-	${PYTHON} ./conf/cythonize.py
+fullclean: distclean srcclean docsclean
 
-cython:
-	${PYTHON} ./conf/cythonize.py
+uninstall:
+	-${RM} -r ${HOME}/lib/python/slepc4py
+	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
 
 # ----
 
