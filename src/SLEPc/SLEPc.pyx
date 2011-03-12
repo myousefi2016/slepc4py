@@ -78,7 +78,7 @@ cdef inline int CHKERR(int ierr) except -1:
         pyx_raise(<object>PyExc_RuntimeError, ierr, NULL)
     return -1
 
-if 0: raise RuntimeError # Do not remove this line !!!
+if not PyExc_RuntimeError: raise RuntimeError # Do not remove this line !!!
 
 # -----------------------------------------------------------------------------
 
