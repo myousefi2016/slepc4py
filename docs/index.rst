@@ -11,12 +11,12 @@ SLEPc for Python
 Online Documentation
 --------------------
 
-+ `User Manual`_, also available as `PDF`_ (generated with Sphinx_).
-
++ `User Manual (HTML)`_ (generated with Sphinx_).
++ `User Manual (PDF)`_  (generated with Sphinx_).
 + `API Reference`_ (generated with Epydoc_).
 
-.. _User Manual:   usrman/index.html
-.. _PDF:           slepc4py.pdf
+.. _User Manual (HTML): usrman/index.html
+.. _User Manual (PDF):  slepc4py.pdf
 .. _API Reference: apiref/index.html
 
 .. _Sphinx:    http://sphinx.pocoo.org/
@@ -28,6 +28,6 @@ Downloads, Support and Development
 
 + Project Page:    http://slepc4py.googlecode.com/
 + Source Releases: http://code.google.com/p/slepc4py/downloads/
-+ Mailing List:    slepc-maint@grycap.upv.es
++ Mailing List:    petsc-users@mcs.anl.gov, slepc-maint@grycap.upv.es
 + Issue Tracker:   http://code.google.com/p/slepc4py/issues/
-+ HG Repository:   http://petsc.cs.iit.edu/slepc4py/slepc4py-dev/
++ HG Repository:   http://petsc4py.googlecode.com/hg/
