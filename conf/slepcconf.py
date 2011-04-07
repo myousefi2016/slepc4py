@@ -6,6 +6,7 @@ __all__ = ['setup',
            'build',
            'build_src',
            'build_ext',
+           'test',
            'sdist',
            ]
 
@@ -25,6 +26,7 @@ from conf.baseconf import config     as _config
 from conf.baseconf import build      as _build
 from conf.baseconf import build_src  as _build_src
 from conf.baseconf import build_ext  as _build_ext
+from conf.baseconf import test       as _test
 from conf.baseconf import sdist      as _sdist
 
 from distutils.errors import DistutilsError
@@ -180,6 +182,9 @@ PETSC_ARCH = %(PETSC_ARCH)s
 
 
 class sdist(_sdist):
+    pass
+
+class test(_test):
     pass
 
 # --------------------------------------------------------------------

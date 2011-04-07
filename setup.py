@@ -13,21 +13,26 @@ Python bindings for SLEPc libraries.
 ## except ImportError:
 ##     pass
 
+import sys, os
+
 # --------------------------------------------------------------------
 # Metadata
 # --------------------------------------------------------------------
 
 from conf.metadata import metadata
 
+def name():
+    return 'slepc4py'
+
 def version():
-    import os, re
+    import re
     fh = open(os.path.join('src', '__init__.py'))
     try: data = fh.read()
     finally: fh.close()
     m = re.search(r"__version__\s*=\s*'(.*)'", data)
     return m.groups()[0]
 
-name     = 'slepc4py'
+name     = name()
 version  = version()
 
 url      = 'http://%(name)s.googlecode.com/' % vars()
@@ -75,11 +80,10 @@ def get_ext_modules(Extension):
 # --------------------------------------------------------------------
 
 from conf.slepcconf import setup, Extension
-from conf.slepcconf import config, build, sdist
-from conf.slepcconf import build_src, build_ext
+from conf.slepcconf import config, build, build_src, build_ext
+from conf.slepcconf import test, sdist
 
 def run_setup():
-    import sys, os
     if (('distribute' in sys.modules) or
         ('setuptools' in sys.modules)):
         metadata['install_requires'] = ['petsc4py']
@@ -102,12 +106,12 @@ def run_setup():
                           'build'      : build,
                           'build_src'  : build_src,
                           'build_ext'  : build_ext,
+                          'test'       : test,
                           'sdist'      : sdist,
                           },
           **metadata)
 
 def chk_cython(CYTHON_VERSION_REQUIRED):
-    import sys, os
     from distutils.version import StrictVersion as Version
     warn = lambda msg='': sys.stderr.write(msg+'\n')
     #
@@ -164,15 +168,15 @@ def run_cython(source, target, includes=(),
 
 def build_sources(cmd):
     CYTHON_VERSION_REQUIRED = '0.13'
-    import os, glob
+    from glob import glob
     if not (os.path.isdir('.hg')  or
             os.path.isdir('.git') or
             cmd.force): return
     source = os.path.join('src', 'slepc4py.SLEPc.pyx')
     target = os.path.splitext(source)[0]+".c"
-    depends = (glob.glob("src/include/*/*.pxd") +
-               glob.glob("src/*/*.pyx") +
-               glob.glob("src/*/*.pxi"))
+    depends = (glob("src/include/*/*.pxd") +
+               glob("src/*/*.pyx") +
+               glob("src/*/*.pxi"))
     import petsc4py
     includes = [petsc4py.get_include()]
     run_cython(source, target, includes,
@@ -180,6 +184,19 @@ def build_sources(cmd):
                CYTHON_VERSION_REQUIRED)
 
 build_src.run = build_sources
+
+def run_testsuite(cmd):
+    from distutils.errors import DistutilsError
+    sys.path.insert(0, 'test')
+    try:
+        from runtests import main
+    finally:
+        del sys.path[-1]
+    err = main(cmd.args or [])
+    if err:
+        raise DistutilsError("test")
+
+test.run = run_testsuite
 
 # --------------------------------------------------------------------
 
