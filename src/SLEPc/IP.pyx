@@ -83,7 +83,7 @@ cdef class IP(Object):
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcIP newip = NULL
         CHKERR( IPCreate(ccomm, &newip) )
-        self.dec_ref(); self.ip = newip
+        SlepcCLEAR(self.obj); self.ip = newip
         return self
 
     def setOptionsPrefix(self, prefix):
@@ -205,10 +205,9 @@ cdef class IP(Object):
               The type of bilinear form.
         """
         cdef Mat mat = Mat()
-        cdef PetscMat m = NULL
         cdef SlepcIPBilinearForm val = IP_INNER_HERMITIAN
-        CHKERR( IPGetBilinearForm(self.ip, &m, &val) )
-        mat.mat = m; mat.inc_ref()
+        CHKERR( IPGetBilinearForm(self.ip, &mat.mat, &val) )
+        PetscINCREF(mat.obj)
         return (mat, val)
 
     def setBilinearForm(self, Mat mat=None, form=None):

@@ -97,7 +97,7 @@ cdef class ST(Object):
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcST newst = NULL
         CHKERR( STCreate(ccomm, &newst) )
-        self.dec_ref(); self.st = newst
+        SlepcCLEAR(self.obj); self.st = newst
         return self
 
     def setType(self, st_type):
@@ -297,7 +297,9 @@ cdef class ST(Object):
         cdef Mat A = Mat()
         cdef Mat B = Mat()
         CHKERR( STGetOperators(self.st, &A.mat, &B.mat) )
-        A.inc_ref(); B.inc_ref(); return (A, B)
+        PetscINCREF(A.obj)
+        PetscINCREF(B.obj)
+        return (A, B)
 
     def setMatStructure(self, structure):
         """
@@ -353,7 +355,8 @@ cdef class ST(Object):
         """
         cdef KSP ksp = KSP()
         CHKERR( STGetKSP(self.st, &ksp.ksp) )
-        ksp.inc_ref(); return ksp
+        PetscINCREF(ksp.obj)
+        return ksp
 
     #
 

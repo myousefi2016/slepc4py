@@ -15,12 +15,6 @@ cdef extern from * nogil:
     int PetscMemzero(void*,size_t)
 
 cdef extern from * nogil:
-    ctypedef int PetscClassId
-    int PetscObjectReference(PetscObject)
-    int PetscObjectDereference(PetscObject)
-    int PetscObjectDestroy(PetscObject)
-
-cdef extern from * nogil:
     enum: SLEPC_VERSION_MAJOR
     enum: SLEPC_VERSION_MINOR
     enum: SLEPC_VERSION_SUBMINOR
@@ -33,19 +27,18 @@ cdef extern from * nogil:
     int SlepcFinalize()
     int SlepcInitializeCalled
 
-cdef inline int SlepcIncref(PetscObject obj):
-    if obj != NULL:
-        return PetscObjectReference(obj)
-    return 0
+cdef extern from * nogil:
+    int PetscObjectReference(PetscObject)
+    int PetscObjectDestroy(PetscObject)
 
-cdef inline int SlepcDecref(PetscObject obj):
-    if obj != NULL:
-        return PetscObjectDereference(obj)
-    return 0
+cdef inline int PetscINCREF(PetscObject *obj):
+    if obj    == NULL: return 0
+    if obj[0] == NULL: return 0
+    return PetscObjectReference(obj[0])
 
 cdef inline int SlepcCLEAR(PetscObject* obj):
-    if obj == NULL: return 0
-    cdef PetscObject tmp = obj[0]
-    if tmp == NULL: return 0
-    obj[0] = NULL
+    if obj    == NULL: return 0
+    if obj[0] == NULL: return 0
+    cdef PetscObject tmp
+    tmp = obj[0]; obj[0] = NULL
     return PetscObjectDestroy(tmp)

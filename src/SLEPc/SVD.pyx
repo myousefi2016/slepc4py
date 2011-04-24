@@ -103,7 +103,7 @@ cdef class SVD(Object):
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcSVD newsvd = NULL
         CHKERR( SVDCreate(ccomm, &newsvd) )
-        self.dec_ref(); self.svd = newsvd
+        SlepcCLEAR(self.obj); self.svd = newsvd
         return self
 
     def setType(self, svd_type):
@@ -394,7 +394,8 @@ cdef class SVD(Object):
         """
         cdef IP ip = IP()
         CHKERR( SVDGetIP(self.svd, &ip.ip) )
-        ip.inc_ref(); return ip
+        PetscINCREF(ip.obj)
+        return ip
 
     def setIP(self, IP ip not None):
         """
@@ -418,7 +419,8 @@ cdef class SVD(Object):
         """
         cdef Mat A = Mat()
         CHKERR( SVDGetOperator(self.svd, &A.mat) )
-        A.inc_ref(); return A
+        PetscINCREF(A.obj)
+        return A
 
     def setOperator(self, Mat A not None):
         """
@@ -716,7 +718,8 @@ cdef class SVD(Object):
         """
         cdef EPS eps = EPS()
         CHKERR( SVDCrossGetEPS(self.svd, &eps.eps) )
-        eps.inc_ref(); return eps
+        PetscINCREF(eps.obj)
+        return eps
 
     def setCyclicEPS(self, EPS eps not None):
         """
@@ -742,7 +745,8 @@ cdef class SVD(Object):
         """
         cdef EPS eps = EPS()
         CHKERR( SVDCyclicGetEPS(self.svd, &eps.eps) )
-        eps.inc_ref(); return eps
+        PetscINCREF(eps.obj)
+        return eps
 
     def setCyclicExplicitMatrix(self, flag=True):
         """

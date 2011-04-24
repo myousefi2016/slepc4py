@@ -222,7 +222,7 @@ cdef class EPS(Object):
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcEPS neweps = NULL
         CHKERR( EPSCreate(ccomm, &neweps) )
-        self.dec_ref(); self.eps = neweps
+        SlepcCLEAR(self.obj); self.eps = neweps
         return self
 
     def setType(self, eps_type):
@@ -718,7 +718,8 @@ cdef class EPS(Object):
         """
         cdef ST st = ST()
         CHKERR( EPSGetST(self.eps, &st.st) )
-        st.inc_ref(); return st
+        PetscINCREF(st.obj)
+        return st
 
     def setST(self, ST st not None):
         """
@@ -743,7 +744,8 @@ cdef class EPS(Object):
         """
         cdef IP ip = IP()
         CHKERR( EPSGetIP(self.eps, &ip.ip) )
-        ip.inc_ref(); return ip
+        PetscINCREF(ip.obj)
+        return ip
 
     def setIP(self, IP ip not None):
         """
@@ -770,7 +772,9 @@ cdef class EPS(Object):
         cdef Mat A = Mat()
         cdef Mat B = Mat()
         CHKERR( EPSGetOperators(self.eps, &A.mat, &B.mat) )
-        A.inc_ref(); B.inc_ref(); return (A, B)
+        PetscINCREF(A.obj)
+        PetscINCREF(B.obj)
+        return (A, B)
 
     def setOperators(self, Mat A not None, Mat B=None):
         """

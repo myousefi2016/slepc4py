@@ -76,7 +76,7 @@ cdef class QEP(Object):
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
         cdef SlepcQEP newqep = NULL
         CHKERR( QEPCreate(ccomm, &newqep) )
-        self.dec_ref(); self.qep = newqep
+        SlepcCLEAR(self.obj); self.qep = newqep
         return self
 
     def setType(self, qep_type):
@@ -374,7 +374,7 @@ cdef class QEP(Object):
         """
         cdef IP ip = IP()
         CHKERR( QEPGetIP(self.qep, &ip.ip) )
-        ip.inc_ref();
+        PetscINCREF(ip.obj)
         return ip
 
     def setIP(self, IP ip not None):
@@ -405,7 +405,9 @@ cdef class QEP(Object):
         cdef Mat C = Mat()
         cdef Mat K = Mat()
         CHKERR( QEPGetOperators(self.qep, &M.mat, &C.mat, &K.mat) )
-        M.inc_ref(); C.inc_ref(); K.inc_ref();
+        PetscINCREF(M.obj)
+        PetscINCREF(C.obj)
+        PetscINCREF(K.obj)
         return (M, C, K)
 
     def setOperators(self, Mat M not None, Mat C not None, Mat K not None):
