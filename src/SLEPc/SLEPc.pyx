@@ -1,7 +1,5 @@
 # -----------------------------------------------------------------------------
 
-from petsc4py.PETSc import Error
-
 from petsc4py.PETSc import COMM_NULL
 from petsc4py.PETSc import COMM_SELF
 from petsc4py.PETSc import COMM_WORLD
@@ -56,30 +54,26 @@ cdef extern from *:
     enum: PETSC_ERR_PYTHON "(-1)"
 
 cdef extern from *:
-    void pyx_raise"__Pyx_Raise"(object, object, void*)
-
-cdef extern from *:
+    void PyErr_SetObject(object, object)
     void *PyExc_RuntimeError
-cdef object PetscError = Error
 
-cdef inline int SETERR(int ierr):
-    if (<void*>PetscError):
-        pyx_raise(PetscError, ierr, NULL)
+cdef object PetscError = <object>PyExc_RuntimeError
+from petsc4py.PETSc import Error as PetscError
+
+cdef inline int SETERR(int ierr) with gil:
+    if (<void*>PetscError) != NULL:
+        PyErr_SetObject(PetscError, <long>ierr)
     else:
-        pyx_raise(<object>PyExc_RuntimeError, ierr, NULL)
+        PyErr_SetObject(<object>PyExc_RuntimeError, <long>ierr)
     return ierr
 
-cdef inline int CHKERR(int ierr) except -1:
-    if ierr == 0: return 0                 # no error
-    if ierr == PETSC_ERR_PYTHON: return -1 # error in Python call
-    if (<void*>PetscError):
-        pyx_raise(PetscError, ierr, NULL)
-    else:
-        pyx_raise(<object>PyExc_RuntimeError, ierr, NULL)
+cdef inline int CHKERR(int ierr) nogil except -1:
+    if ierr == 0:
+        return 0  # no error
+    if ierr == PETSC_ERR_PYTHON:
+        return -1 # Python error
+    SETERR(ierr)
     return -1
-
-# Do not remove the line below !!!
-if not PyExc_RuntimeError: raise RuntimeError
 
 # -----------------------------------------------------------------------------
 
