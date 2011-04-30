@@ -64,6 +64,7 @@ def get_ext_modules(Extension):
     depends = []
     for pth, dirs, files in walk('src'):
         depends += glob(path.join(pth, '*.h'))
+        depends += glob(path.join(pth, '*.c'))
     try:
         import petsc4py
         petsc4py_includes = [petsc4py.get_include()]
@@ -112,8 +113,16 @@ def run_setup():
           **metadata)
 
 def chk_cython(CYTHON_VERSION_REQUIRED):
+    from distutils import log
     from distutils.version import StrictVersion as Version
     warn = lambda msg='': sys.stderr.write(msg+'\n')
+    #
+    cython_zip = 'cython.zip'
+    if os.path.isfile(cython_zip):
+        path = os.path.abspath(cython_zip)
+        if sys.path[0] != path:
+            sys.path.insert(0, os.path.abspath(cython_zip))
+            log.info("adding '%s' to sys.path", cython_zip)
     #
     try:
         import Cython
@@ -135,7 +144,8 @@ def chk_cython(CYTHON_VERSION_REQUIRED):
         CYTHON_VERSION = CYTHON_VERSION.replace(s, 'a')
     for s in ('.beta',  'beta', '.rc', 'rc', '.c', 'c'):
         CYTHON_VERSION = CYTHON_VERSION.replace(s, 'b')
-    if Version(CYTHON_VERSION) < Version(CYTHON_VERSION_REQUIRED):
+    if (CYTHON_VERSION_REQUIRED is not None and
+        Version(CYTHON_VERSION) < Version(CYTHON_VERSION_REQUIRED)):
         warn("*"*80)
         warn()
         warn(" You need to install Cython %s (you have version %s)"
@@ -147,24 +157,38 @@ def chk_cython(CYTHON_VERSION_REQUIRED):
     #
     return True
 
-def run_cython(source, target, includes=(),
-               depends=(), force=False,
-               CYTHON_VERSION_REQUIRED=None):
+def run_cython(source, depends=(), includes=(),
+               destdir_c=None, destdir_h=None, wdir=None,
+               force=False, VERSION=None):
+    from glob import glob
     from distutils import log
     from distutils import dep_util
     from distutils.errors import DistutilsError
-    depends = [source] + list(depends)
-    if not (force or dep_util.newer_group(depends, target)):
-        log.debug("skipping '%s' -> '%s' (up-to-date)",
-                  source, target)
-        return
-    if (CYTHON_VERSION_REQUIRED and not
-        chk_cython(CYTHON_VERSION_REQUIRED)):
-        raise DistutilsError('requires Cython>=%s'
-                             % CYTHON_VERSION_REQUIRED)
+    target = os.path.splitext(source)[0]+".c"
+    cwd = os.getcwd()
+    try:
+        if wdir: os.chdir(wdir)
+        alldeps = [source]
+        for dep in depends:
+            alldeps += glob(dep)
+        if not (force or dep_util.newer_group(alldeps, target)):
+            log.debug("skipping '%s' -> '%s' (up-to-date)",
+                      source, target)
+            return
+    finally:
+        os.chdir(cwd)
+    if not chk_cython(VERSION):
+        raise DistutilsError("requires Cython>=%s" % VERSION)
     log.info("cythonizing '%s' -> '%s'", source, target)
-    from conf.cythonize import run as cythonize
-    cythonize(source, includes=includes)
+    from conf.cythonize import cythonize
+    err = cythonize(source,
+                    includes=includes,
+                    destdir_c=destdir_c,
+                    destdir_h=destdir_h,
+                    wdir=wdir)
+    if err:
+        raise DistutilsError(
+            "Cython failure: '%s' -> '%s'" % (source, target))
 
 def build_sources(cmd):
     CYTHON_VERSION_REQUIRED = '0.13'
@@ -172,16 +196,17 @@ def build_sources(cmd):
     if not (os.path.isdir('.hg')  or
             os.path.isdir('.git') or
             cmd.force): return
-    source = os.path.join('src', 'slepc4py.SLEPc.pyx')
-    target = os.path.splitext(source)[0]+".c"
-    depends = (glob("src/include/*/*.pxd") +
-               glob("src/*/*.pyx") +
-               glob("src/*/*.pxi"))
+    # slepc4py.SLEPc
+    source = 'slepc4py.SLEPc.pyx'
+    depends = ("include/*/*.pxd",
+               "*/*.pyx",
+               "*/*.pxi",)
     import petsc4py
-    includes = [petsc4py.get_include()]
-    run_cython(source, target, includes,
-               depends, cmd.force,
-               CYTHON_VERSION_REQUIRED)
+    includes = ['include', petsc4py.get_include()]
+    destdir_h = os.path.join('include', 'slepc4py')
+    run_cython(source, depends, includes,
+               destdir_c=None, destdir_h=destdir_h, wdir='src',
+               force=cmd.force, VERSION=CYTHON_VERSION_REQUIRED)
 
 build_src.run = build_sources
 
