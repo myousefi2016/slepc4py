@@ -77,8 +77,8 @@ cdef inline int CHKERR(int ierr) nogil except -1:
 
 # -----------------------------------------------------------------------------
 
-cdef extern from "compat.h":
-    pass
+cdef extern from "compat.h": pass
+cdef extern from "custom.h": pass
 
 cdef extern from *:
     ctypedef long   PetscInt

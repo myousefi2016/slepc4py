@@ -1,0 +1,4 @@
+#ifndef SLEPC4PY_CUSTOM_H
+#define SLEPC4PY_CUSTOM_H
+
+#endif/*SLEPC4PY_CUSTOM_H*/

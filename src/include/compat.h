@@ -1,36 +1,35 @@
-#if !defined(SLEPC_COMPAT_H)
-#define SLEPC_COMPAT_H
+#ifndef SLEPC4PY_COMPAT_H
+#define SLEPC4PY_COMPAT_H
+
+#include <slepc.h>
 
 #if !defined(SLEPC_VERSION_)
 #define SLEPC_VERSION_(MAJOR,MINOR,SUBMINOR) \
-  ((SLEPC_VERSION_MAJOR == (MAJOR)) &&       \
-   (SLEPC_VERSION_MINOR == (MINOR)) &&       \
+  ((SLEPC_VERSION_MAJOR == (MAJOR))       && \
+   (SLEPC_VERSION_MINOR == (MINOR))       && \
    (SLEPC_VERSION_SUBMINOR == (SUBMINOR)) && \
    (SLEPC_VERSION_RELEASE  == 1))
 #endif
+
+#if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 
 #if SLEPC_VERSION_(3,1,0)
 #include <slepcqep.h>
 #elif SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 #include <petscts.h>
 #include <petscda.h>
-#include <slepc.h>
 #include <slepcsvd.h>
 #include "compat/slepcqep.h"
 #endif
 
-#if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 #define PetscBool PetscTruth
-#endif
 
-#if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 #define PetscClassId PetscCookie
 #define ST_CLASSID  ST_COOKIE
 #define IP_CLASSID  IP_COOKIE
 #define EPS_CLASSID EPS_COOKIE
 #define SVD_CLASSID SVD_COOKIE
 #define QEP_CLASSID QEP_COOKIE
-#endif
 
 #undef  __FUNCT__
 #define __FUNCT__ "SlepcInitializePackage"
@@ -438,4 +437,6 @@ static PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,
 
 #endif
 
-#endif /* !SLEPC_COMPAT_H */
+#endif
+
+#endif/*SLEPC4PY_COMPAT_H*/
