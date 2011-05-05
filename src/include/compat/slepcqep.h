@@ -2,7 +2,6 @@
 #define _COMPAT_SLEPC_QEP_H
 PETSC_EXTERN_CXX_BEGIN
 
-
 #undef  __FUNCT__
 #define __FUNCT__ "QEP???"
 
@@ -61,7 +60,7 @@ typedef enum { QEP_LARGEST_MAGNITUDE=1,
                QEP_SMALLEST_IMAGINARY } QEPWhich;
 
 static PetscErrorCode QEPCreate(MPI_Comm c,QEP *o){SlepcQEP_ERR_SUP}
-static PetscErrorCode QEPDestroy(QEP*o,...){SlepcQEP_ERR_SUP}
+static PetscErrorCode QEPDestroy(QEP o,...){SlepcQEP_ERR_SUP}
 static PetscErrorCode QEPSetType(QEP o,...){SlepcQEP_ERR_SUP}
 static PetscErrorCode QEPGetType(QEP o,...){SlepcQEP_ERR_SUP}
 static PetscErrorCode QEPSetProblemType(QEP o,...){SlepcQEP_ERR_SUP}

@@ -35,6 +35,8 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 
 #if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 
+#include "compat/destroy.h"
+
 #define PetscBool    PetscTruth
 
 #define PetscClassId PetscCookie
