@@ -59,7 +59,7 @@ cdef class QEP(Object):
         """
         Destroys the QEP object.
         """
-        CHKERR( QEPDestroy(self.qep) )
+        CHKERR( QEPDestroy(&self.qep) )
         self.qep = NULL
         return self
 

@@ -57,7 +57,7 @@ cdef extern from * nogil:
         EPS_DIVERGED_NONSYMMETRIC
 
     int EPSView(SlepcEPS,PetscViewer)
-    int EPSDestroy(SlepcEPS)
+    int EPSDestroy(SlepcEPS*)
     int EPSCreate(MPI_Comm,SlepcEPS*)
     int EPSSetType(SlepcEPS,SlepcEPSType)
     int EPSGetType(SlepcEPS,SlepcEPSType*)

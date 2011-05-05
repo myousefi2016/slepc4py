@@ -205,7 +205,7 @@ cdef class EPS(Object):
         """
         Destroys the EPS object.
         """
-        CHKERR( EPSDestroy(self.eps) )
+        CHKERR( EPSDestroy(&self.eps) )
         self.eps = NULL
         return self
 

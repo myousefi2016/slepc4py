@@ -20,7 +20,7 @@ cdef extern from * nogil:
         MAT_SAME_PRECONDITIONER       "SAME_PRECONDITIONER"
 
     int STView(SlepcST,PetscViewer)
-    int STDestroy(SlepcST)
+    int STDestroy(SlepcST*)
     int STCreate(MPI_Comm,SlepcST*)
     int STGetType(SlepcST,SlepcSTType*)
     int STSetType(SlepcST,SlepcSTType)

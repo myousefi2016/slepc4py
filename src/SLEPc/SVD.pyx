@@ -86,7 +86,7 @@ cdef class SVD(Object):
         """
         Destroys the SVD object.
         """
-        CHKERR( SVDDestroy(self.svd) )
+        CHKERR( SVDDestroy(&self.svd) )
         self.svd = NULL
         return self
 

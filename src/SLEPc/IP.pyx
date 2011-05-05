@@ -66,7 +66,7 @@ cdef class IP(Object):
         """
         Destroys the IP object.
         """
-        CHKERR( IPDestroy(self.ip) )
+        CHKERR( IPDestroy(&self.ip) )
         self.ip = NULL
         return self
 

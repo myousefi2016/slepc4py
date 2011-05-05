@@ -80,7 +80,7 @@ cdef class ST(Object):
         """
         Destroys the ST object.
         """
-        CHKERR( STDestroy(self.st) )
+        CHKERR( STDestroy(&self.st) )
         self.st = NULL
         return self
 

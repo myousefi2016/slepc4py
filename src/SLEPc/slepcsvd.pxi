@@ -24,7 +24,7 @@ cdef extern from * nogil:
 
     int SVDCreate(MPI_Comm,SlepcSVD*)
     int SVDView(SlepcSVD,PetscViewer)
-    int SVDDestroy(SlepcSVD)
+    int SVDDestroy(SlepcSVD*)
     int SVDSetType(SlepcSVD,SlepcSVDType)
     int SVDGetType(SlepcSVD,SlepcSVDType*)
     int SVDSetOptionsPrefix(SlepcSVD,char[])

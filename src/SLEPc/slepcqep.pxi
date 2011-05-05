@@ -24,7 +24,7 @@ cdef extern from * nogil:
         QEP_CONVERGED_ITERATING
 
     int QEPCreate(MPI_Comm,SlepcQEP*)
-    int QEPDestroy(SlepcQEP)
+    int QEPDestroy(SlepcQEP*)
     int QEPView(SlepcQEP,PetscViewer)
 
     int QEPSetType(SlepcQEP,SlepcQEPType)

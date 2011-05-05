@@ -29,7 +29,7 @@ cdef extern from * nogil:
 
 cdef extern from * nogil:
     int PetscObjectReference(PetscObject)
-    int PetscObjectDestroy(PetscObject)
+    int PetscObjectDestroy(PetscObject*)
 
 cdef inline int PetscINCREF(PetscObject *obj):
     if obj    == NULL: return 0
@@ -41,4 +41,4 @@ cdef inline int SlepcCLEAR(PetscObject* obj):
     if obj[0] == NULL: return 0
     cdef PetscObject tmp
     tmp = obj[0]; obj[0] = NULL
-    return PetscObjectDestroy(tmp)
+    return PetscObjectDestroy(&tmp)
