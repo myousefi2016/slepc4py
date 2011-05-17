@@ -156,7 +156,7 @@ cdef int initialize(object args) except -1:
                           "SlepcFinalize() with Py_AtExit()")
     return 1 # and we are done, enjoy !!
 
-from petsc4py.PETSc cimport TypeRegistryAdd
+from petsc4py.PETSc cimport PyPetscType_Register
 
 cdef extern from *:
     int SlepcInitializePackage(char[])
@@ -171,11 +171,11 @@ cdef int register(char path[]) except -1:
     # make sure all SLEPc packages are initialized
     CHKERR( SlepcInitializePackage  (NULL) )
     # register Python types
-    TypeRegistryAdd(SLEPC_ST_CLASSID,  ST)
-    TypeRegistryAdd(SLEPC_IP_CLASSID,  IP)
-    TypeRegistryAdd(SLEPC_EPS_CLASSID, EPS)
-    TypeRegistryAdd(SLEPC_SVD_CLASSID, SVD)
-    TypeRegistryAdd(SLEPC_QEP_CLASSID, QEP)
+    PyPetscType_Register(SLEPC_ST_CLASSID,  ST)
+    PyPetscType_Register(SLEPC_IP_CLASSID,  IP)
+    PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)
+    PyPetscType_Register(SLEPC_SVD_CLASSID, SVD)
+    PyPetscType_Register(SLEPC_QEP_CLASSID, QEP)
     return 0
 
 cdef void finalize() nogil:
