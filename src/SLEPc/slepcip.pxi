@@ -1,13 +1,13 @@
 cdef extern from * nogil:
 
-    ctypedef enum SlepcIPOrthogonalizationType "IPOrthogonalizationType":
-        IP_ORTH_MGS
-        IP_ORTH_CGS
+    ctypedef enum SlepcIPOrthogType "IPOrthogType":
+        IP_ORTHOG_MGS
+        IP_ORTHOG_CGS
 
-    ctypedef enum SlepcIPOrthogonalizationRefinementType "IPOrthogonalizationRefinementType":
-        IP_ORTH_REFINE_NEVER
-        IP_ORTH_REFINE_IFNEEDED
-        IP_ORTH_REFINE_ALWAYS
+    ctypedef enum SlepcIPOrthogRefineType "IPOrthogRefineType":
+        IP_ORTHOG_REFINE_NEVER
+        IP_ORTHOG_REFINE_IFNEEDED
+        IP_ORTHOG_REFINE_ALWAYS
 
     ctypedef enum SlepcIPBilinearForm "IPBilinearForm":
         IP_INNER_HERMITIAN
@@ -22,8 +22,8 @@ cdef extern from * nogil:
     int IPAppendOptionsPrefix(SlepcIP,char[])
     int IPSetFromOptions(SlepcIP)
 
-    int IPSetOrthogonalization(SlepcIP,SlepcIPOrthogonalizationType,SlepcIPOrthogonalizationRefinementType,PetscReal)
-    int IPGetOrthogonalization(SlepcIP,SlepcIPOrthogonalizationType*,SlepcIPOrthogonalizationRefinementType*,PetscReal*)
+    int IPSetOrthogonalization(SlepcIP,SlepcIPOrthogType,SlepcIPOrthogRefineType,PetscReal)
+    int IPGetOrthogonalization(SlepcIP,SlepcIPOrthogType*,SlepcIPOrthogRefineType*,PetscReal*)
 
     int IPSetBilinearForm(SlepcIP,PetscMat,SlepcIPBilinearForm)
     int IPGetBilinearForm(SlepcIP,PetscMat*,SlepcIPBilinearForm*)

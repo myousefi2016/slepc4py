@@ -68,6 +68,15 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 /**/
 #endif
 
+#define IPOrthogType  IPOrthogonalizationType
+#define IP_ORTHOG_MGS IP_ORTH_MGS
+#define IP_ORTHOG_CGS IP_ORTH_CGS
+
+#define IPOrthogRefineType        IPOrthogonalizationRefinementType
+#define IP_ORTHOG_REFINE_NEVER    IP_ORTH_REFINE_NEVER
+#define IP_ORTHOG_REFINE_IFNEEDED IP_ORTH_REFINE_IFNEEDED
+#define IP_ORTHOG_REFINE_ALWAYS   IP_ORTH_REFINE_ALWAYS 
+
 #if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/
 #define IP_ORTH_MGS IP_MGS_ORTH

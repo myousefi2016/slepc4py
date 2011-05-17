@@ -1,16 +1,16 @@
 # -----------------------------------------------------------------------------
 
-class IPOrthoType(object):
+class IPOrthogType(object):
     """
     IP orthogonalization types
 
     - `CGS`: Classical Gram-Schmidt.
     - `MGS`: Modified Gram-Schmidt.
     """
-    CGS = IP_ORTH_CGS
-    MGS = IP_ORTH_MGS
+    CGS = IP_ORTHOG_CGS
+    MGS = IP_ORTHOG_MGS
 
-class IPRefineType(object):
+class IPOrthogRefineType(object):
     """
     IP orthogonalization refinement types
 
@@ -18,9 +18,9 @@ class IPRefineType(object):
     - `IFNEEDED`: Reorthogonalize if a criterion is satisfied.
     - `ALWAYS`:   Always reorthogonalize.
     """
-    NEVER    = IP_ORTH_REFINE_NEVER
-    IFNEEDED = IP_ORTH_REFINE_IFNEEDED
-    ALWAYS   = IP_ORTH_REFINE_ALWAYS
+    NEVER    = IP_ORTHOG_REFINE_NEVER
+    IFNEEDED = IP_ORTHOG_REFINE_IFNEEDED
+    ALWAYS   = IP_ORTHOG_REFINE_ALWAYS
 
 class IPBilinearForm(object):
     """
@@ -40,9 +40,11 @@ cdef class IP(Object):
     IP
     """
 
-    OrthoType    = IPOrthoType
-    RefineType   = IPRefineType
-    BilinearForm = IPBilinearForm
+    OrthogType       = IPOrthogType
+    OrthogRefineType = IPOrthogRefineType
+    BilinearForm     = IPBilinearForm
+
+    RefineType       = IPOrthogRefineType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.ip
@@ -148,10 +150,8 @@ cdef class IP(Object):
               Parameter for selective refinement (used when the the
               refinement type `IP.RefineType.IFNEEDED`).
         """
-        cdef SlepcIPOrthogonalizationType val1
-        val1 = IP_ORTH_CGS
-        cdef SlepcIPOrthogonalizationRefinementType val2
-        val2 = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogType val1 = IP_ORTHOG_CGS
+        cdef SlepcIPOrthogRefineType val2 = IP_ORTHOG_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
         CHKERR( IPGetOrthogonalization(self.ip, &val1, &val2, &rval) )
         return (val1, val2, toReal(rval))
@@ -183,10 +183,8 @@ cdef class IP(Object):
         When using several processors, `IP.OrthoType.MGS` is likely to
         result in bad scalability.
         """
-        cdef SlepcIPOrthogonalizationType val1
-        val1 = IP_ORTH_CGS
-        cdef SlepcIPOrthogonalizationRefinementType val2
-        val2 = IP_ORTH_REFINE_IFNEEDED
+        cdef SlepcIPOrthogType val1 = IP_ORTHOG_CGS
+        cdef SlepcIPOrthogRefineType val2 = IP_ORTHOG_REFINE_IFNEEDED
         cdef PetscReal rval = PETSC_DEFAULT
         if type   is not None: val1= type
         if refine is not None: val2= refine
@@ -367,8 +365,8 @@ cdef class IP(Object):
 
 # -----------------------------------------------------------------------------
 
-del IPOrthoType
-del IPRefineType
+del IPOrthogType
+del IPOrthogRefineType
 del IPBilinearForm
 
 # -----------------------------------------------------------------------------
