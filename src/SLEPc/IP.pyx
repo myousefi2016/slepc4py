@@ -60,6 +60,12 @@ cdef class IP(Object):
         self.ip = NULL
         return self
 
+    def reset(self):
+        """
+        Resets the IP object.
+        """
+        CHKERR( IPReset(self.ip) )
+
     def create(self, comm=None):
         """
         Creates the IP object.

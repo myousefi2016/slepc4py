@@ -25,6 +25,7 @@ cdef extern from * nogil:
 
     int QEPCreate(MPI_Comm,SlepcQEP*)
     int QEPDestroy(SlepcQEP*)
+    int QEPReset(SlepcQEP)
     int QEPView(SlepcQEP,PetscViewer)
 
     int QEPSetType(SlepcQEP,SlepcQEPType)

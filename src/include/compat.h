@@ -36,6 +36,7 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 #if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 
 #include "compat/destroy.h"
+#include "compat/reset.h"
 
 #define PetscBool    PetscTruth
 
@@ -68,6 +69,7 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 /**/
 #endif
 
+
 #define IPOrthogType  IPOrthogonalizationType
 #define IP_ORTHOG_MGS IP_ORTH_MGS
 #define IP_ORTHOG_CGS IP_ORTH_CGS
@@ -76,6 +78,32 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 #define IP_ORTHOG_REFINE_NEVER    IP_ORTH_REFINE_NEVER
 #define IP_ORTHOG_REFINE_IFNEEDED IP_ORTH_REFINE_IFNEEDED
 #define IP_ORTHOG_REFINE_ALWAYS   IP_ORTH_REFINE_ALWAYS 
+
+#undef __FUNCT__
+#define __FUNCT__ "IPGetMatrix"
+static PetscErrorCode IPGetMatrix(IP ip, Mat *mat)
+{
+  IPBilinearForm form;
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(ip,IP_COOKIE,1);
+  PetscValidPointer(mat,2);
+  ierr = IPGetBilinearForm(ip,mat,&form);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
+
+#undef __FUNCT__
+#define __FUNCT__ "IPSetMatrix"
+static PetscErrorCode IPSetMatrix(IP ip, Mat mat)
+{
+  IPBilinearForm form;
+  PetscErrorCode ierr;
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(ip,IP_COOKIE,1);
+  ierr = IPGetBilinearForm(ip,0,&form);CHKERRQ(ierr);
+  ierr = IPSetBilinearForm(ip,mat,form);CHKERRQ(ierr);
+  PetscFunctionReturn(0);
+}
 
 #if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
 /**/

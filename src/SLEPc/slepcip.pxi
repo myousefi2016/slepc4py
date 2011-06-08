@@ -12,6 +12,7 @@ cdef extern from * nogil:
     int IPCreate(MPI_Comm,SlepcIP*)
     int IPView(SlepcIP,PetscViewer)
     int IPDestroy(SlepcIP*)
+    int IPReset(SlepcIP)
 
     int IPSetOptionsPrefix(SlepcIP,char[])
     int IPGetOptionsPrefix(SlepcIP,char*[])

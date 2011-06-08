@@ -84,6 +84,12 @@ cdef class ST(Object):
         self.st = NULL
         return self
 
+    def reset(self):
+        """
+        Resets the ST object.
+        """
+        CHKERR( STReset(self.st) )
+
     def create(self, comm=None):
         """
         Creates the ST object.

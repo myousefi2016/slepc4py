@@ -209,6 +209,12 @@ cdef class EPS(Object):
         self.eps = NULL
         return self
 
+    def reset(self):
+        """
+        Resets the EPS object.
+        """
+        CHKERR( EPSReset(self.eps) )
+
     def create(self, comm=None):
         """
         Creates the EPS object.

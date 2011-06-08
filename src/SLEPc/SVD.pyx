@@ -90,6 +90,12 @@ cdef class SVD(Object):
         self.svd = NULL
         return self
 
+    def reset(self):
+        """
+        Resets the SVD object.
+        """
+        CHKERR( SVDReset(self.svd) )
+
     def create(self, comm=None):
         """
         Creates the SVD object.

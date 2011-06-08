@@ -58,6 +58,7 @@ cdef extern from * nogil:
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)
+    int EPSReset(SlepcEPS)
     int EPSCreate(MPI_Comm,SlepcEPS*)
     int EPSSetType(SlepcEPS,SlepcEPSType)
     int EPSGetType(SlepcEPS,SlepcEPSType*)

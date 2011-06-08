@@ -63,6 +63,12 @@ cdef class QEP(Object):
         self.qep = NULL
         return self
 
+    def reset(self):
+        """
+        Resets the QEP object.
+        """
+        CHKERR( QEPReset(self.qep) )
+
     def create(self, comm=None):
         """
         Creates the QEP object.

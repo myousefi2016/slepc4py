@@ -21,6 +21,7 @@ cdef extern from * nogil:
 
     int STView(SlepcST,PetscViewer)
     int STDestroy(SlepcST*)
+    int STReset(SlepcST)
     int STCreate(MPI_Comm,SlepcST*)
     int STGetType(SlepcST,SlepcSTType*)
     int STSetType(SlepcST,SlepcSTType)
