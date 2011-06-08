@@ -192,7 +192,6 @@ def run_cython(source, depends=(), includes=(),
 
 def build_sources(cmd):
     CYTHON_VERSION_REQUIRED = '0.13'
-    from glob import glob
     if not (os.path.isdir('.hg')  or
             os.path.isdir('.git') or
             cmd.force): return
