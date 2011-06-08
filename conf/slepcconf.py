@@ -12,13 +12,7 @@ __all__ = ['setup',
 
 # --------------------------------------------------------------------
 
-import sys, os, platform
-
-if not hasattr(sys, 'version_info') or \
-       sys.version_info < (2, 4, 0, 'final'):
-    raise SystemExit("Python 2.4 or later is required")
-
-# --------------------------------------------------------------------
+import sys, os
 
 from conf.baseconf import PetscConfig
 from conf.baseconf import setup, Extension, log
@@ -116,7 +110,7 @@ class config(_config):
         log.info('SLEPC_DIR:   %s' % self.slepc_dir)
         _config.run(self)
 
-    @staticmethod
+    #@staticmethod
     def get_slepc_dir(slepc_dir):
         if not slepc_dir: return None
         slepc_dir = os.path.expandvars(slepc_dir)
@@ -133,6 +127,7 @@ class config(_config):
             log.warn('invalid SLEPC_DIR:  %s' % slepc_dir)
             return None
         return slepc_dir
+    get_slepc_dir = staticmethod(get_slepc_dir)
 
 class build(_build):
 
