@@ -826,11 +826,11 @@ cdef class EPS(Object):
         use `removeDeflationSpace()` to eliminate them. 
         """
         if isinstance(space, Vec): space = [space]
-        cdef PetscVec* vds = NULL
-        cdef Py_ssize_t i = 0, nds = len(space)
-        cdef tmp = allocate(<size_t>nds*sizeof(Vec),<void**>&vds)
-        for i in range(nds): vds[i] = (<Vec?>space[i]).vec
-        CHKERR( EPSSetDeflationSpace(self.eps, <PetscInt>nds, vds) )
+        cdef PetscVec* vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetDeflationSpace(self.eps, <PetscInt>ns, vs) )
 
     def removeDeflationSpace(self):
         """
