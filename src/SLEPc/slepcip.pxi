@@ -9,10 +9,6 @@ cdef extern from * nogil:
         IP_ORTHOG_REFINE_IFNEEDED
         IP_ORTHOG_REFINE_ALWAYS
 
-    ctypedef enum SlepcIPBilinearForm "IPBilinearForm":
-        IP_INNER_HERMITIAN
-        IP_INNER_SYMMETRIC
-
     int IPCreate(MPI_Comm,SlepcIP*)
     int IPView(SlepcIP,PetscViewer)
     int IPDestroy(SlepcIP*)
@@ -25,8 +21,8 @@ cdef extern from * nogil:
     int IPSetOrthogonalization(SlepcIP,SlepcIPOrthogType,SlepcIPOrthogRefineType,PetscReal)
     int IPGetOrthogonalization(SlepcIP,SlepcIPOrthogType*,SlepcIPOrthogRefineType*,PetscReal*)
 
-    int IPSetBilinearForm(SlepcIP,PetscMat,SlepcIPBilinearForm)
-    int IPGetBilinearForm(SlepcIP,PetscMat*,SlepcIPBilinearForm*)
+    int IPSetMatrix(SlepcIP,PetscMat)
+    int IPGetMatrix(SlepcIP,PetscMat*)
     int IPApplyMatrix(SlepcIP,PetscVec,PetscVec)
 
     int IPNorm(SlepcIP,PetscVec,PetscReal*)

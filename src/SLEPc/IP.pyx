@@ -22,16 +22,6 @@ class IPOrthogRefineType(object):
     IFNEEDED = IP_ORTHOG_REFINE_IFNEEDED
     ALWAYS   = IP_ORTHOG_REFINE_ALWAYS
 
-class IPBilinearForm(object):
-    """
-    IP bilinear form types
-
-    - `HERMITIAN`:
-    - `SYMMETRIC`:
-    """
-    HERMITIAN = IP_INNER_HERMITIAN
-    SYMMETRIC = IP_INNER_SYMMETRIC
-
 # -----------------------------------------------------------------------------
 
 cdef class IP(Object):
@@ -42,8 +32,6 @@ cdef class IP(Object):
 
     OrthogType       = IPOrthogType
     OrthogRefineType = IPOrthogRefineType
-    BilinearForm     = IPBilinearForm
-
     RefineType       = IPOrthogRefineType
 
     def __cinit__(self):
@@ -193,37 +181,31 @@ cdef class IP(Object):
 
     #
 
-    def getBilinearForm(self):
+    def getMatrix(self):
         """
-        Gets the bilinear form to be used for inner products.
+        Retrieves the matrix representation of the inner produc
 
         Returns
         -------
-        form: IP.BilinearForm enumerate
-              The type of bilinear form.
+        mat: the matrix of the inner product
         """
         cdef Mat mat = Mat()
-        cdef SlepcIPBilinearForm val = IP_INNER_HERMITIAN
-        CHKERR( IPGetBilinearForm(self.ip, &mat.mat, &val) )
+        CHKERR( IPGetMatrix(self.ip, &mat.mat) )
         PetscINCREF(mat.obj)
-        return (mat, val)
+        return mat
 
-    def setBilinearForm(self, Mat mat=None, form=None):
+    def setMatrix(self, Mat mat):
         """
         Sets the bilinear form to be used for inner products.
 
         Parameters
         ----------
         mat:  Mat, optional
-              The matrix of the bilinear form.
-        form: IP.BilinearForm enumerate, optional
-              The type of bilinear form.
+              The matrix of the inner product.
         """
         cdef PetscMat m = NULL
-        cdef SlepcIPBilinearForm val = IP_INNER_HERMITIAN
-        if mat  is not None: m = mat.mat
-        if form is not None: val = form
-        CHKERR( IPSetBilinearForm(self.ip, m, val) )
+        if mat is not None: m = mat.mat
+        CHKERR( IPSetMatrix(self.ip, m) )
 
     def applyMatrix(self, Vec x not None, Vec y not None):
         """
@@ -367,6 +349,5 @@ cdef class IP(Object):
 
 del IPOrthogType
 del IPOrthogRefineType
-del IPBilinearForm
 
 # -----------------------------------------------------------------------------
