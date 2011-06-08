@@ -445,13 +445,12 @@ cdef class SVD(Object):
         space: an sequence of Vec
            The initial space.
         """
-        cdef PetscInt i = 0, ns = 0
-        cdef PetscVec *vs = NULL
         if isinstance(space, Vec): space = [space]
-        ns = len(space)
-        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( SVDSetInitialSpace(self.svd, ns, vs) )
+        cdef PetscVec *vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( SVDSetInitialSpace(self.svd, <PetscInt>ns, vs) )
 
     #
 

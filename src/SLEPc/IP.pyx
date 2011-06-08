@@ -317,27 +317,27 @@ cdef class IP(Object):
 
         This routine does not normalize the resulting vector.
         """
-        cdef PetscInt i = 0, n = 0
         cdef PetscBool* which = NULL
         cdef PetscVec* V = NULL
         cdef PetscScalar* H = NULL, h = 0
         cdef PetscReal rval = 0
         cdef PetscBool tval = PETSC_FALSE
         cdef object tmp1 = None, tmp2 = None
+        cdef Py_ssize_t i = 0, n = 0
         if isinstance(VS, Vec):
             n = 1
             V = &((<Vec>VS).vec)
             H = &h
         else:
             n = len(VS)
-            tmp1 = allocate(n*sizeof(PetscVec),<void**>&V)
-            tmp2 = allocate(n*sizeof(PetscScalar),<void**>&H)
+            tmp1 = allocate(<size_t>n*sizeof(PetscVec),<void**>&V)
+            tmp2 = allocate(<size_t>n*sizeof(PetscScalar),<void**>&H)
             for i in range(n):
-                V[i] = (<Vec?>VS[<Py_ssize_t>i]).vec
+                V[i] = (<Vec?>VS[i]).vec
                 H[i] = 0
-        CHKERR( IPOrthogonalize(self.ip,
-                                0, NULL, n, NULL, V, v.vec,
-                                H, &rval, &tval) )
+        CHKERR( IPOrthogonalize(self.ip, 0, NULL,
+                                <PetscInt>n, which, V,
+                                v.vec, H, &rval, &tval) )
         cdef object coefs = None
         if isinstance(VS, Vec):
             coefs = toScalar(H[0])

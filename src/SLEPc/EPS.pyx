@@ -819,13 +819,12 @@ cdef class EPS(Object):
         These vectors persist from one `solve()` call to the other,
         use `removeDeflationSpace()` to eliminate them. 
         """
-        cdef PetscInt i = 0, nds = 0
-        cdef PetscVec* vds = NULL
         if isinstance(space, Vec): space = [space]
-        nds = len(space)
-        cdef tmp = allocate(nds*sizeof(Vec),<void**>&vds)
-        for i in range(nds): vds[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( EPSSetDeflationSpace(self.eps, nds, vds) )
+        cdef PetscVec* vds = NULL
+        cdef Py_ssize_t i = 0, nds = len(space)
+        cdef tmp = allocate(<size_t>nds*sizeof(Vec),<void**>&vds)
+        for i in range(nds): vds[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetDeflationSpace(self.eps, <PetscInt>nds, vds) )
 
     def removeDeflationSpace(self):
         """
@@ -861,13 +860,12 @@ cdef class EPS(Object):
         Common usage of this function is when the user can provide a rough
         approximation of the wanted eigenspace. Then, convergence may be faster.
         """
-        cdef PetscInt i = 0, ns = 0
-        cdef PetscVec *vs = NULL
         if isinstance(space, Vec): space = [space]
-        ns = len(space)
-        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( EPSSetInitialSpace(self.eps, ns, vs) )
+        cdef PetscVec *vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetInitialSpace(self.eps, <PetscInt>ns, vs) )
 
     def setInitialSpaceLeft(self, space):
         """
@@ -880,13 +878,12 @@ cdef class EPS(Object):
         space: Vec or sequence of Vec
            The initial space
         """
-        cdef PetscInt i = 0, ns = 0
-        cdef PetscVec *vs = NULL
         if isinstance(space, Vec): space = [space]
-        ns = len(space)
-        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( EPSSetInitialSpaceLeft(self.eps, ns, vs) )
+        cdef PetscVec *vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( EPSSetInitialSpaceLeft(self.eps, <PetscInt>ns, vs) )
 
     #
 

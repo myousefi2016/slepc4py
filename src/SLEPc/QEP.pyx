@@ -437,13 +437,12 @@ cdef class QEP(Object):
         space: Vec or sequence of Vec
            The initial space
         """
-        cdef PetscInt i = 0, ns = 0
-        cdef PetscVec *vs = NULL
         if isinstance(space, Vec): space = [space]
-        ns = len(space)
-        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( QEPSetInitialSpace(self.qep, ns, vs) )
+        cdef PetscVec *vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( QEPSetInitialSpace(self.qep, <PetscInt>ns, vs) )
 
     def setInitialSpaceLeft(self, space):
         """
@@ -455,13 +454,12 @@ cdef class QEP(Object):
         space: Vec or sequence of Vec
            The initial left space
         """
-        cdef PetscInt i = 0, ns = 0
-        cdef PetscVec *vs = NULL
         if isinstance(space, Vec): space = [space]
-        ns = len(space)
-        cdef tmp = allocate(ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[<Py_ssize_t>i]).vec
-        CHKERR( QEPSetInitialSpaceLeft(self.qep, ns, vs) )
+        cdef PetscVec *vs = NULL
+        cdef Py_ssize_t i = 0, ns = len(space)
+        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
+        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
+        CHKERR( QEPSetInitialSpaceLeft(self.qep, <PetscInt>ns, vs) )
 
     #
 
