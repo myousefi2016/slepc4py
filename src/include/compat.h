@@ -24,11 +24,12 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 {
   PetscErrorCode ierr;
   PetscFunctionBegin;
-  ierr = 0;
 #if SLEPC_VERSION_(3,0,0)
   ierr = PetscCookieRegister("Quadratic Eigenproblem Solver",&QEP_COOKIE);CHKERRQ(ierr);
 #elif SLEPC_VERSION_(2,3,3)
   ierr = PetscLogClassRegister(&QEP_COOKIE,"Quadratic Eigenproblem Solver");CHKERRQ(ierr);
+#else
+  ierr = 0; CHKERRQ(ierr);
 #endif
   PetscFunctionReturn(0);
 }

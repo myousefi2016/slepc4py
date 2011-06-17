@@ -387,7 +387,7 @@ cdef class SVD(Object):
         if nsv is not None: ival1 = asInt(nsv)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
-        CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival2) )
+        CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival3) )
 
     def getIP(self):
         """
