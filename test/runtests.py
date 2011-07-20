@@ -96,30 +96,45 @@ def getpythoninfo():
 
 def getlibraryinfo():
     from petsc4py import PETSc
-    (major, minor, micro), patch = PETSc.Sys.getVersion(patch=True)
-    r = PETSc.Sys.getVersionInfo()['release']
+    (major, minor, micro), patch, devel = \
+        PETSc.Sys.getVersion(patch=True, devel=True)
+    r = not devel
     if r: release = 'release'
     else: release = 'development'
     arch = PETSc.__arch__
-    return ("PETSc %d.%d.%d-p%d %s (conf: '%s')"
-            % (major, minor, micro, patch, release, arch) )
+    petsc_info = ("PETSc %d.%d.%d-p%d %s (conf: '%s')"
+                  % (major, minor, micro, patch, release, arch) )
+    from slepc4py import SLEPc
+    (major, minor, micro), patch, devel = \
+        SLEPc.Sys.getVersion(patch=True, devel=True)
+    r = not devel
+    if r: release = 'release'
+    else: release = 'development'
+    arch = SLEPc.__arch__
+    slepc_info = ("SLEPc %d.%d.%d-p%d %s (conf: '%s')"
+                  % (major, minor, micro, patch, release, arch) )
+    return [petsc_info, slepc_info]
     
-def getpackageinfo(pkg):
-    return ("%s %s (%s)" % (pkg.__name__,
+def getpackageinfo(pkgnames):
+    packages = [__import__(pkg) for pkg in pkgnames]
+    return ["%s %s (%s)" % (pkg.__name__,
                             pkg.__version__,
-                            pkg.__path__[0]))
+                            pkg.__path__[0])
+            for pkg in packages]
 
 def writeln(message='', endl='\n'):
     from petsc4py.PETSc import Sys
     Sys.syncPrint(message, endl=endl, flush=True)
 
-def print_banner(options, package):
+def print_banner(options, packages):
     r, n = getprocessorinfo()
     fmt = "[%d@%s] %s"
     if options.verbose:
         writeln(fmt % (r, n, getpythoninfo()))
-        writeln(fmt % (r, n, getlibraryinfo()))
-        writeln(fmt % (r, n, getpackageinfo(package)))
+        for libinfo in getlibraryinfo():
+            writeln(fmt % (r, n, libinfo))
+        for pkginfo in getpackageinfo(packages):
+            writeln(fmt % (r, n, pkginfo))
 
 def load_tests(options, args):
     from glob import glob
@@ -177,13 +192,12 @@ def run_tests_leaks(options, testsuite):
                 % (rank, name, r2, r1, r2-r1))
 
 def main(args=None):
-    pkgname = 'slepc4py'
     parser = getoptionparser()
     (options, args) = parser.parse_args(args)
     setup_python(options)
     setup_unittest(options)
-    package = import_package(options, pkgname)
-    print_banner(options, package)
+    package = import_package(options, 'slepc4py')
+    print_banner(options, ['petsc4py', 'slepc4py'])
     testsuite = load_tests(options, args)
     success = run_tests(options, testsuite)
     if success and hasattr(sys, 'gettotalrefcount'):
