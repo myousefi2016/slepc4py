@@ -129,6 +129,7 @@ IGNORE    = PETSC_IGNORE
 DEFAULT   = PETSC_DEFAULT
 DETERMINE = PETSC_DETERMINE
 
+include "Sys.pyx"
 include "ST.pyx"
 include "IP.pyx"
 include "EPS.pyx"
