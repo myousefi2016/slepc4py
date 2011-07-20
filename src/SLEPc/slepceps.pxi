@@ -54,7 +54,6 @@ cdef extern from * nogil:
         EPS_CONVERGED_TOL
         EPS_DIVERGED_ITS
         EPS_DIVERGED_BREAKDOWN
-        EPS_DIVERGED_NONSYMMETRIC
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)
