@@ -5,8 +5,16 @@ SLEPc for Python
 ================
 
 Python bindings for SLEPc libraries.
-"""
 
+.. tip::
+
+  You can also install `slepc4py-dev`_ with::
+
+    $ pip install slepc4py==dev slepc==dev petsc4py==dev petsc==dev
+
+  .. _slepc4py-dev: http://petsc.cs.iit.edu/petsc4py/
+                    slepc4py-dev/archive/tip.tar.gz#egg=slepc4py-dev
+"""
 
 ## try:
 ##     import setuptools
@@ -84,14 +92,19 @@ from conf.slepcconf import setup, Extension
 from conf.slepcconf import config, build, build_src, build_ext
 from conf.slepcconf import test, sdist
 
+CYTHON = '0.15'
+
 def run_setup():
-    if (('distribute' in sys.modules) or
-        ('setuptools' in sys.modules)):
-        metadata['install_requires'] = ['petsc4py']
-        if not os.environ.get('SLEPC_DIR'):
-            metadata['install_requires'].append('slepc')
-    if 'setuptools' in sys.modules:
+    if ('setuptools' in sys.modules):
+        from os.path import exists, join
         metadata['zip_safe'] = False
+        metadata['install_requires'] = ['petsc4py']
+        if not exists(join('src', 'slepc4py.SLEPc.c')):
+            metadata['install_requires'] += ['Cython>='+CYTHON]
+        SLEPC_DIR = os.environ.get('SLEPC_DIR')
+        if not (SLEPC_DIR and os.path.isdir(SLEPC_DIR)):
+            metadata['install_requires'].append('slepc')
+    #
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],
           package_dir  = {'slepc4py'     : 'src',
@@ -112,7 +125,8 @@ def run_setup():
                           },
           **metadata)
 
-def chk_cython(CYTHON_VERSION_REQUIRED):
+def chk_cython(VERSION):
+    CYTHON_VERSION_REQUIRED = VERSION
     from distutils import log
     from distutils.version import StrictVersion as Version
     warn = lambda msg='': sys.stderr.write(msg+'\n')
@@ -191,21 +205,21 @@ def run_cython(source, depends=(), includes=(),
             "Cython failure: '%s' -> '%s'" % (source, target))
 
 def build_sources(cmd):
-    CYTHON_VERSION_REQUIRED = '0.13'
-    if not (os.path.isdir('.hg')  or
-            os.path.isdir('.git') or
-            cmd.force): return
+    from os.path import exists, isdir, join
+    if (exists(join('src', 'slepc4py.SLEPc.c')) and
+        not (isdir('.hg') or isdir('.git')) and
+        not cmd.force): return
     # slepc4py.SLEPc
     source = 'slepc4py.SLEPc.pyx'
     depends = ("include/*/*.pxd",
-               "*/*.pyx",
-               "*/*.pxi",)
+               "SLEPc/*.pyx",
+               "SLEPc/*.pxi",)
     import petsc4py
     includes = ['include', petsc4py.get_include()]
     destdir_h = os.path.join('include', 'slepc4py')
     run_cython(source, depends, includes,
                destdir_c=None, destdir_h=destdir_h, wdir='src',
-               force=cmd.force, VERSION=CYTHON_VERSION_REQUIRED)
+               force=cmd.force, VERSION=CYTHON)
 
 build_src.run = build_sources
 
@@ -215,7 +229,7 @@ def run_testsuite(cmd):
     try:
         from runtests import main
     finally:
-        del sys.path[-1]
+        del sys.path[0]
     err = main(cmd.args or [])
     if err:
         raise DistutilsError("test")
