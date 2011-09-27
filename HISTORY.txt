@@ -8,6 +8,11 @@ HISTORY: SLEPc for Python
 :Organization: CIMEC <http://www.cimec.org.ar>
 :Address:      CCT CONICET, 3000 Santa Fe, Argentina
 
+Release 1.2
+===========
+
+- Update to SLEPc 3.2 release.
+
 
 Release 1.1
 ===========
