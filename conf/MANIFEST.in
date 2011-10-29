@@ -1,4 +1,4 @@
-include *.py *.cfg *.txt
+include setup*.py *.cfg *.txt
 
 recursive-include demo [M,m]akefile* *.py *.txt
 recursive-include conf *.py *.cfg *.in

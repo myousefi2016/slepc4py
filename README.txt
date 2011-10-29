@@ -20,11 +20,11 @@ subject to change at any time.
 - To build and install this package, you must meet the following
   requirements.
 
-  + A recent PETSc_ distribution, built with *shared libraries*.
+  + PETSc_ 3.2 or 3.1, built with *shared libraries*.
 
-  + A recent SLEPc_ distribution, built with *shared libraries*.
+  + SLEPc_ 3.2 or 3.1, built with *shared libraries*.
 
-  + Python_ 2.4 to 2.7 or 3.1.
+  + Python_ 2.4 to 2.7 and 3.1 to 3.2.
 
   + NumPy_ 1.0.1 and above.
 
