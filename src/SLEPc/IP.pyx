@@ -136,13 +136,13 @@ cdef class IP(Object):
 
         Returns
         -------
-        type: IP.OrthoType enumerate
+        type: IP.OrthogType enumerate
               The type of orthogonalization technique.
-        refine: IP.RefineType enumerate
+        refine: IP.OrthogRefineType enumerate
               The type of refinement.
         eta:  float
               Parameter for selective refinement (used when the the
-              refinement type `IP.RefineType.IFNEEDED`).
+              refinement type `IP.OrthogRefineType.IFNEEDED`).
         """
         cdef SlepcIPOrthogType val1 = IP_ORTHOG_CGS
         cdef SlepcIPOrthogRefineType val2 = IP_ORTHOG_REFINE_IFNEEDED
@@ -159,9 +159,9 @@ cdef class IP(Object):
 
         Parameters
         ----------
-        type: IP.OrthoType enumerate, optional
+        type: IP.OrthogType enumerate, optional
               The type of orthogonalization technique.
-        refine: IP.RefineType enumerate, optional
+        refine: IP.OrthogRefineType enumerate, optional
               The type of refinement.
         eta:  float, optional
               Parameter for selective refinement.
@@ -172,9 +172,9 @@ cdef class IP(Object):
 
         The parameter `eta` should be a real value between ``0`` and
         ``1`` (or `DEFAULT`).  The value of `eta` is used only when
-        the refinement type is `IP.RefineType.IFNEEDED`.
+        the refinement type is `IP.OrthogRefineType.IFNEEDED`.
 
-        When using several processors, `IP.OrthoType.MGS` is likely to
+        When using several processors, `IP.OrthogType.MGS` is likely to
         result in bad scalability.
         """
         cdef SlepcIPOrthogType val1 = IP_ORTHOG_CGS
@@ -254,7 +254,7 @@ cdef class IP(Object):
         This function will usually compute the 2-norm of a vector,
         ``||x||_2``. But this behaviour may be different if using a
         non-standard inner product changed via
-        `setBilinearForm()`. For example, if using the B-inner product
+        `setMatrix()`. For example, if using the B-inner product
         for positive definite ``B`, ``(x,y)_B=y^H Bx``, then the
         computed norm is ``||x||_B = sqrt( x^H Bx )``.
         """
@@ -282,7 +282,7 @@ cdef class IP(Object):
         -----
         This function will usually compute the standard dot product,
         ``(x,y)=y^H x``.  However this behaviour may be different if
-        changed via `setBilinearForm()`.  This allows use of other
+        changed via `setMatrix()`.  This allows use of other
         inner products such as the indefinite product ``y^T x`` for
         complex symmetric problems or the B-inner product for positive
         definite ``B``, ``(x,y)_B=y^H Bx``.
