@@ -105,6 +105,7 @@ class EPSWhich(object):
     - `TARGET_MAGNITUDE`:   Closest to target (in magnitude).
     - `TARGET_REAL`:        Real part closest to target.
     - `TARGET_IMAGINARY`:   Imaginary part closest to target.
+    - `ALL`:                All eigenvalues in an interval.
     - `USER`:               User defined ordering.
     """
     LARGEST_MAGNITUDE  = EPS_LARGEST_MAGNITUDE
@@ -116,6 +117,7 @@ class EPSWhich(object):
     TARGET_MAGNITUDE   = EPS_TARGET_MAGNITUDE
     TARGET_REAL        = EPS_TARGET_REAL
     TARGET_IMAGINARY   = EPS_TARGET_IMAGINARY
+    ALL                = EPS_ALL
     USER               = EPS_WHICH_USER
 
 class EPSConvergedReason(object):
@@ -577,6 +579,48 @@ cdef class EPS(Object):
         """
         cdef PetscScalar sval = asScalar(target)
         CHKERR( EPSSetTarget(self.eps, sval) )
+
+    def getInterval(self):
+        """
+        Gets the computational interval for spectrum slicing.
+
+        Returns
+        -------
+        inta: float
+                The left end of the interval.
+        intb: float
+                The right end of the interval.
+
+        Notes
+        -----
+        If the interval was not set by the user, then zeros are returned.
+        """
+        cdef PetscReal inta = 0
+        cdef PetscReal intb = 0
+        CHKERR( EPSGetInterval(self.eps, &inta, &intb) )
+        return (toReal(inta), toReal(intb))
+
+    def setInterval(self, inta, intb):
+        """
+        Defines the computational interval for spectrum slicing.
+
+        Parameters
+        ----------
+        inta: float
+                The left end of the interval.
+        intb: float
+                The right end of the interval.
+
+        Notes
+        -----
+        Spectrum slicing is a technique employed for computing all
+        eigenvalues of symmetric eigenproblems in a given interval.
+        This function provides the interval to be considered. It must
+        be used in combination with `ALL`, see `setWhichEigenpairs()`.
+        """
+        cdef PetscReal rval1 = asReal(inta)
+        cdef PetscReal rval2 = asReal(intb)
+        CHKERR( EPSSetInterval(self.eps, rval1, rval2) )
 
     #
 
