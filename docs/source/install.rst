@@ -10,9 +10,9 @@ build *SLEPc for Python*:
 * Any MPI_ implementation [#]_ (e.g., MPICH_ or `Open MPI`_), 
   built with shared libraries.
 
-* PETSc_ 2.3.3/3.0.0/3.1 release, built with shared libraries.
+* PETSc_ 2.3.3/3.0.0/3.1/3.2 release, built with shared libraries.
 
-* SLEPc_ 2.3.3/3.0.0/3.1 release, built with shared libraries.
+* SLEPc_ 2.3.3/3.0.0/3.1/3.2 release, built with shared libraries.
 
 * Python_ 2.4 to 2.7 or 3.1 [#]_.
 
@@ -20,7 +20,7 @@ build *SLEPc for Python*:
 
 * petsc4py_ package.
 
-.. [#] Unless you have appropiatelly configured and built SLEPc and 
+.. [#] Unless you have appropriately configured and built SLEPc and 
        PETSc without MPI (configure option ``--with-mpi=0``).
 
 .. [#] You may need to use a parallelized version of the Python
@@ -32,16 +32,16 @@ build *SLEPc for Python*:
 Using **pip** or **easy_install**
 ---------------------------------
 
-If you already have a working PETSc, set environment variables
-:envvar:`PETSC_DIR` and perhaps :envvar:`PETSC_ARCH` to appropriate
-values::
+If you already have a working SLEPc, set environment variables
+:envvar:`SLEPC_DIR` and :envvar:`PETSC_DIR` (and perhaps
+:envvar:`PETSC_ARCH`) to appropriate values::
 
     $ export SLEPC_DIR=/path/to/slepc
     $ export PETSC_DIR=/path/to/petsc
     $ export PETSC_ARCH=linux-gnu
 
 .. note:: If you do not set these environment variables, the install
-   process will attempt to download and install PETSc for you.
+   process will attempt to download and install SLEPc for you.
 
 Now you can use :program:`pip`::
 
@@ -82,16 +82,16 @@ environmental variables :envvar:`SLEPC_DIR``, :envvar:`PETSC_DIR`, and
 :envvar:`PETSC_ARCH` indicating where you have built/installed SLEPc
 and PETSc::
 
-   $ export SLEPC_DIR=/usr/local/slepc/3.1
-   $ export PETSC_DIR=/usr/local/petsc/3.1
+   $ export SLEPC_DIR=/usr/local/slepc/3.2
+   $ export PETSC_DIR=/usr/local/petsc/3.2
    $ export PETSC_ARCH=linux-gnu
 
 Alternatively, you can edit the file :file:`setup.cfg` and provide the
 required information below the ``[config]`` section::
 
    [config]
-   slepc_dir  = /usr/local/slepc/3.1
-   petsc_dir  = /usr/local/petsc/3.1
+   slepc_dir  = /usr/local/slepc/3.2
+   petsc_dir  = /usr/local/petsc/3.2
    petsc_arch = linux-gnu
    ...
 
@@ -115,7 +115,7 @@ or, in case you need root privileges::
 This will install the :mod:`slepc4py` package in the standard location
 :file:`{prefix}/lib/python{X}.{X}/site-packages`.
 
-You can also do a user-install type. Threre are two options depending
+You can also do a user-install type. There are two options depending
 on the target Python version.
 
 * For Python 2.6 and up::
