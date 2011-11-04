@@ -41,6 +41,7 @@ cdef extern from * nogil:
         EPS_TARGET_MAGNITUDE
         EPS_TARGET_REAL
         EPS_TARGET_IMAGINARY
+        EPS_ALL
         EPS_WHICH_USER
 
     ctypedef enum SlepcEPSBalance "EPSBalance":
@@ -80,7 +81,8 @@ cdef extern from * nogil:
     int EPSGetLeftVectorsWanted(SlepcEPS,PetscBool*)
     int EPSSetTarget(SlepcEPS,PetscScalar)
     int EPSGetTarget(SlepcEPS,PetscScalar*)
-
+    int EPSSetInterval(SlepcEPS,PetscReal,PetscReal)
+    int EPSGetInterval(SlepcEPS,PetscReal*,PetscReal*)
     int EPSSetTolerances(SlepcEPS,PetscReal,PetscInt)
     int EPSGetTolerances(SlepcEPS,PetscReal*,PetscInt*)
     int EPSSetDimensions(SlepcEPS,PetscInt,PetscInt,PetscInt)
