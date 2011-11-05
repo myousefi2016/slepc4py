@@ -237,7 +237,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        eps_type: EPS.Type enumerate
+        eps_type: `EPS.Type` enumerate
                   The solver to be used.
 
         Notes
@@ -259,7 +259,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        type: EPS.Type enumerate
+        type: `EPS.Type` enumerate
               The solver currently being used.
         """
         cdef SlepcEPSType eps_type = NULL
@@ -342,7 +342,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        problem_type: EPS.ProblemType enumerate
+        problem_type: `EPS.ProblemType` enumerate
                       The problem type that was previously set.
         """
         cdef SlepcEPSProblemType val = EPS_NHEP
@@ -355,7 +355,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        problem_type: EPS.ProblemType enumerate
+        problem_type: `EPS.ProblemType` enumerate
                The problem type to be set.
 
         Notes
@@ -413,7 +413,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        balance: EPS.Balance enumerate
+        balance: `EPS.Balance` enumerate
                  The balancing method
         iterations: integer
                     Number of iterations of the balancing algorithm
@@ -433,7 +433,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        balance: EPS.Balance enumerate
+        balance: `EPS.Balance` enumerate
                  The balancing method
         iterations: integer
                     Number of iterations of the balancing algorithm
@@ -454,7 +454,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        extraction: EPS.Extraction enumerate
+        extraction: `EPS.Extraction` enumerate
                     The method of extraction.
         """
         cdef SlepcEPSExtraction val = EPS_RITZ
@@ -467,7 +467,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        extraction: EPS.Extraction enumerate
+        extraction: `EPS.Extraction` enumerate
                     The extraction method to be used by the solver.
 
         Notes
@@ -490,7 +490,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        which: EPS.Which enumerate
+        which: `EPS.Which` enumerate
                The portion of the spectrum to be sought by the solver.
         """
         cdef SlepcEPSWhich val = EPS_LARGEST_MAGNITUDE
@@ -503,7 +503,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        which: EPS.Which enumerate
+        which: `EPS.Which` enumerate
                The portion of the spectrum to be sought by the solver.
 
         Notes
@@ -616,7 +616,8 @@ cdef class EPS(Object):
         Spectrum slicing is a technique employed for computing all
         eigenvalues of symmetric eigenproblems in a given interval.
         This function provides the interval to be considered. It must
-        be used in combination with `ALL`, see `setWhichEigenpairs()`.
+        be used in combination with `EPS.Which.ALL`, see
+        `setWhichEigenpairs()`.
         """
         cdef PetscReal rval1 = asReal(inta)
         cdef PetscReal rval2 = asReal(intb)
@@ -983,7 +984,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        reason: EPS.ConvergedReason enumerate
+        reason: `EPS.ConvergedReason` enumerate
                 Negative value indicates diverged, positive value
                 converged.
         """
@@ -1378,7 +1379,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        shift: EPS.PowerShiftType enumerate
+        shift: `EPS.PowerShiftType` enumerate
                The type of shift.
 
         Notes
@@ -1405,7 +1406,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        shift: EPS.PowerShiftType enumerate
+        shift: `EPS.PowerShiftType` enumerate
                The type of shift.
         """
         cdef SlepcEPSPowerShiftType val = EPS_POWER_SHIFT_CONSTANT
@@ -1457,7 +1458,7 @@ cdef class EPS(Object):
 
         Parameters
         ----------
-        reorthog: EPS.LanczosReorthogType enumerate
+        reorthog: `EPS.LanczosReorthogType` enumerate
                   The type of reorthogonalization.
 
         Notes
@@ -1475,7 +1476,7 @@ cdef class EPS(Object):
 
         Returns
         -------
-        reorthog: EPS.LanczosReorthogType enumerate
+        reorthog: `EPS.LanczosReorthogType` enumerate
                   The type of reorthogonalization.
         """
         cdef SlepcEPSLanczosReorthogType val = \
