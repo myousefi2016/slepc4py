@@ -118,7 +118,7 @@ cdef class SVD(Object):
 
         Parameters
         ----------
-        svd_type: SVD.Type enumerate
+        svd_type: `SVD.Type` enumerate
                   The solver to be used.
 
         Notes
@@ -140,7 +140,7 @@ cdef class SVD(Object):
 
         Returns
         -------
-        type: SVD.Type enumerate
+        type: `SVD.Type` enumerate
               The solver currently being used.
         """
         cdef SlepcSVDType svd_type = NULL
@@ -224,7 +224,7 @@ cdef class SVD(Object):
 
         Returns
         -------
-        mode: SVD.TransposeMode enumerate
+        mode: `SVD.TransposeMode` enumerate
               The transpose mode (either explicit or implicit).
         """
         cdef SlepcSVDTransposeMode val = SVD_TRANSPOSE_IMPLICIT
@@ -238,7 +238,7 @@ cdef class SVD(Object):
 
         Parameters
         ----------
-        mode: SVD.TransposeMode enumerate
+        mode: `SVD.TransposeMode` enumerate
               The transpose mode (either explicit or implicit).
 
         Notes
@@ -265,7 +265,7 @@ cdef class SVD(Object):
 
         Returns
         -------
-        which: SVD.Which enumerate
+        which: `SVD.Which` enumerate
                The singular values to be sought (either largest or
                smallest).
         """
@@ -279,7 +279,7 @@ cdef class SVD(Object):
 
         Parameters
         ----------
-        which: SVD.Which enumerate
+        which: `SVD.Which` enumerate
                The singular values to be sought (either largest or
                smallest).
         """
@@ -508,7 +508,7 @@ cdef class SVD(Object):
 
         Returns
         -------
-        reason: SVD.ConvergedReason enumerate
+        reason: `SVD.ConvergedReason` enumerate
                 Negative value indicates diverged, positive value
                 converged.
         """
