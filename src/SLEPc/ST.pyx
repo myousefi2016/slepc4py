@@ -112,7 +112,7 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        st_type: ST.Type enumerate
+        st_type: `ST.Type` enumerate
                  The spectral transformation to be used.
 
         Notes
@@ -134,7 +134,7 @@ cdef class ST(Object):
 
         Returns
         -------
-        type: ST.Type enumerate
+        type: `ST.Type` enumerate
               The spectral transformation currently being used.
         """
         cdef SlepcSTType st_type = NULL
@@ -228,7 +228,7 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        mode: ST.MatMode enumerate
+        mode: `ST.MatMode` enumerate
               The mode flag.
 
         Notes
@@ -266,7 +266,7 @@ cdef class ST(Object):
 
         Returns
         -------
-        mode: ST.MatMode enumerate
+        mode: `ST.MatMode` enumerate
               The mode flag.
         """
         cdef SlepcSTMatMode val = ST_MATMODE_INPLACE
@@ -317,7 +317,7 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        structure: ST.MatStructure enumerate
+        structure: `ST.MatStructure` enumerate
                    Either same, different, or a subset of the non-zero
                    sparsity pattern.
 

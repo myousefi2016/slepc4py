@@ -136,9 +136,9 @@ cdef class IP(Object):
 
         Returns
         -------
-        type: IP.OrthogType enumerate
+        type: `IP.OrthogType` enumerate
               The type of orthogonalization technique.
-        refine: IP.OrthogRefineType enumerate
+        refine: `IP.OrthogRefineType` enumerate
               The type of refinement.
         eta:  float
               Parameter for selective refinement (used when the the
@@ -159,9 +159,9 @@ cdef class IP(Object):
 
         Parameters
         ----------
-        type: IP.OrthogType enumerate, optional
+        type: `IP.OrthogType` enumerate, optional
               The type of orthogonalization technique.
-        refine: IP.OrthogRefineType enumerate, optional
+        refine: `IP.OrthogRefineType` enumerate, optional
               The type of refinement.
         eta:  float, optional
               Parameter for selective refinement.
