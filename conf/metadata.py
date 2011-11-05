@@ -1,5 +1,5 @@
 classifiers = """
-License :: BSD
+License :: OSI Approved :: BSD License
 Operating System :: POSIX
 Intended Audience :: Developers
 Intended Audience :: Science/Research
