@@ -55,7 +55,7 @@ docsclean:
 RST2HTML = rst2html
 RST2HTMLOPTS = --no-compact-lists --cloak-email-addresses
 rst2html:
-#	${RST2HTML} ${RST2HTMLOPTS} docs/index.rst > docs/index.html
+	${RST2HTML} ${RST2HTMLOPTS} docs/index.rst > docs/index.html
 	${RST2HTML} ${RST2HTMLOPTS} LICENSE.txt    > docs/LICENSE.html
 	${RST2HTML} ${RST2HTMLOPTS} HISTORY.txt    > docs/HISTORY.html
 
