@@ -1,5 +1,5 @@
 classifiers = """
-License :: Public Domain
+License :: BSD
 Operating System :: POSIX
 Intended Audience :: Developers
 Intended Audience :: Science/Research
