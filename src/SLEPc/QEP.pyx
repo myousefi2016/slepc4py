@@ -91,7 +91,7 @@ cdef class QEP(Object):
 
         Parameters
         ----------
-        qep_type: QEP.Type enumerate
+        qep_type: `QEP.Type` enumerate
             T5he solver to be used.
         """
         cdef SlepcQEPType cval = NULL
@@ -104,7 +104,7 @@ cdef class QEP(Object):
 
         Returns
         -------
-        type: QEP.Type enumerate
+        type: `QEP.Type` enumerate
             The solver currently being used.
         """
         cdef SlepcQEPType qep_type = NULL
@@ -167,7 +167,7 @@ cdef class QEP(Object):
 
         Returns
         -------
-        problem_type: QEP.ProblemType enumerate
+        problem_type: `QEP.ProblemType` enumerate
             The problem type that was previously set.
         """
         cdef SlepcQEPProblemType val = QEP_GENERAL
@@ -180,7 +180,7 @@ cdef class QEP(Object):
 
         Parameters
         ----------
-        problem_type: QEP.ProblemType enumerate
+        problem_type: `QEP.ProblemType` enumerate
             The problem type to be set.
         """
         cdef SlepcQEPProblemType val = problem_type
@@ -192,7 +192,7 @@ cdef class QEP(Object):
 
         Returns
         -------
-        which: QEP.Which enumerate
+        which: `QEP.Which` enumerate
             The portion of the spectrum to be sought by the solver.
         """
         cdef SlepcQEPWhich val = QEP_LARGEST_MAGNITUDE
@@ -205,7 +205,7 @@ cdef class QEP(Object):
 
         Parameters
         ----------
-        which: QEP.Which enumerate
+        which: `QEP.Which` enumerate
             The portion of the spectrum to be sought by the solver.
         """
         cdef SlepcQEPWhich val = which
@@ -511,7 +511,7 @@ cdef class QEP(Object):
 
         Returns
         -------
-        reason: QEP.ConvergedReason enumerate
+        reason: `QEP.ConvergedReason` enumerate
             Negative value indicates diverged, positive value
             converged.
         """
