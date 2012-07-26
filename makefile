@@ -19,7 +19,6 @@ test:
 install: build
 	${PYTHON} setup.py install ${INSTALLOPT} --home=${HOME}
 
-
 sdist: docs
 	${PYTHON} setup.py sdist ${SDISTOPT}
 
@@ -41,8 +40,8 @@ srcclean:
 fullclean: distclean srcclean docsclean
 
 uninstall:
-	-${RM} -r ${HOME}/lib/python/slepc4py
-	-${RM} -r ${HOME}/lib/python/slepc4py-*-py*.egg-info
+	-${RM} -r ${HOME}/lib{,64}/python/slepc4py
+	-${RM} -r ${HOME}/lib{,64}/python/slepc4py-*-py*.egg-info
 
 # ----
 
