@@ -3,17 +3,14 @@
 
 #include <slepc.h>
 
-#if !defined(SLEPC_VERSION_)
-#define SLEPC_VERSION_(MAJOR,MINOR,SUBMINOR) \
-  ((SLEPC_VERSION_MAJOR == (MAJOR))       && \
-   (SLEPC_VERSION_MINOR == (MINOR))       && \
-   (SLEPC_VERSION_SUBMINOR == (SUBMINOR)) && \
-   (SLEPC_VERSION_RELEASE  == 1))
+#if PETSC_VERSION_(3,2,0)
+#define PetscShell PetscFwk
 #endif
 
+/* ------------------------------------------------------------------------- */
 #if SLEPC_VERSION_(3,1,0)
 #include <slepcqep.h>
-#elif SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#elif SLEPC_VERSION_(3,0,0)
 #include <slepcsvd.h>
 #include "compat/slepcqep.h"
 #endif
@@ -26,18 +23,21 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
   PetscFunctionBegin;
 #if SLEPC_VERSION_(3,0,0)
   ierr = PetscCookieRegister("Quadratic Eigenproblem Solver",&QEP_COOKIE);CHKERRQ(ierr);
-#elif SLEPC_VERSION_(2,3,3)
-  ierr = PetscLogClassRegister(&QEP_COOKIE,"Quadratic Eigenproblem Solver");CHKERRQ(ierr);
 #else
   ierr = 0; CHKERRQ(ierr);
 #endif
   PetscFunctionReturn(0);
 }
+/* ------------------------------------------------------------------------- */
 
-#if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+
+/* ------------------------------------------------------------------------- */
+#if SLEPC_VERSION_(3,1,0) || SLEPC_VERSION_(3,0,0)
 
 #include "compat/destroy.h"
 #include "compat/reset.h"
+
+#define PetscShell void*
 
 #define PetscBool    PetscTruth
 
@@ -48,7 +48,30 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 #define SVD_CLASSID  SVD_COOKIE
 #define QEP_CLASSID  QEP_COOKIE
 
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#define EPS_ALL ((EPSWhich)EPS_WHICH_USER)
+
+#undef __FUNCT__
+#define __FUNCT__ "EPSSetInterval"
+static PetscErrorCode EPSSetInterval(EPS eps,PetscReal inta,PetscReal intb)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_CLASSID,1);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+#undef __FUNCT__
+#define __FUNCT__ "EPSGetInterval"
+static PetscErrorCode EPSGetInterval(EPS eps,PetscReal* inta,PetscReal* intb)
+{
+  PetscFunctionBegin;
+  PetscValidHeaderSpecific(eps,EPS_CLASSID,1);
+  PetscValidPointer(inta,2);
+  PetscValidPointer(intb,3);
+  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
+  PetscFunctionReturn(0);
+}
+
+#if SLEPC_VERSION_(3,0,0)
 /**/
 #define EPSGD  "gd"
 #define EPSJD  "jd"
@@ -59,7 +82,7 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 /**/
 #endif
 
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#if SLEPC_VERSION_(3,0,0)
 /**/
 #define STSINVERT  STSINV
 #define STPRECOND  "precond"
@@ -78,7 +101,7 @@ static PetscErrorCode SlepcInitializePackage(const char path[])
 #define IPOrthogRefineType        IPOrthogonalizationRefinementType
 #define IP_ORTHOG_REFINE_NEVER    IP_ORTH_REFINE_NEVER
 #define IP_ORTHOG_REFINE_IFNEEDED IP_ORTH_REFINE_IFNEEDED
-#define IP_ORTHOG_REFINE_ALWAYS   IP_ORTH_REFINE_ALWAYS 
+#define IP_ORTHOG_REFINE_ALWAYS   IP_ORTH_REFINE_ALWAYS
 
 #undef __FUNCT__
 #define __FUNCT__ "IPGetMatrix"
@@ -106,7 +129,7 @@ static PetscErrorCode IPSetMatrix(IP ip, Mat mat)
   PetscFunctionReturn(0);
 }
 
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#if SLEPC_VERSION_(3,0,0)
 /**/
 #define IP_ORTH_MGS IP_MGS_ORTH
 #define IP_ORTH_CGS IP_CGS_ORTH
@@ -125,16 +148,9 @@ static PetscErrorCode IPOrthogonalize_300(IP ip,
   PetscErrorCode ierr;
   PetscFunctionBegin;
   PetscValidHeaderSpecific(ip,IP_COOKIE,1);
-  if (nds > 0) {
-    SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  }
-  #if SLEPC_VERSION_(3,0,0)
+  if (nds > 0) {SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");}
   ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,
-			 PETSC_NULL,0);CHKERRQ(ierr);
-  #elif SLEPC_VERSION_(2,3,3)
-  ierr = IPOrthogonalize(ip,n,which,V,v,H,norm,lindep,
-                         /*work*/0);CHKERRQ(ierr);
-  #endif
+                         PETSC_NULL,0);CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
 #define IPOrthogonalize IPOrthogonalize_300
@@ -142,7 +158,7 @@ static PetscErrorCode IPOrthogonalize_300(IP ip,
 #endif
 
 
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#if SLEPC_VERSION_(3,0,0)
 /**/
 #define EPSDSITRLANCZOS "dsitrlanczos"
 /**/
@@ -164,7 +180,7 @@ static PetscErrorCode IPOrthogonalize_300(IP ip,
 #define EPS_TARGET_IMAGINARY ((EPSWhich)0)
 #define EPS_WHICH_USER       ((EPSWhich)0)
 /**/
-#undef __FUNCT__  
+#undef __FUNCT__
 #define __FUNCT__ "EPSGetLeftVectorsWanted"
 static PetscErrorCode EPSGetLeftVectorsWanted(EPS eps,PetscTruth *leftvecs)
 {
@@ -177,7 +193,7 @@ static PetscErrorCode EPSGetLeftVectorsWanted(EPS eps,PetscTruth *leftvecs)
   *leftvecs = (epsclass==EPS_TWO_SIDE)?PETSC_TRUE:PETSC_FALSE;
   PetscFunctionReturn(0);
 }
-#undef __FUNCT__  
+#undef __FUNCT__
 #define __FUNCT__ "EPSSetLeftVectorsWanted"
 static PetscErrorCode EPSSetLeftVectorsWanted(EPS eps,PetscTruth leftvecs)
 {
@@ -188,11 +204,11 @@ static PetscErrorCode EPSSetLeftVectorsWanted(EPS eps,PetscTruth leftvecs)
   PetscFunctionReturn(0);
 }
 /**/
-typedef enum { 
+typedef enum {
   EPS_BALANCE_NONE=0,
   EPS_BALANCE_ONESIDE,
   EPS_BALANCE_TWOSIDE,
-  EPS_BALANCE_USER 
+  EPS_BALANCE_USER
 } EPSBalance;
 #undef __FUNCT__
 #define __FUNCT__ "EPSSetBalance"
@@ -268,7 +284,7 @@ static PetscErrorCode EPSSetTrackAll(EPS eps,PetscTruth trackall)
 }
 #undef __FUNCT__
 #define __FUNCT__ "EPSGetTrackAll"
-static PetscErrorCode EPSGetTrackAll(EPS eps,PetscTruth *trackall) 
+static PetscErrorCode EPSGetTrackAll(EPS eps,PetscTruth *trackall)
 {
   PetscFunctionBegin;
   PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
@@ -277,7 +293,7 @@ static PetscErrorCode EPSGetTrackAll(EPS eps,PetscTruth *trackall)
 }
 #endif
 
-#if SLEPC_VERSION_(3,0,0) || SLEPC_VERSION_(2,3,3)
+#if SLEPC_VERSION_(3,0,0)
 /**/
 #undef __FUNCT__
 #define __FUNCT__ "SVDSetInitialSpace"
@@ -300,181 +316,8 @@ static PetscErrorCode SVDSetInitialSpace(SVD svd, PetscInt n, Vec *is)
 /**/
 #endif
 
+#endif
 /* ------------------------------------------------------------------------- */
 
-#if SLEPC_VERSION_(2,3,3)
-
-#undef __FUNCT__
-#define __FUNCT__ "IPGetOptionsPrefix"
-static PetscErrorCode IPGetOptionsPrefix(IP ip,const char *prefix[])
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(ip,IP_COOKIE,1);
-  PetscValidPointer(prefix,2);
-  ierr = PetscObjectGetOptionsPrefix((PetscObject)ip, prefix);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSGetOperators_233"
-static PetscErrorCode EPSGetOperators_233(EPS eps, Mat *A, Mat *B)
-{
-  ST st;
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  if (A) PetscValidPointer(A,2);
-  if (B) PetscValidPointer(B,3);
-  ierr = EPSGetST(eps,&st);CHKERRQ(ierr);
-  ierr = STGetOperators(st,A,B);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define EPSGetOperators EPSGetOperators_233
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSSetOperators_233"
-static PetscErrorCode EPSSetOperators_233(EPS eps, Mat A, Mat B)
-{
-  ST st;
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  if (A) PetscValidPointer(A,2);
-  if (B) PetscValidPointer(B,3);
-  ierr = EPSSetOperators(eps,A,B);CHKERRQ(ierr);
-  ierr = EPSGetST(eps,&st);CHKERRQ(ierr);
-  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_A__",(PetscObject)A);CHKERRQ(ierr);
-  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_B__",(PetscObject)B);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define EPSSetOperators EPSSetOperators_233
-
-#undef __FUNCT__
-#define __FUNCT__ "STSetOperators_233"
-static PetscErrorCode STSetOperators_233(ST st, Mat A, Mat B)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(st,ST_COOKIE,1);
-  if (A) PetscValidPointer(A,2);
-  if (B) PetscValidPointer(B,3);
-  ierr = STSetOperators(st,A,B);CHKERRQ(ierr);
-  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_A__",(PetscObject)A);CHKERRQ(ierr);
-  ierr = PetscObjectCompose((PetscObject)st,"__SLEPc_ST_op_B__",(PetscObject)B);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define STSetOperators STSetOperators_233
-
-#endif
-
-
-#if SLEPC_VERSION_(2,3,3)
-
-typedef enum {
-  EPS_RITZ=1,
-  EPS_HARMONIC,
-  EPS_REFINED,
-  EPS_REFINED_HARMONIC
-} EPSExtraction;
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSSetExtraction"
-static PetscErrorCode EPSSetExtraction(EPS eps,EPSExtraction ext)
-{
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  PetscFunctionReturn(0);
-}
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSGetExtraction"
-static PetscErrorCode EPSGetExtraction(EPS eps,EPSExtraction *ext)
-{
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  PetscFunctionReturn(0);
-}
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSSetTarget"
-static PetscErrorCode EPSSetTarget(EPS eps,PetscScalar target)
-{
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  PetscFunctionReturn(0);
-}
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSGetTarget"
-static PetscErrorCode EPSGetTarget(EPS eps,PetscScalar *target)
-{
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  SETERRQ(PETSC_ERR_SUP,"operation not supported in this SLEPc version");
-  PetscFunctionReturn(0);
-}
-
-#endif
-
-
-#if SLEPC_VERSION_(2,3,3)
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSSetDimensions_233"
-static PetscErrorCode EPSSetDimensions_233(EPS eps,PetscInt nev,PetscInt ncv,PetscInt mpd)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  ierr = EPSSetDimensions(eps,nev,ncv);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define EPSSetDimensions EPSSetDimensions_233
-
-#undef __FUNCT__
-#define __FUNCT__ "EPSGetDimensions_233"
-static PetscErrorCode EPSGetDimensions_233(EPS eps, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(eps,EPS_COOKIE,1);
-  ierr = EPSGetDimensions(eps,nev,ncv);CHKERRQ(ierr);
-  if (mpd) mpd = 0;
-  PetscFunctionReturn(0);
-}
-#define EPSGetDimensions EPSGetDimensions_233
-
-#undef __FUNCT__
-#define __FUNCT__ "SVDSetDimensions_233"
-static PetscErrorCode SVDSetDimensions_233(SVD svd,PetscInt nev,PetscInt ncv,PetscInt mpd)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(svd,SVD_COOKIE,1);
-  ierr = SVDSetDimensions(svd,nev,ncv);CHKERRQ(ierr);
-  PetscFunctionReturn(0);
-}
-#define SVDSetDimensions SVDSetDimensions_233
-
-#undef __FUNCT__
-#define __FUNCT__ "SVDGetDimensions_233"
-static PetscErrorCode SVDGetDimensions_233(SVD svd, PetscInt *nev,PetscInt *ncv,PetscInt *mpd)
-{
-  PetscErrorCode ierr;
-  PetscFunctionBegin;
-  PetscValidHeaderSpecific(svd,SVD_COOKIE,1);
-  ierr = SVDGetDimensions(svd,nev,ncv);CHKERRQ(ierr);
-  if (mpd) mpd = 0;
-  PetscFunctionReturn(0);
-}
-#define SVDGetDimensions SVDGetDimensions_233
-
-#endif
-
-#endif
 
 #endif/*SLEPC4PY_COMPAT_H*/
