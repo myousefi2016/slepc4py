@@ -17,6 +17,6 @@ static PetscScalar PyPetscScalar_AsPetscScalar(PyObject *o)
   PetscReal b = (PetscReal) cval.imag;
   return a + b * PETSC_i;
 #else
-  return PyFloat_AsDouble(o);
+  return (PetscScalar) PyFloat_AsDouble(o);
 #endif
 }
