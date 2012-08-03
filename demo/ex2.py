@@ -15,6 +15,7 @@ def construct_operator(m, n):
     A = PETSc.Mat().create()
     A.setSizes([m*n, m*n])
     A.setFromOptions( )
+    A.setUp()
     # Fill matrix
     hx = 1.0/(m-1) # x grid spacing
     hy = 1.0/(n-1) # y grid spacing

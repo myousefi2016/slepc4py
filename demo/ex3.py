@@ -46,6 +46,7 @@ def construct_operator(m, n):
     # Create shell matrix
     context = Laplacian2D(m,n)
     A = PETSc.Mat().createPython([m*n,m*n], context)
+    A.setUp()
     return A
 
 def solve_eigensystem(A, problem_type=SLEPc.EPS.ProblemType.HEP):

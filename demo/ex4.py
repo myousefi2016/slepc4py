@@ -13,6 +13,7 @@ PETSc.Sys.Print( "Lauchli singular value decomposition, (%d x %d) mu=%g\n" % (n+
 A = PETSc.Mat(); A.create()
 A.setSizes([n+1, n])
 A.setFromOptions( )
+A.setUp()
 
 rstart, rend = A.getOwnershipRange()
 

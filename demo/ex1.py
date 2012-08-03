@@ -11,6 +11,7 @@ n = opts.getInt('n', 30)
 A = PETSc.Mat(); A.create()
 A.setSizes([n, n])
 A.setFromOptions()
+A.setUp()
 
 rstart, rend = A.getOwnershipRange()
 
