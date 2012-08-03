@@ -20,15 +20,15 @@ subject to change at any time.
 - To build and install this package, you must meet the following
   requirements.
 
-  + PETSc_ 3.2 or 3.1, built with *shared libraries*.
+  + PETSc_ 3.3 or 3.3, built with *shared libraries*.
 
-  + SLEPc_ 3.2 or 3.1, built with *shared libraries*.
+  + SLEPc_ 3.3 or 3.2, built with *shared libraries*.
 
   + Python_ 2.4 to 2.7 and 3.1 to 3.2.
 
-  + NumPy_ 1.0.1 and above.
+  + NumPy_ package.
 
-  + petsc4py_ (latest release).
+  + petsc4py_ package.
 
 .. _PETSc:    http://www.mcs.anl.gov/petsc/
 .. _SLEPc:    http://www.grycap.upv.es/slepc/
