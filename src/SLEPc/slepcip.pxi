@@ -1,5 +1,10 @@
 cdef extern from * nogil:
 
+    ctypedef char* SlepcIPType "const char*"
+    SlepcIPType IPBILINEAR
+    SlepcIPType IPSESQUILINEAR
+    SlepcIPType IPINDEFINITE
+
     ctypedef enum SlepcIPOrthogType "IPOrthogType":
         IP_ORTHOG_MGS
         IP_ORTHOG_CGS
@@ -13,6 +18,8 @@ cdef extern from * nogil:
     int IPView(SlepcIP,PetscViewer)
     int IPDestroy(SlepcIP*)
     int IPReset(SlepcIP)
+    int IPSetType(SlepcIP,SlepcIPType)
+    int IPGetType(SlepcIP,SlepcIPType*)
 
     int IPSetOptionsPrefix(SlepcIP,char[])
     int IPGetOptionsPrefix(SlepcIP,char*[])

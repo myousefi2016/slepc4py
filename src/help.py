@@ -43,6 +43,11 @@ def help(args=None):
         svd.setFromOptions()
         svd.destroy()
         del svd
+    if 'qep' in args:
+        qep = SLEPc.QEP().create(comm=COMM)
+        qep.setFromOptions()
+        qep.destroy()
+        del qep
     if 'st' in args:
         st = SLEPc.ST().create(comm=COMM)
         st.setFromOptions()

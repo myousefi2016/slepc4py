@@ -8,6 +8,7 @@ cdef extern from * nogil:
     SlepcEPSType EPSKRYLOVSCHUR
     SlepcEPSType EPSGD
     SlepcEPSType EPSJD
+    SlepcEPSType EPSRQCG
     SlepcEPSType EPSLAPACK
     SlepcEPSType EPSARPACK
     SlepcEPSType EPSBLZPACK
@@ -21,6 +22,7 @@ cdef extern from * nogil:
         EPS_NHEP
         EPS_GNHEP
         EPS_PGNHEP
+        EPS_GHIEP
 
     ctypedef enum SlepcEPSExtraction "EPSExtraction":
         EPS_RITZ
@@ -49,6 +51,12 @@ cdef extern from * nogil:
         EPS_BALANCE_ONESIDE
         EPS_BALANCE_TWOSIDE
         EPS_BALANCE_USER
+
+    ctypedef enum SlepcEPSConv "EPSConv":
+        EPS_CONV_ABS
+        EPS_CONV_EIG
+        EPS_CONV_NORM
+        EPS_CONV_USER
 
     ctypedef enum SlepcEPSConvergedReason "EPSConvergedReason":
         EPS_CONVERGED_ITERATING

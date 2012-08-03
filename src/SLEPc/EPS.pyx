@@ -6,13 +6,14 @@ class EPSType(object):
 
     Native sparse eigensolvers.
 
+    - `POWER`:        Power Iteration, Inverse Iteration, RQI.
+    - `SUBSPACE`:     Subspace Iteration.
+    - `ARNOLDI`:      Arnoldi.
+    - `LANCZOS`:      Lanczos.
     - `KRYLOVSCHUR`:  Krylov-Schur (default).
     - `GD`:           Generalized Davidson.
     - `JD`:           Jacobi-Davidson.
-    - `LANCZOS`:      Lanczos.
-    - `ARNOLDI`:      Arnoldi.
-    - `SUBSPACE`:     Subspace Iteration.
-    - `POWER`:        Power Iteration, Inverse Iteration, RQI.
+    - `RQCG`:         Rayleigh Quotient Conjugate Gradient.
     - `LAPACK`:       Wrappers to dense eigensolvers in Lapack.
 
     Wrappers to sparse eigensolvers
@@ -32,6 +33,7 @@ class EPSType(object):
     KRYLOVSCHUR  = S_(EPSKRYLOVSCHUR)
     GD           = S_(EPSGD)
     JD           = S_(EPSJD)
+    RQCG         = S_(EPSRQCG)
     LAPACK       = S_(EPSLAPACK)
     # with external libraries
     ARPACK       = S_(EPSARPACK)
@@ -56,6 +58,7 @@ class EPSProblemType(object):
     GHEP   = EPS_GHEP
     GNHEP  = EPS_GNHEP
     PGNHEP = EPS_PGNHEP
+    GHIEP  = EPS_GHIEP
 
 class EPSExtraction(object):
     """
@@ -120,6 +123,20 @@ class EPSWhich(object):
     ALL                = EPS_ALL
     USER               = EPS_WHICH_USER
 
+class EPSConv(object):
+    """
+    EPS convergence test
+
+    - `ABS`: 
+    - `EIG`: 
+    - `NORM`: 
+    - `USER`: 
+    """
+    ABS  = EPS_CONV_ABS
+    EIG  = EPS_CONV_EIG
+    NORM = EPS_CONV_NORM
+    USER = EPS_CONV_USER
+
 class EPSConvergedReason(object):
     """
     EPS convergence reasons
@@ -178,6 +195,7 @@ cdef class EPS(Object):
     Extraction      = EPSExtraction
     Balance         = EPSBalance
     Which           = EPSWhich
+    Conv            = EPSConv
     ConvergedReason = EPSConvergedReason
 
     PowerShiftType      = EPSPowerShiftType
@@ -1540,6 +1558,7 @@ del EPSProblemType
 del EPSExtraction
 del EPSBalance
 del EPSWhich
+del EPSConv
 del EPSConvergedReason
 del EPSPowerShiftType
 del EPSLanczosReorthogType

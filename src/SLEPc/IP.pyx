@@ -1,5 +1,13 @@
 # -----------------------------------------------------------------------------
 
+class IPType(object):
+    """
+    IP type
+    """
+    BILINEAR     = S_(IPBILINEAR)
+    SESQUILINEAR = S_(IPSESQUILINEAR)
+    INDEFINITE   = S_(IPINDEFINITE)
+
 class IPOrthogType(object):
     """
     IP orthogonalization types
@@ -30,6 +38,7 @@ cdef class IP(Object):
     IP
     """
 
+    Type             = IPType
     OrthogType       = IPOrthogType
     OrthogRefineType = IPOrthogRefineType
     RefineType       = IPOrthogRefineType
@@ -81,6 +90,32 @@ cdef class IP(Object):
         CHKERR( IPCreate(ccomm, &newip) )
         SlepcCLEAR(self.obj); self.ip = newip
         return self
+
+    def setType(self, ip_type):
+        """
+        Selects the type for the IP object.
+
+        Parameters
+        ----------
+        ip_type: `IP.Type` enumerate
+                  The inner product type to be used.
+        """
+        cdef SlepcIPType cval = NULL
+        ip_type = str2bytes(ip_type, &cval)
+        CHKERR( IPSetType(self.ip, cval) )
+
+    def getType(self):
+        """
+        Gets the IP type of this object.
+
+        Returns
+        -------
+        type: `IP.Type` enumerate
+              The inner product type currently being used.
+        """
+        cdef SlepcIPType ip_type = NULL
+        CHKERR( IPGetType(self.ip, &ip_type) )
+        return bytes2str(ip_type)
 
     def setOptionsPrefix(self, prefix):
         """
@@ -353,6 +388,7 @@ cdef class IP(Object):
 
 # -----------------------------------------------------------------------------
 
+del IPType
 del IPOrthogType
 del IPOrthogRefineType
 

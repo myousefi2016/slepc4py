@@ -15,7 +15,6 @@ cdef extern from * nogil:
         SVD_LARGEST
         SVD_SMALLEST
 
-
     ctypedef enum SlepcSVDConvergedReason "SVDConvergedReason":
         SVD_CONVERGED_ITERATING
         SVD_CONVERGED_TOL
