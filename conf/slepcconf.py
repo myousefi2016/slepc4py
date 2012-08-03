@@ -47,19 +47,14 @@ class SlepcConfig(PetscConfig):
         macros = [('SLEPC_DIR', SLEPC_DIR)]
         extension.define_macros.extend(macros)
         # includes and libraries
-        if (os.path.exists(os.path.join(SLEPC_DIR, 'conf')) or
-            os.path.exists(os.path.join(SLEPC_DIR, PETSC_ARCH, 'conf'))):
-            SLEPC_INCLUDE = [
-                os.path.join(SLEPC_DIR, PETSC_ARCH, 'include'),
-                os.path.join(SLEPC_DIR, 'include'),
-                ]
-            SLEPC_LIB_DIR = [
-                os.path.join(SLEPC_DIR, PETSC_ARCH, 'lib'),
-                os.path.join(SLEPC_DIR, 'lib'),
-                ]
-        else:
-            SLEPC_INCLUDE = [os.path.join(SLEPC_DIR, 'include'), SLEPC_DIR]
-            SLEPC_LIB_DIR = [os.path.join(SLEPC_DIR, 'lib', PETSC_ARCH)]
+        SLEPC_INCLUDE = [
+            os.path.join(SLEPC_DIR, PETSC_ARCH, 'include'),
+            os.path.join(SLEPC_DIR, 'include'),
+            ]
+        SLEPC_LIB_DIR = [
+            os.path.join(SLEPC_DIR, PETSC_ARCH, 'lib'),
+            os.path.join(SLEPC_DIR, 'lib'),
+            ]
         slepc_cfg = { }
         slepc_cfg['include_dirs'] = SLEPC_INCLUDE
         slepc_cfg['library_dirs'] = SLEPC_LIB_DIR
