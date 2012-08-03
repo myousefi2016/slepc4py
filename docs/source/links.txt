@@ -25,3 +25,7 @@
 .. _CIMEC:        http://www.cimec.org.ar
 
 .. _GRyCAP:       http://www.grycap.upv.es
+
+.. Local Variables:
+.. mode: rst
+.. End:
