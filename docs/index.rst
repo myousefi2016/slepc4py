@@ -13,21 +13,35 @@ Online Documentation
 
 + `User Manual (HTML)`_ (generated with Sphinx_).
 + `User Manual (PDF)`_  (generated with Sphinx_).
-+ `API Reference`_ (generated with Epydoc_).
++ `API Reference`_      (generated with Epydoc_).
 
 .. _User Manual (HTML): usrman/index.html
 .. _User Manual (PDF):  slepc4py.pdf
-.. _API Reference: apiref/index.html
+.. _API Reference:      apiref/index.html
 
 .. _Sphinx:    http://sphinx.pocoo.org/
 .. _Epydoc:    http://epydoc.sourceforge.net/
 
 
-Downloads, Support and Development
-----------------------------------
+Discussion and Support
+----------------------
 
-+ Project Page:    http://slepc4py.googlecode.com/
++ Mailing Lists: petsc-users@mcs.anl.gov,
+                 slepc-maint@grycap.upv.es
+
+
+Downloads and Development
+-------------------------
+
++ Project Site:    http://slepc4py.googlecode.com/
 + Source Releases: http://code.google.com/p/slepc4py/downloads/
-+ Mailing List:    petsc-users@mcs.anl.gov, slepc-maint@grycap.upv.es
 + Issue Tracker:   http://code.google.com/p/slepc4py/issues/
-+ HG Repository:   http://petsc4py.googlecode.com/hg/
++ Repository:      http://petsc4py.googlecode.com/hg/
+
+
+Acknowledgments
+---------------
+
+This project was partially supported by the Center for Numerical
+Porous Media, Mathematics and Computational Science and Engineering
+Division, King Abdullah University of Science and Technology (KAUST).
