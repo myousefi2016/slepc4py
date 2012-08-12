@@ -52,6 +52,7 @@ class EPSProblemType(object):
     - `GNHEP`:  Generalized Non-Hermitian eigenproblem.
     - `PGNHEP`: Generalized Non-Hermitian eigenproblem 
                 with positive definite ``B``.
+    - `GHIEP`:  Generalized Hermitian-indefinite eigenproblem.
     """
     HEP    = EPS_HEP
     NHEP   = EPS_NHEP
@@ -182,6 +183,18 @@ class EPSLanczosReorthogType(object):
     PARTIAL   =  EPS_LANCZOS_REORTHOG_PARTIAL
     DELAYED   =  EPS_LANCZOS_REORTHOG_DELAYED
 
+class EPSOrthType(object):
+    """
+    EPS orthogonalization used in the search subspace
+
+    - `I`: standard orthogonalization
+    - `B`: B-orthogonalization
+    - `BOPT`: B-orthogonalization with optimized method
+    """
+    I         =  EPS_ORTH_I
+    B         =  EPS_ORTH_B
+    BOPT      =  EPS_ORTH_BOPT
+
 # --------------------------------------------------------------------
 
 cdef class EPS(Object):
@@ -200,6 +213,7 @@ cdef class EPS(Object):
 
     PowerShiftType      = EPSPowerShiftType
     LanczosReorthogType = EPSLanczosReorthogType
+    OrthType            = EPSOrthType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.eps
@@ -422,6 +436,21 @@ cdef class EPS(Object):
         """
         cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSIsHermitian(self.eps, &tval) )
+        return <bint> tval
+
+    def isPositive(self):
+        """
+        Tells whether the EPS object corresponds to an eigenvalue problem
+        type that requires a positive (semi-) definite matrix B.
+
+        Returns
+        -------
+        flag: boolean
+              True if the problem type set with `setProblemType()` was
+              positive.
+        """
+        cdef PetscBool tval = PETSC_FALSE
+        CHKERR( EPSIsPositive(self.eps, &tval) )
         return <bint> tval
 
     def getBalance(self):
@@ -824,6 +853,31 @@ cdef class EPS(Object):
             The inner product context.
         """
         CHKERR( EPSSetIP(self.eps, ip.ip) )
+
+    def getDS(self):
+        """
+        Obtain the direct solver associated to the eigensolver.
+
+        Returns
+        -------
+        ds: DS
+            The direct solver context.
+        """
+        cdef DS ds = DS()
+        CHKERR( EPSGetDS(self.eps, &ds.ds) )
+        PetscINCREF(ds.obj)
+        return ds
+
+    def setDS(self, DS ds not None):
+        """
+        Associates a direct solver object to the eigensolver.
+
+        Parameters
+        ----------
+        ds: DS
+            The direct solver context.
+        """
+        CHKERR( EPSSetDS(self.eps, ds.ds) )
 
     def getOperators(self):
         """
@@ -1503,6 +1557,67 @@ cdef class EPS(Object):
         return val
 
     #
+
+    def setKrylovSchurRestart(self, keep):
+        """
+        Sets the restart parameter for the Krylov-Schur method, in
+        particular the proportion of basis vectors that must be kept
+        after restart.
+
+        Parameters
+        ----------
+        keep: float
+              The number of vectors to be kept at restart.
+
+        Notes
+        -----
+        Allowed values are in the range [0.1,0.9]. The default is 0.5.
+        """
+        cdef PetscReal val = keep
+        CHKERR( EPSKrylovSchurSetRestart(self.eps, val) )
+
+    def getKrylovSchurRestart(self):
+        """
+        Gets the restart parameter used in the Krylov-Schur method.
+
+        Returns
+        -------
+        keep: float
+              The number of vectors to be kept at restart.
+        """
+        cdef PetscReal val
+        CHKERR( EPSKrylovSchurGetRestart(self.eps, &val) )
+        return val
+
+    #
+
+    def setRQCGReset(self, nrest):
+        """
+        Sets the reset parameter of the RQCG iteration. Every nrest iterations,
+        the solver performs a Rayleigh-Ritz projection step.
+
+        Parameters
+        ----------
+        nrest: integer
+               The number of iterations between resets.
+        """
+        cdef PetscInt val = nrest
+        CHKERR( EPSRQCGSetReset(self.eps, val) )
+
+    def getRQCGReset(self):
+        """
+        Gets the reset parameter used in the RQCG method.
+
+        Returns
+        -------
+        nrest: integer
+               The number of iterations between resets.
+        """
+        cdef PetscInt val
+        CHKERR( EPSRQCGGetReset(self.eps, &val) )
+        return val
+
+    #
     property problem_type:
         def __get__(self):
             return self.getProblemType()
@@ -1562,5 +1677,6 @@ del EPSConv
 del EPSConvergedReason
 del EPSPowerShiftType
 del EPSLanczosReorthogType
+del EPSOrthType
 
 # -----------------------------------------------------------------------------

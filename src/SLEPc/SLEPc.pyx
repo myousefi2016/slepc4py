@@ -113,6 +113,7 @@ include "slepcmpi.pxi"
 include "slepcsys.pxi"
 include "slepcst.pxi"
 include "slepcip.pxi"
+include "slepcds.pxi"
 include "slepceps.pxi"
 include "slepcsvd.pxi"
 include "slepcqep.pxi"
@@ -132,6 +133,7 @@ DETERMINE = PETSC_DETERMINE
 include "Sys.pyx"
 include "ST.pyx"
 include "IP.pyx"
+include "DS.pyx"
 include "EPS.pyx"
 include "SVD.pyx"
 include "QEP.pyx"
@@ -164,6 +166,7 @@ cdef extern from *:
     ctypedef int PetscClassId
     PetscClassId SLEPC_ST_CLASSID  "ST_CLASSID"
     PetscClassId SLEPC_IP_CLASSID  "IP_CLASSID"
+    PetscClassId SLEPC_DS_CLASSID  "DS_CLASSID"
     PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
     PetscClassId SLEPC_SVD_CLASSID "SVD_CLASSID"
     PetscClassId SLEPC_QEP_CLASSID "QEP_CLASSID"
@@ -174,6 +177,7 @@ cdef int register(char path[]) except -1:
     # register Python types
     PyPetscType_Register(SLEPC_ST_CLASSID,  ST)
     PyPetscType_Register(SLEPC_IP_CLASSID,  IP)
+    PyPetscType_Register(SLEPC_DS_CLASSID,  DS)
     PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)
     PyPetscType_Register(SLEPC_SVD_CLASSID, SVD)
     PyPetscType_Register(SLEPC_QEP_CLASSID, QEP)
