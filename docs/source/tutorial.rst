@@ -46,6 +46,7 @@ documentation for details about matrix objects::
     A = PETSc.Mat().create()
     A.setSizes([n, n])
     A.setFromOptions()
+    A.setUp()
 
     rstart, rend = A.getOwnershipRange()
 
