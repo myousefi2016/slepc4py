@@ -8,11 +8,8 @@
 #endif
 
 #if SLEPC_VERSION_(3,2,0)
-#define IPBILINEAR     "bilinear"
-#define IPSESQUILINEAR "sesquilinear"
-#define IPINDEFINITE   "indefinite"
-#define EPSRQCG "rqcg"
-#define EPS_GHIEP ((EPSProblemType)-1)
+#include "compat/slepc-32.h"
 #endif
+
 
 #endif/*SLEPC4PY_COMPAT_H*/

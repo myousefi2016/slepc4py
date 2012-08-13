@@ -1585,7 +1585,7 @@ cdef class EPS(Object):
         keep: float
               The number of vectors to be kept at restart.
         """
-        cdef PetscReal val
+        cdef PetscReal val = 0
         CHKERR( EPSKrylovSchurGetRestart(self.eps, &val) )
         return val
 
@@ -1613,7 +1613,7 @@ cdef class EPS(Object):
         nrest: integer
                The number of iterations between resets.
         """
-        cdef PetscInt val
+        cdef PetscInt val = 0
         CHKERR( EPSRQCGGetReset(self.eps, &val) )
         return val
 

@@ -212,7 +212,7 @@ cdef class DS(Object):
         ld: integer
             Leading dimension (maximum allowed dimension for the matrices).
         """
-        cdef PetscInt val
+        cdef PetscInt val = 0
         CHKERR( DSGetLeadingDimension(self.ds, &val) )
         return val
 
@@ -247,7 +247,7 @@ cdef class DS(Object):
         state: `DS.StateType` enumerate
                The current state.
         """
-        cdef SlepcDSStateType val
+        cdef SlepcDSStateType val = DS_STATE_RAW
         CHKERR( DSGetState(self.ds, &val) )
         return val
 
