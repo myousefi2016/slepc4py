@@ -4,13 +4,13 @@ class DSType(object):
     """
     DS type
     """
-    HEP     = S_(HEP)
-    NHEP    = S_(NHEP)
-    GHEP    = S_(GHEP)
-    GHIEP   = S_(GHIEP)
-    GNHEP   = S_(GNHEP)
-    SVD     = S_(SVD)
-    QEP     = S_(QEP)
+    HEP     = S_(DSHEP)
+    NHEP    = S_(DSNHEP)
+    GHEP    = S_(DSGHEP)
+    GHIEP   = S_(DSGHIEP)
+    GNHEP   = S_(DSGNHEP)
+    SVD     = S_(DSSVD)
+    QEP     = S_(DSQEP)
 
 class DSStateType(object):
     """
@@ -26,22 +26,22 @@ class DSStateType(object):
     CONDENSED    = DS_STATE_CONDENSED
     TRUNCATED    = DS_STATE_TRUNCATED
 
-class IPMatType(object):
+class DSMatType(object):
     """
     To refer to one of the matrices stored internally in DS
 
-+   - `A`:  first matrix of eigenproblem/singular value problem.
-.   - `B`:  second matrix of a generalized eigenproblem.
-.   - `C`:  third matrix of a quadratic eigenproblem.
-.   - `T`:  tridiagonal matrix.
-.   - `D`:  diagonal matrix.
-.   - `Q`:  orthogonal matrix of (right) Schur vectors.
-.   - `Z`:  orthogonal matrix of left Schur vectors.
-.   - `X`:  right eigenvectors.
-.   - `Y`:  left eigenvectors.
-.   - `U`:  left singular vectors.
-.   - `VT`: right singular vectors.
--   - `W`:  workspace matrix.
+    - `A`:  first matrix of eigenproblem/singular value problem.
+    - `B`:  second matrix of a generalized eigenproblem.
+    - `C`:  third matrix of a quadratic eigenproblem.
+    - `T`:  tridiagonal matrix.
+    - `D`:  diagonal matrix.
+    - `Q`:  orthogonal matrix of (right) Schur vectors.
+    - `Z`:  orthogonal matrix of left Schur vectors.
+    - `X`:  right eigenvectors.
+    - `Y`:  left eigenvectors.
+    - `U`:  left singular vectors.
+    - `VT`: right singular vectors.
+    - `W`:  workspace matrix.
     """
     A  = DS_MAT_A
     B  = DS_MAT_B
@@ -248,7 +248,7 @@ cdef class DS(Object):
                The current state.
         """
         cdef SlepcDSStateType val
-        CHKERR( DSGetState(self.eps, &val) )
+        CHKERR( DSGetState(self.ds, &val) )
         return val
 
     def setDimensions(self, n=None, m=None, l=None, k=None):
@@ -279,8 +279,8 @@ cdef class DS(Object):
         if n is not None: ival1 = asInt(n)
         if m is not None: ival2 = asInt(m)
         if l is not None: ival3 = asInt(l)
-        if k is not None: ival3 = asInt(k)
-        CHKERR( DSSetDimensions(self.ds, ival1, ival2, ival3) )
+        if k is not None: ival4 = asInt(k)
+        CHKERR( DSSetDimensions(self.ds, ival1, ival2, ival3, ival4) )
 
     def getDimensions(self):
         """
@@ -302,7 +302,7 @@ cdef class DS(Object):
         cdef PetscInt ival3 = 0
         cdef PetscInt ival4 = 0
         CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3), toInt(ival))
+        return (toInt(ival1), toInt(ival2), toInt(ival3), toInt(ival4))
 
     def setMethod(self, meth):
         """
@@ -361,7 +361,7 @@ cdef class DS(Object):
               The flag.
         """
         cdef PetscBool val = PETSC_FALSE
-        CHKERR( DSGetMethod(self.ds, &val) )
+        CHKERR( DSGetCompact(self.ds, &val) )
         return val
 
     def setExtraRow(self, ext):

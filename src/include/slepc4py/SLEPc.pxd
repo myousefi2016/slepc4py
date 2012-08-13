@@ -11,6 +11,9 @@ cdef extern from "slepc.h":
     struct _p_IP
     ctypedef _p_IP* SlepcIP "IP"
 
+    struct _p_DS
+    ctypedef _p_DS* SlepcDS "DS"
+
     struct _p_EPS
     ctypedef _p_EPS* SlepcEPS "EPS"
 
@@ -35,6 +38,12 @@ ctypedef public api class IP(Object) [
     object PySlepcIPObject,
     ]:
     cdef SlepcIP ip
+
+ctypedef public api class DS(Object) [
+    type   PySlepcDS_Type,
+    object PySlepcDSObject,
+    ]:
+    cdef SlepcDS ds
 
 ctypedef public api class EPS(Object) [
     type PySlepcEPS_Type,

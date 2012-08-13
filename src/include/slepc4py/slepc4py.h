@@ -8,10 +8,8 @@
 
 #include <slepc.h>
 
-#if SLEPC_VERSION_(3,0,0)
-typedef struct _p_QEP* QEP;
-#else
-#include "slepcqep.h"
+#if SLEPC_VERSION_(3,2,0)
+typedef struct _p_DS* DS;
 #endif
 
 #include "slepc4py.SLEPc_api.h"
