@@ -2,7 +2,7 @@
 SLEPc for Python
 ================
 
-:Authors:      Lisandro Dalcín, Jose E. Roman
+:Authors:      Lisandro Dalcin, Jose E. Roman
 :Contact:      dalcinl@gmail.com, jroman@dsic.upv.es
 :Web Site:     http://slepc4py.googlecode.com
 :Organization: CIMEC_, GRyCAP_
