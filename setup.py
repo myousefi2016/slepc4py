@@ -103,7 +103,7 @@ def run_setup():
             metadata['install_requires'] += ['Cython>='+CYTHON]
         SLEPC_DIR = os.environ.get('SLEPC_DIR')
         if not (SLEPC_DIR and os.path.isdir(SLEPC_DIR)):
-            metadata['install_requires'].append('slepc>=3.2,<3.3')
+            metadata['install_requires'].append('slepc>=3.3,<3.4')
     #
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],
