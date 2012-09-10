@@ -197,8 +197,8 @@ cdef class DS(Object):
         Parameters
         ----------
         ld: integer
-            Leading dimension (maximum allowed dimension for the matrices, including
-            the extra row if present).
+            Leading dimension (maximum allowed dimension for the
+            matrices, including the extra row if present).
         """
         cdef PetscInt val = ld
         CHKERR( DSAllocate(self.ds, val) )
@@ -227,13 +227,14 @@ cdef class DS(Object):
 
         Notes
         -----
-        The state indicates that the dense system is in an initial state (raw),
-        in an intermediate state (such as tridiagonal, Hessenberg or 
-        Hessenberg-triangular), in a condensed state (such as diagonal, Schur or
-        generalized Schur), or in a truncated state.
+        The state indicates that the dense system is in an initial
+        state (raw), in an intermediate state (such as tridiagonal,
+        Hessenberg or Hessenberg-triangular), in a condensed state
+        (such as diagonal, Schur or generalized Schur), or in a
+        truncated state.
 
-        This function is normally used to return to the raw state when the
-        condensed structure is destroyed.
+        This function is normally used to return to the raw state when
+        the condensed structure is destroyed.
         """
         cdef SlepcDSStateType val = state
         CHKERR( DSSetState(self.ds, val) )
@@ -340,10 +341,10 @@ cdef class DS(Object):
 
         Notes
         -----
-        Compact storage is used in some DS types such as `HEP` when the matrix
-        is tridiagonal. This flag can be used to indicate whether the user
-        provides the matrix entries via the compact form (the tridiagonal `DS.T`)
-        or the non-compact one (`DS.A`).
+        Compact storage is used in some DS types such as `HEP` when
+        the matrix is tridiagonal. This flag can be used to indicate
+        whether the user provides the matrix entries via the compact
+        form (the tridiagonal `DS.T`) or the non-compact one (`DS.A`).
 
         The default is False.
         """
@@ -375,10 +376,12 @@ cdef class DS(Object):
 
         Notes
         -----
-        In Krylov methods it is useful that the matrix representing the direct solver
-        has one extra row, i.e., has dimension (n+1) x n. If this flag is activated, all
-        transformations applied to the right of the matrix also affect this additional
-        row. In that case, (n+1) must be less or equal than the leading dimension.
+        In Krylov methods it is useful that the matrix representing
+        the direct solver has one extra row, i.e., has dimension (n+1)
+        x n. If this flag is activated, all transformations applied to
+        the right of the matrix also affect this additional row. In
+        that case, (n+1) must be less or equal than the leading
+        dimension.
 
         The default is False.
         """
@@ -410,11 +413,12 @@ cdef class DS(Object):
 
         Notes
         -----
-        Normally the vectors returned in `DS.X` are eigenvectors of the
-        projected matrix. With this flag activated, `vectors()` will return
-        the right singular vector of the smallest singular value of matrix
-        At-theta*I, where At is the extended (n+1)xn matrix and theta is
-        the Ritz value. This is used in the refined Ritz approximation.
+        Normally the vectors returned in `DS.X` are eigenvectors of
+        the projected matrix. With this flag activated, `vectors()`
+        will return the right singular vector of the smallest singular
+        value of matrix At-theta*I, where At is the extended (n+1)xn
+        matrix and theta is the Ritz value. This is used in the
+        refined Ritz approximation.
 
         The default is False.
         """
