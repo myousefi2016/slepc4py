@@ -8,6 +8,14 @@ HISTORY: SLEPc for Python
 :Organization: CIMEC <http://www.cimec.org.ar>
 :Address:      CCT CONICET, 3000 Santa Fe, Argentina
 
+
+Release 3.3.1
+=============
+
+- Regenerate the wrappers using Cython 0.18 and fix binary
+  compatibility issues with petsc4py 3.3.1 .
+
+
 Release 3.3
 ===========
 
