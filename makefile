@@ -17,7 +17,7 @@ test:
 	${MPIEXEC} ${VALGRIND} ${PYTHON} test/runtests.py < /dev/null
 
 install: build
-	${PYTHON} setup.py install ${INSTALLOPT} --home=${HOME}
+	${PYTHON} setup.py install --user ${INSTALLOPT}
 
 sdist: docs
 	${PYTHON} setup.py sdist ${SDISTOPT}
@@ -34,14 +34,15 @@ distclean: clean
 
 srcclean:
 	-${RM} src/slepc4py.SLEPc.c
+	-${RM} src/libslepc4py/libslepc4py.[ch]
 	-${RM} src/include/slepc4py/slepc4py.SLEPc.h
 	-${RM} src/include/slepc4py/slepc4py.SLEPc_api.h
 
 fullclean: distclean srcclean docsclean
 
 uninstall:
-	-${RM} -r ${HOME}/lib{,64}/python/slepc4py
-	-${RM} -r ${HOME}/lib{,64}/python/slepc4py-*-py*.egg-info
+	-${RM} -r $(shell ${PYTHON} -m site --user-site)/slepc4py
+	-${RM} -r $(shell ${PYTHON} -m site --user-site)/slepc4py-*-py*.egg-info
 
 # ----
 

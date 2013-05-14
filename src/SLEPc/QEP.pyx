@@ -267,8 +267,9 @@ cdef class QEP(Object):
         max_it: int, optional
             The maximum number of iterations
         """
-        cdef PetscReal rval = PETSC_IGNORE
-        cdef PetscInt  ival = PETSC_IGNORE
+        cdef PetscReal rval = PETSC_DECIDE
+        cdef PetscInt  ival = PETSC_DECIDE
+        CHKERR( QEPGetTolerances(self.qep, &rval, &ival) )
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( QEPSetTolerances(self.qep, rval, ival) )
@@ -335,9 +336,10 @@ cdef class QEP(Object):
         mpd: int, optional
             Maximum dimension allowed for the projected problem.
         """
-        cdef PetscInt ival1 = PETSC_IGNORE
-        cdef PetscInt ival2 = PETSC_IGNORE
-        cdef PetscInt ival3 = PETSC_IGNORE
+        cdef PetscInt ival1 = PETSC_DECIDE
+        cdef PetscInt ival2 = PETSC_DECIDE
+        cdef PetscInt ival3 = PETSC_DECIDE
+        CHKERR( QEPGetDimensions(self.qep, &ival1, &ival2, &ival3) )
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)

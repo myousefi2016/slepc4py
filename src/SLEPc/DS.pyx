@@ -273,10 +273,11 @@ cdef class DS(Object):
 
         The value `m` is not used except in the case of DS.SVD.
         """
-        cdef PetscInt ival1 = PETSC_IGNORE
-        cdef PetscInt ival2 = PETSC_IGNORE
+        cdef PetscInt ival1 = PETSC_DECIDE
+        cdef PetscInt ival2 = PETSC_DECIDE
         cdef PetscInt ival3 = 0
         cdef PetscInt ival4 = 0
+        CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4) )
         if n is not None: ival1 = asInt(n)
         if m is not None: ival2 = asInt(m)
         if l is not None: ival3 = asInt(l)

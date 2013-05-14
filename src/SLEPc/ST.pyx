@@ -273,21 +273,21 @@ cdef class ST(Object):
         CHKERR( STGetMatMode(self.st, &val) )
         return val
 
-    def setOperators(self, Mat A not None, Mat B=None):
+    def setOperators(self, operators):
         """
         Sets the matrices associated with the eigenvalue problem.
 
         Parameters
         ----------
-        A: Mat
-           The matrix associated with the eigensystem.
-        B: Mat, optional
-           The second matrix in the case of generalized eigenproblems;
-           if not provided, a standard eigenproblem is assumed.
+        operators: sequence of Mat
+           The matrices associated with the eigensystem.
         """
-        cdef PetscMat Bmat = NULL
-        if B is not None: Bmat = B.mat
-        CHKERR( STSetOperators(self.st, A.mat, Bmat) )
+        operators = tuple(operators)
+        cdef PetscMat *mats = NULL
+        cdef Py_ssize_t k=0, n = len(operators)
+        cdef tmp = allocate(<size_t>n*sizeof(PetscMat),<void**>&mats)
+        for k from 0 <= k < n: mats[k] = (<Mat?>operators[k]).mat
+        CHKERR( STSetOperators(self.st, n, mats) )
 
     def getOperators(self):
         """
@@ -295,17 +295,19 @@ cdef class ST(Object):
 
         Returns
         -------
-        A: Mat
-           The matrix associated with the eigensystem.
-        B: Mat
-           The second matrix in the case of generalized eigenproblems.
+        operators: tuple of Mat
+           The matrices associated with the eigensystem.
         """
-        cdef Mat A = Mat()
-        cdef Mat B = Mat()
-        CHKERR( STGetOperators(self.st, &A.mat, &B.mat) )
-        PetscINCREF(A.obj)
-        PetscINCREF(B.obj)
-        return (A, B)
+        cdef Mat A
+        cdef PetscMat mat = NULL
+        cdef PetscInt k=0, n=0
+        CHKERR( STGetNumMatrices(self.st, &n) )
+        cdef object operators = []
+        for k from 0 <= k < n:
+            CHKERR( STGetOperators(self.st, k, &mat) )
+            A = Mat(); A.mat = mat; PetscINCREF(A.obj)
+            operators.append(A)
+        return tuple(operators)
 
     def setMatStructure(self, structure):
         """

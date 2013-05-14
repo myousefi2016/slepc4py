@@ -2,7 +2,6 @@ cdef extern from * :
     enum: PETSC_DECIDE
     enum: PETSC_DEFAULT
     enum: PETSC_DETERMINE
-    enum: PETSC_IGNORE
 
     ctypedef enum PetscBool:
         PETSC_TRUE,  PETSC_YES,

@@ -126,7 +126,6 @@ Scalable Library for Eigenvalue Problem Computations.
 """
 
 DECIDE    = PETSC_DECIDE
-IGNORE    = PETSC_IGNORE
 DEFAULT   = PETSC_DEFAULT
 DETERMINE = PETSC_DETERMINE
 
