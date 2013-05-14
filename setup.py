@@ -12,8 +12,8 @@ Python bindings for SLEPc libraries.
 
     $ pip install slepc4py==dev slepc==dev petsc4py==dev petsc==dev
 
-  .. _slepc4py-dev: http://petsc.cs.iit.edu/petsc4py/
-                    slepc4py-dev/archive/tip.tar.gz#egg=slepc4py-dev
+  .. _slepc4py-dev: hg+https://code.google.com/p/
+                    slepc4py/#egg=slepc4py-dev
 """
 
 ## try:
