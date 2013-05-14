@@ -96,23 +96,23 @@ def getpythoninfo():
 
 def getlibraryinfo():
     from petsc4py import PETSc
-    (major, minor, micro), patch, devel = \
-        PETSc.Sys.getVersion(patch=True, devel=True)
+    (major, minor, micro), devel = \
+        PETSc.Sys.getVersion(devel=True)
     r = not devel
     if r: release = 'release'
     else: release = 'development'
     arch = PETSc.__arch__
-    petsc_info = ("PETSc %d.%d.%d-p%d %s (conf: '%s')"
-                  % (major, minor, micro, patch, release, arch) )
+    petsc_info = ("PETSc %d.%d.%d %s (conf: '%s')"
+                  % (major, minor, micro, release, arch) )
     from slepc4py import SLEPc
-    (major, minor, micro), patch, devel = \
-        SLEPc.Sys.getVersion(patch=True, devel=True)
+    (major, minor, micro), devel = \
+        SLEPc.Sys.getVersion(devel=True)
     r = not devel
     if r: release = 'release'
     else: release = 'development'
     arch = SLEPc.__arch__
-    slepc_info = ("SLEPc %d.%d.%d-p%d %s (conf: '%s')"
-                  % (major, minor, micro, patch, release, arch) )
+    slepc_info = ("SLEPc %d.%d.%d %s (conf: '%s')"
+                  % (major, minor, micro, release, arch) )
     return [petsc_info, slepc_info]
     
 def getpackageinfo(pkgnames):
