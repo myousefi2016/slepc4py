@@ -10,10 +10,9 @@ Python bindings for SLEPc libraries.
 
   You can also install `slepc4py-dev`_ with::
 
-    $ pip install slepc4py==dev slepc==dev petsc4py==dev petsc==dev
+    $ pip install petsc==dev slepc==dev petsc4py==dev slepc4py==dev 
 
-  .. _slepc4py-dev: hg+https://code.google.com/p/
-                    slepc4py/#egg=slepc4py-dev
+  .. _slepc4py-dev: hg+https://code.google.com/p/slepc4py/#egg=slepc4py-dev
 """
 
 ## try:
