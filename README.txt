@@ -4,7 +4,6 @@ README: SLEPc for Python
 
 :Author:       Lisandro Dalcin
 :Contact:      dalcinl@gmail.com
-:Web Site:     http://slepc4py.googlecode.com/
 :Organization: CIMEC <http://www.cimec.org.ar>
 :Address:      CCT CONICET, (3000) Santa Fe, Argentina
 
@@ -34,7 +33,7 @@ subject to change at any time.
 .. _SLEPc:    http://www.grycap.upv.es/slepc/
 .. _Python:   http://www.python.org
 .. _NumPy:    http://numpy.scipy.org
-.. _petsc4py: http://petsc4py.googlecode.com
+.. _petsc4py: https://bitbucket.org/petsc/petsc4py
 
 
 - This package uses standard `distutils`. For detailed instructions

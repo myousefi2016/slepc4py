@@ -61,16 +61,16 @@ Downloading
 ^^^^^^^^^^^
 
 The *SLEPc for Python* package is available for download at the
-project website generously hosted by Google Code. You can get a
+project website generously hosted by Bitbucket. You can get a
 release tarball :program:`curl` or :program:`wget`.
 
 * Using :program:`curl`::
 
-   $ curl -O http://slepc4py.googlecode.com/files/slepc4py-X.Y.tar.gz
+   $ curl -O https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
 
 * Using :program:`wget`::
 
-   $ wget http://slepc4py.googlecode.com/files/slepc4py-X.Y.tar.gz
+   $ wget https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
 
 Building
 ^^^^^^^^

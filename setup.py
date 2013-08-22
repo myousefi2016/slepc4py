@@ -12,7 +12,7 @@ Python bindings for SLEPc libraries.
 
     $ pip install petsc==dev slepc==dev petsc4py==dev slepc4py==dev 
 
-  .. _slepc4py-dev: hg+https://code.google.com/p/slepc4py/#egg=slepc4py-dev
+  .. _slepc4py-dev: hg+https://bitbucket.org/slepc/slepc4py.git#egg=slepc4py-dev
 """
 
 ## try:
@@ -42,8 +42,8 @@ def version():
 name     = name()
 version  = version()
 
-url      = 'http://%(name)s.googlecode.com/' % vars()
-download = url + 'files/%(name)s-%(version)s.tar.gz' % vars()
+url      = 'https://bitbucket.org/slepc/' % vars()
+download = url + 'slepc4py/%(name)s-%(version)s.tar.gz' % vars()
 
 descr    = __doc__.strip().split('\n'); del descr[1:3]
 devstat  = ['Development Status :: 5 - Production/Stable']

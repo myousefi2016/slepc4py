@@ -32,10 +32,9 @@ Discussion and Support
 Downloads and Development
 -------------------------
 
-+ Project Site:    http://slepc4py.googlecode.com/
-+ Source Releases: http://code.google.com/p/slepc4py/downloads/
-+ Issue Tracker:   http://code.google.com/p/slepc4py/issues/
-+ Repository:      http://petsc4py.googlecode.com/hg/
++ Source Releases: https://bitbucket.org/slepc/slepc4py/downloads/
++ Issue Tracker:   https://bitbucket.org/slepc/slepc4py/issues/
++ Repository:      https://bitbucket.org/slepc/slepc4py.git
 
 
 Acknowledgments
