@@ -39,4 +39,4 @@ updates.
   about requirements and the building/install process, read the file
   ``docs/source/install.rst``.
 
-.. distutils: http://docs.python.org/distutils/
+.. _distutils: http://docs.python.org/distutils/
