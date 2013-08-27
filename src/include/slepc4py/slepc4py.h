@@ -8,10 +8,6 @@
 
 #include <slepc.h>
 
-#if SLEPC_VERSION_(3,2,0)
-typedef struct _p_DS* DS;
-#endif
-
 #include "slepc4py.SLEPc_api.h"
 
 static int import_slepc4py(void) {

@@ -22,7 +22,7 @@ static PetscErrorCode SlepcInitializePackageAll(void)
   ierr = EPSInitializePackage();CHKERRQ(ierr);
   ierr = SVDInitializePackage();CHKERRQ(ierr);
   ierr = QEPInitializePackage();CHKERRQ(ierr);
-  ierr = NEPInitializePackage();CHKERRQ(ierr);
+  /*ierr = NEPInitializePackage();CHKERRQ(ierr);*/
   /*ierr = MFNInitializePackage();CHKERRQ(ierr);*/
   ierr = STInitializePackage();CHKERRQ(ierr);
   ierr = IPInitializePackage();CHKERRQ(ierr);

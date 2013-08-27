@@ -3,10 +3,6 @@
 
 #include <slepc.h>
 
-#ifndef SLEPC_VERSION_EQ
-#define SLEPC_VERSION_EQ(MAJOR,MINOR,SUBMINOR) \
-  (SLEPC_VERSION_(MAJOR,MINOR,SUBMINOR))
-#endif
 #ifndef SLEPC_VERSION_LT
 #define SLEPC_VERSION_LT(MAJOR,MINOR,SUBMINOR) \
   (SLEPC_VERSION_MAJOR < (MAJOR) ||            \
@@ -16,7 +12,7 @@
       (SLEPC_VERSION_SUBMINOR < (SUBMINOR))))))
 #define SLEPC_VERSION_LE(MAJOR,MINOR,SUBMINOR) \
   (SLEPC_VERSION_LT(MAJOR,MINOR,SUBMINOR) ||   \
-   SLEPC_VERSION_EQ(MAJOR,MINOR,SUBMINOR))
+   SLEPC_VERSION_  (MAJOR,MINOR,SUBMINOR))
 #endif
 #ifndef SLEPC_VERSION_GT
 #define SLEPC_VERSION_GT(MAJOR,MINOR,SUBMINOR) \
@@ -25,12 +21,8 @@
   (!SLEPC_VERSION_LT(MAJOR,MINOR,SUBMINOR))
 #endif
 
-#if PETSC_VERSION_(3,2,0)
-#define PetscShell PetscFwk
-#endif
-
-#if SLEPC_VERSION_LE(3,2,0)
-#include "compat/slepc-32.h"
+#if SLEPC_VERSION_LE(3,3,0)
+#include "compat/slepc-33.h"
 #endif
 
 
