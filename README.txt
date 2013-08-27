@@ -13,17 +13,17 @@ updates.  This project should be considered experimental, APIs are
 subject to change at any time.
 
 .. _CIMEC:            http://www.cimec.org.ar/
-.. _project website:  http://slepc4py.googlecode.com/
+.. _project website:  https://bitbucket.org/slepc/slepc4py/
 
 
 - To build and install this package, you must meet the following
   requirements.
 
-  + PETSc_ 3.3 or 3.3, built with *shared libraries*.
+  + PETSc_ 3.4 or 3.3, built with *shared libraries*.
 
-  + SLEPc_ 3.3 or 3.2, built with *shared libraries*.
+  + SLEPc_ 3.4 or 3.3, built with *shared libraries*.
 
-  + Python_ 2.4 to 2.7 and 3.1 to 3.2.
+  + Python_ 2.4 to 2.7 and 3.1 to 3.3.
 
   + NumPy_ package.
 
@@ -36,6 +36,8 @@ subject to change at any time.
 .. _petsc4py: https://bitbucket.org/petsc/petsc4py
 
 
-- This package uses standard `distutils`. For detailed instructions
+- This package uses standard distutils_. For detailed instructions
   about requirements and the building/install process, read the file
   ``docs/source/install.rst``.
+
+.. distutils: http://docs.python.org/distutils/
