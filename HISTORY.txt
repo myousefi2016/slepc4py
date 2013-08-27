@@ -8,6 +8,12 @@ HISTORY: SLEPc for Python
 :Address:      CCT CONICET, 3000 Santa Fe, Argentina
 
 
+Release 3.4
+===========
+
+- Update to SLEPc 3.4 release.
+
+
 Release 3.3.1
 =============
 
