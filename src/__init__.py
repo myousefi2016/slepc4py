@@ -21,7 +21,7 @@ a large, sparse, rectangular matrix.
 """
 
 __author__    = 'Lisandro Dalcin'
-__version__   = '3.3.1'
+__version__   = '3.4'
 __credits__   = 'SLEPc Team <slepc-maint@grycap.upv.es>'
 
 # -----------------------------------------------------------------------------
