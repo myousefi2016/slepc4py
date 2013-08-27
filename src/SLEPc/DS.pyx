@@ -277,7 +277,8 @@ cdef class DS(Object):
         cdef PetscInt ival2 = PETSC_DECIDE
         cdef PetscInt ival3 = 0
         cdef PetscInt ival4 = 0
-        CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4) )
+        cdef PetscInt ival5 = 0
+        CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4, &ival5) )
         if n is not None: ival1 = asInt(n)
         if m is not None: ival2 = asInt(m)
         if l is not None: ival3 = asInt(l)
@@ -298,13 +299,16 @@ cdef class DS(Object):
            Number of locked (inactive) leading columns.
         k: int
            Intermediate dimension (e.g., position of arrow).
+        t: int
+           Truncated length.
         """
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
         cdef PetscInt ival4 = 0
-        CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3), toInt(ival4))
+        cdef PetscInt ival5 = 0
+        CHKERR( DSGetDimensions(self.ds, &ival1, &ival2, &ival3, &ival4, &ival5) )
+        return (toInt(ival1), toInt(ival2), toInt(ival3), toInt(ival4), toInt(ival5))
 
     def setMethod(self, meth):
         """

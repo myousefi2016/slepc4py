@@ -20,7 +20,6 @@ cdef extern from * nogil:
     enum: SLEPC_VERSION_PATCH
     enum: SLEPC_VERSION_RELEASE
     char* SLEPC_VERSION_DATE
-    char* SLEPC_VERSION_PATCH_DATE
     char* SLEPC_AUTHOR_INFO
     int SlepcInitialize(int*,char***,char[],char[])
     int SlepcFinalize()

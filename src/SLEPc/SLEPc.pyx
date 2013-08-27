@@ -161,7 +161,7 @@ cdef int initialize(object args) except -1:
 from petsc4py.PETSc cimport PyPetscType_Register
 
 cdef extern from *:
-    int SlepcInitializePackage(char[])
+    int SlepcInitializePackageAll()
     ctypedef int PetscClassId
     PetscClassId SLEPC_ST_CLASSID  "ST_CLASSID"
     PetscClassId SLEPC_IP_CLASSID  "IP_CLASSID"
@@ -172,7 +172,7 @@ cdef extern from *:
 
 cdef int register(char path[]) except -1:
     # make sure all SLEPc packages are initialized
-    CHKERR( SlepcInitializePackage  (NULL) )
+    CHKERR( SlepcInitializePackageAll() )
     # register Python types
     PyPetscType_Register(SLEPC_ST_CLASSID,  ST)
     PyPetscType_Register(SLEPC_IP_CLASSID,  IP)
