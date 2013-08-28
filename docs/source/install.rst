@@ -35,23 +35,23 @@ Using **pip** or **easy_install**
 You can use :program:`pip` to install :mod:`slepc4py` and its
 dependencies (:mod:`mpi4py` is optional but highly recommended)::
 
-    $ pip install [--user] numpy mpi4py
-    $ pip install [--user] petsc petsc4py
-    $ pip install [--user] slepc slepc4py
+  $ pip install [--user] numpy mpi4py
+  $ pip install [--user] petsc petsc4py
+  $ pip install [--user] slepc slepc4py
 
 Alternatively, you can use :program:`easy_install` (deprecated)::
 
-    $ [sudo] easy_install [--user] slepc4py
+  $ [sudo] easy_install [--user] slepc4py
 
 If you already have working PETSc and SLEPc builds, set environment
 variables :envvar:`SLEPC_DIR` and :envvar:`PETSC_DIR` (and perhaps
 :envvar:`PETSC_ARCH` for prefix installs) to appropriate values and
 next use :program:`pip`::
 
-    $ export SLEPC_DIR=/path/to/slepc
-    $ export PETSC_DIR=/path/to/petsc
-    $ export PETSC_ARCH=arch-linux2-c-opt
-    $ pip install [--user] petsc4py slepc4py
+  $ export SLEPC_DIR=/path/to/slepc
+  $ export PETSC_DIR=/path/to/petsc
+  $ export PETSC_ARCH=arch-linux2-c-opt
+  $ pip install [--user] petsc4py slepc4py
 
 
 Using **distutils**
@@ -66,19 +66,19 @@ project website generously hosted by Bitbucket. You can use
 
 * Using :program:`curl`::
 
-   $ curl -O https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
+    $ curl -O https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
 
 * Using :program:`wget`::
 
-   $ wget https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
+    $ wget https://bitbucket.org/slepc/slepc4py/downloads/slepc4py-X.Y.tar.gz
 
 Building
 ^^^^^^^^
 
 After unpacking the release tarball::
 
-   $ tar -zxf slepc4py-X.Y.tar.gz
-   $ cd slepc4py-X.Y
+  $ tar -zxf slepc4py-X.Y.tar.gz
+  $ cd slepc4py-X.Y
 
 the distribution is ready for building.
 
@@ -91,9 +91,9 @@ the distribution is ready for building.
    SDK in Python configuration, your environment should be modified
    like this::
 
-      $ export MACOSX_DEPLOYMENT_TARGET=10.6
-      $ export SDKROOT=/
-      $ export ARCHFLAGS='-arch x86_64'
+     $ export MACOSX_DEPLOYMENT_TARGET=10.6
+     $ export SDKROOT=/
+     $ export ARCHFLAGS='-arch x86_64'
 
 Some environment configuration is needed to inform the location of
 PETSc and SLEPc. You can set (using :command:`setenv`,
@@ -102,22 +102,22 @@ environment variables :envvar:`SLEPC_DIR``, :envvar:`PETSC_DIR`, and
 :envvar:`PETSC_ARCH` indicating where you have built/installed SLEPc
 and PETSc::
 
-   $ export SLEPC_DIR=/usr/local/slepc
-   $ export PETSC_DIR=/usr/local/petsc
-   $ export PETSC_ARCH=arch-linux2-c-opt
+  $ export SLEPC_DIR=/usr/local/slepc
+  $ export PETSC_DIR=/usr/local/petsc
+  $ export PETSC_ARCH=arch-linux2-c-opt
 
 Alternatively, you can edit the file :file:`setup.cfg` and provide the
 required information below the ``[config]`` section::
 
-   [config]
-   slepc_dir  = /usr/local/slepc
-   petsc_dir  = /usr/local/petsc
-   petsc_arch = arch-linux2-c-opt
-   ...
+  [config]
+  slepc_dir  = /usr/local/slepc
+  petsc_dir  = /usr/local/petsc
+  petsc_arch = arch-linux2-c-opt
+  ...
 
 Finally, you can build the distribution by typing::
 
-   $ python setup.py build
+  $ python setup.py build
 
 Installing
 ^^^^^^^^^^
@@ -128,7 +128,7 @@ If you have root privileges (either by log-in as the root user of by
 using :command:`sudo`) and you want to install *SLEPc for Python* in
 your system for all users, just do::
 
-    $ python setup.py install
+  $ python setup.py install
 
 The previous steps will install the :mod:`slepc4py` package at standard
 location :file:`{prefix}/lib/python{X}.{X}/site-packages`.
@@ -139,12 +139,12 @@ target Python version.
 
 * For Python 2.6 and up::
 
-      $ python setup.py install --user
+    $ python setup.py install --user
 
 * For Python 2.5 and below (assuming your home directory is available
   through the :envvar:`HOME` environment variable)::
 
-      $ python setup.py install --home=$HOME
+    $ python setup.py install --home=$HOME
 
   Finally, add :file:`$HOME/lib/python` or :file:`$HOME/lib64/python`
   to your :envvar:`PYTHONPATH` environment variable.
