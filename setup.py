@@ -4,7 +4,7 @@
 SLEPc for Python
 ================
 
-Python bindings for SLEPc libraries.
+Python bindings for SLEPc.
 
 .. tip::
 
@@ -12,7 +12,7 @@ Python bindings for SLEPc libraries.
 
     $ pip install petsc==dev slepc==dev petsc4py==dev slepc4py==dev 
 
-  .. _slepc4py-dev: hg+https://bitbucket.org/slepc/slepc4py.git#egg=slepc4py-dev
+  .. _slepc4py-dev: https://bitbucket.org/slepc/slepc4py/get/master.tar.gz#egg=slepc4py-dev
 """
 
 ## try:
