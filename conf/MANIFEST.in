@@ -1,6 +1,6 @@
 include setup*.py *.cfg *.txt
 
-recursive-include demo [M,m]akefile* *.py *.txt
+recursive-include demo [M,m]akefile* *.py
 recursive-include conf *.py *.cfg *.in
 recursive-include src  *.py *.pyx *.px[di] *.h *.c *.i *.cfg
 recursive-include test *.py
