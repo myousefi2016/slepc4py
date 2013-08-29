@@ -97,12 +97,12 @@ def run_setup():
     if ('setuptools' in sys.modules):
         from os.path import exists, join
         metadata['zip_safe'] = False
-        metadata['install_requires'] = ['petsc4py>=3.3.1']
+        metadata['install_requires'] = ['petsc4py>=3.4']
         if not exists(join('src', 'slepc4py.SLEPc.c')):
             metadata['install_requires'] += ['Cython>='+CYTHON]
         SLEPC_DIR = os.environ.get('SLEPC_DIR')
         if not (SLEPC_DIR and os.path.isdir(SLEPC_DIR)):
-            metadata['install_requires'].append('slepc>=3.3,<3.4')
+            metadata['install_requires'].append('slepc>=3.4,<3.5')
     #
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],
