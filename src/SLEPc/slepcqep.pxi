@@ -79,4 +79,3 @@ cdef extern from * nogil:
     int QEPLinearGetExplicitMatrix(SlepcQEP,PetscBool*)
     int QEPLinearSetEPS(SlepcQEP,SlepcEPS)
     int QEPLinearGetEPS(SlepcQEP,SlepcEPS*)
-

@@ -69,4 +69,3 @@ cdef extern from * nogil:
     int DSTranslateHarmonic(SlepcDS,PetscScalar,PetscReal,PetscBool,PetscScalar*,PetscReal*)
     int DSTranslateRKS(SlepcDS,PetscScalar)
     int DSNormalize(SlepcDS,SlepcDSMatType,PetscInt)
-

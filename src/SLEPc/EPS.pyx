@@ -50,7 +50,7 @@ class EPSProblemType(object):
     - `NHEP`:   Non-Hermitian eigenproblem.
     - `GHEP`:   Generalized Hermitian eigenproblem.
     - `GNHEP`:  Generalized Non-Hermitian eigenproblem.
-    - `PGNHEP`: Generalized Non-Hermitian eigenproblem 
+    - `PGNHEP`: Generalized Non-Hermitian eigenproblem
                 with positive definite ``B``.
     - `GHIEP`:  Generalized Hermitian-indefinite eigenproblem.
     """
@@ -128,10 +128,10 @@ class EPSConv(object):
     """
     EPS convergence test
 
-    - `ABS`: 
-    - `EIG`: 
-    - `NORM`: 
-    - `USER`: 
+    - `ABS`:
+    - `EIG`:
+    - `NORM`:
+    - `USER`:
     """
     ABS  = EPS_CONV_ABS
     EIG  = EPS_CONV_EIG
@@ -941,7 +941,7 @@ cdef class EPS(Object):
         are explicitly orthonormalized internally.
 
         These vectors persist from one `solve()` call to the other,
-        use `removeDeflationSpace()` to eliminate them. 
+        use `removeDeflationSpace()` to eliminate them.
         """
         if isinstance(space, Vec): space = [space]
         cdef PetscVec* vs = NULL
@@ -971,7 +971,7 @@ cdef class EPS(Object):
 
         Notes
         -----
-        Some solvers start to iterate on a single vector (initial vector). 
+        Some solvers start to iterate on a single vector (initial vector).
         In that case, the other vectors are ignored.
 
         In contrast to `setDeflationSpace()`, these vectors do not persist

@@ -22,7 +22,7 @@ cdef extern from *:
     ctypedef char const_char "const char"
 
 cdef inline object bytes2str(const_char p[]):
-     if p == NULL: 
+     if p == NULL:
          return None
      cdef bytes s = <char*>p
      if isinstance(s, str):
