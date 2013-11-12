@@ -204,3 +204,4 @@ cdef extern from * nogil:
 
 cdef extern from * nogil:
     int VecDuplicate(PetscVec,PetscVec*)
+    int MatGetVecs(PetscMat,PetscVec*,PetscVec*)

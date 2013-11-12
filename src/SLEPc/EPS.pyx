@@ -1172,37 +1172,40 @@ cdef class EPS(Object):
         CHKERR( EPSGetEigenpair(self.eps, i, &sval1, &sval2, vecr, veci) )
         return complex(toScalar(sval1), toScalar(sval2))
 
-    ## def getInvariantSubspace(self):
-    ##     """
-    ##     Gets an orthonormal basis of the computed invariant subspace.
-    ##
-    ##     Returns
-    ##     -------
-    ##     subspace: list of Vec
-    ##        Basis of the invariant subspace.
-    ##
-    ##     Notes
-    ##     -----
-    ##     This function should be called after `solve()` has finished.
-    ##
-    ##     The returned vectors span an invariant subspace associated
-    ##     with the computed eigenvalues. An invariant subspace ``X`` of
-    ##     ``A` satisfies ``A x`` in ``X`` for all ``x`` in ``X`` (a
-    ##     similar definition applies for generalized eigenproblems).
-    ##     """
-    ##     cdef PetscInt i = 0, ncv = 0
-    ##     cdef PetscVec v = NULL, *isp = NULL
-    ##     CHKERR( EPSGetConverged(self.eps, &ncv) )
-    ##     CHKERR( EPSGetInitialVector(self.eps, &v) )
-    ##     cdef Vec V = None
-    ##     cdef list subspace = []
-    ##     cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
-    ##     for i in range(ncv):
-    ##         V = Vec(); subspace.append(V)
-    ##         CHKERR( VecDuplicate(v, &isp[i]) )
-    ##         V.vec = isp[i]
-    ##     CHKERR( EPSGetInvariantSubspace(self.eps, isp) )
-    ##     return subspace
+    def getInvariantSubspace(self):
+        """
+        Gets an orthonormal basis of the computed invariant subspace.
+
+        Returns
+        -------
+        subspace: list of Vec
+           Basis of the invariant subspace.
+
+        Notes
+        -----
+        This function should be called after `solve()` has finished.
+
+        The returned vectors span an invariant subspace associated
+        with the computed eigenvalues. An invariant subspace ``X`` of
+        ``A` satisfies ``A x`` in ``X`` for all ``x`` in ``X`` (a
+        similar definition applies for generalized eigenproblems).
+        """
+        cdef PetscInt i = 0, ncv = 0
+        cdef PetscVec v = NULL, *isp = NULL
+        cdef list subspace = []
+        CHKERR( EPSGetConverged(self.eps, &ncv) )
+        if ncv == 0: return subspace
+        cdef PetscMat A = NULL
+        CHKERR( EPSGetOperators(self.eps, &A, NULL) )
+        CHKERR( MatGetVecs(A, &v, NULL) )
+        cdef Vec V = None
+        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+        for i in range(ncv):
+            if i == 0: isp[0] = v
+            if i >= 1: CHKERR( VecDuplicate(v, &isp[i]) )
+            V = Vec(); V.vec = isp[i]; subspace.append(V)
+        CHKERR( EPSGetInvariantSubspace(self.eps, isp) )
+        return subspace
 
     #
 
@@ -1234,33 +1237,36 @@ cdef class EPS(Object):
         if Wi is not None: veci = Wi.vec
         CHKERR( EPSGetEigenvectorLeft(self.eps, i, vecr, veci) )
 
-    ## def getInvariantSubspaceLeft(self):
-    ##     """
-    ##     Gets an orthonormal basis of the computed left invariant
-    ##     subspace (only available in two-sided eigensolvers).
-    ##
-    ##     Returns
-    ##     -------
-    ##     v: array of Vec
-    ##        Basis of the left invariant subspace.
-    ##
-    ##     Notes
-    ##     -----
-    ##     See `getInvariantSubspace()` for additional information.
-    ##     """
-    ##     cdef PetscInt i = 0, ncv = 0
-    ##     cdef PetscVec w = NULL, *isp = NULL
-    ##     CHKERR( EPSGetConverged(self.eps, &ncv) )
-    ##     CHKERR( EPSGetLeftInitialVector(self.eps, &w) )
-    ##     cdef Vec W = None
-    ##     cdef list subspace = []
-    ##     cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
-    ##     for i in range(ncv):
-    ##         W = Vec(); subspace.append(W)
-    ##         CHKERR( VecDuplicate(w, &isp[i]) )
-    ##         W.vec = isp[i]
-    ##     CHKERR( EPSGetLeftInvariantSubspace(self.eps, isp) )
-    ##     return subspace
+    def getInvariantSubspaceLeft(self):
+        """
+        Gets an orthonormal basis of the computed left invariant
+        subspace (only available in two-sided eigensolvers).
+
+        Returns
+        -------
+        subspace: list of Vec
+           Basis of the left invariant subspace.
+
+        Notes
+        -----
+        See `getInvariantSubspace()` for additional information.
+        """
+        cdef PetscInt i = 0, ncv = 0
+        cdef PetscVec w = NULL, *isp = NULL
+        cdef list subspace = []
+        CHKERR( EPSGetConverged(self.eps, &ncv) )
+        if ncv == 0: return subspace
+        cdef PetscMat A = NULL
+        CHKERR( EPSGetOperators(self.eps, &A, NULL) )
+        CHKERR( MatGetVecs(A, &w, NULL) )
+        cdef Vec W = None
+        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
+        for i in range(ncv):
+            if i == 0: isp[0] = w
+            if i >= 1: CHKERR( VecDuplicate(w, &isp[i]) )
+            W = Vec(); W.vec = isp[i]; subspace.append(W)
+        CHKERR( EPSGetInvariantSubspaceLeft(self.eps, isp) )
+        return subspace
 
     #
 
