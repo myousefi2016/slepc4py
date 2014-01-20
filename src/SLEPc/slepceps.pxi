@@ -9,12 +9,14 @@ cdef extern from * nogil:
     SlepcEPSType EPSGD
     SlepcEPSType EPSJD
     SlepcEPSType EPSRQCG
+    SlepcEPSType EPSCISS
     SlepcEPSType EPSLAPACK
     SlepcEPSType EPSARPACK
     SlepcEPSType EPSBLZPACK
     SlepcEPSType EPSTRLAN
     SlepcEPSType EPSBLOPEX
     SlepcEPSType EPSPRIMME
+    SlepcEPSType EPSFEAST
 
     ctypedef enum SlepcEPSProblemType "EPSProblemType":
         EPS_HEP
@@ -201,6 +203,14 @@ cdef extern from * nogil:
     int EPSRQCGSetReset(SlepcEPS,PetscInt)
     int EPSRQCGGetReset(SlepcEPS,PetscInt*)
 
+    int EPSCISSSetRegion(SlepcEPS,PetscScalar,PetscReal,PetscReal)
+    int EPSCISSGetRegion(SlepcEPS,PetscScalar*,PetscReal*,PetscReal*)
+    int EPSCISSSetSizes(SlepcEPS,PetscInt,PetscInt,PetscInt,PetscInt,PetscInt,PetscBool)
+    int EPSCISSGetSizes(SlepcEPS,PetscInt*,PetscInt*,PetscInt*,PetscInt*,PetscInt*,PetscBool*)
+    int EPSCISSSetThreshold(SlepcEPS,PetscReal,PetscReal)
+    int EPSCISSGetThreshold(SlepcEPS,PetscReal*,PetscReal*)
+    int EPSCISSSetRefinement(SlepcEPS,PetscInt,PetscInt,PetscInt)
+    int EPSCISSGetRefinement(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
 cdef extern from * nogil:
     int VecDuplicate(PetscVec,PetscVec*)
