@@ -407,7 +407,7 @@ cdef class QEP(Object):
         Returns
         -------
         M: Mat
-            The fist coefficient matrix.
+            The first coefficient matrix.
         C: Mat
             The second coefficient matrix.
         K: Mat
@@ -429,7 +429,7 @@ cdef class QEP(Object):
         Parameters
         ----------
         M: Mat
-            The fist coefficient matrix.
+            The first coefficient matrix.
         C: Mat
             The second coefficient matrix.
         K: Mat

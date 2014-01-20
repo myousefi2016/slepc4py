@@ -40,3 +40,9 @@ cdef inline int SlepcCLEAR(PetscObject* obj):
     cdef PetscObject tmp
     tmp = obj[0]; obj[0] = NULL
     return PetscObjectDestroy(&tmp)
+
+cdef extern from * nogil:
+    ctypedef enum SlepcFunction "SlepcFunction":
+        SLEPC_FUNCTION_NONE
+        SLEPC_FUNCTION_EXP
+        SLEPC_FUNCTION_LAST

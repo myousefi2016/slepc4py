@@ -117,6 +117,7 @@ include "slepcds.pxi"
 include "slepceps.pxi"
 include "slepcsvd.pxi"
 include "slepcqep.pxi"
+include "slepcmfn.pxi"
 
 # -----------------------------------------------------------------------------
 
@@ -136,6 +137,7 @@ include "DS.pyx"
 include "EPS.pyx"
 include "SVD.pyx"
 include "QEP.pyx"
+include "MFN.pyx"
 
 # -----------------------------------------------------------------------------
 
@@ -169,6 +171,7 @@ cdef extern from *:
     PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
     PetscClassId SLEPC_SVD_CLASSID "SVD_CLASSID"
     PetscClassId SLEPC_QEP_CLASSID "QEP_CLASSID"
+    PetscClassId SLEPC_MFN_CLASSID "MFN_CLASSID"
 
 cdef int register(char path[]) except -1:
     # make sure all SLEPc packages are initialized
@@ -180,6 +183,7 @@ cdef int register(char path[]) except -1:
     PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)
     PyPetscType_Register(SLEPC_SVD_CLASSID, SVD)
     PyPetscType_Register(SLEPC_QEP_CLASSID, QEP)
+    PyPetscType_Register(SLEPC_MFN_CLASSID, MFN)
     return 0
 
 cdef void finalize() nogil:

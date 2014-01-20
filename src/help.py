@@ -48,6 +48,11 @@ def help(args=None):
         qep.setFromOptions()
         qep.destroy()
         del qep
+    if 'mfn' in args:
+        mfn = SLEPc.MFN().create(comm=COMM)
+        mfn.setFromOptions()
+        mfn.destroy()
+        del qep
     if 'st' in args:
         st = SLEPc.ST().create(comm=COMM)
         st.setFromOptions()

@@ -23,6 +23,9 @@ cdef extern from "slepc.h":
     struct _p_QEP
     ctypedef _p_QEP* SlepcQEP "QEP"
 
+    struct _p_MFN
+    ctypedef _p_MFN* SlepcMFN "MFN"
+
 # -----------------------------------------------------------------------------
 
 from petsc4py.PETSc cimport Object
@@ -62,5 +65,11 @@ ctypedef public api class QEP(Object) [
     object PySlepcQEPObject,
     ]:
     cdef SlepcQEP qep
+
+ctypedef public api class MFN(Object) [
+    type   PySlepcMFN_Type,
+    object PySlepcMFNObject,
+    ]:
+    cdef SlepcMFN mfn
 
 # -----------------------------------------------------------------------------
