@@ -128,6 +128,9 @@ class TestObjectSVD(BaseTestObject, unittest.TestCase):
 class TestObjectQEP(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.QEP
 
+class TestObjectMFN(BaseTestObject, unittest.TestCase):
+    CLASS = SLEPc.MFN
+
 try:
     SLEPc.QEP().create().destroy()
 except:
