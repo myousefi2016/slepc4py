@@ -3,6 +3,7 @@ cdef extern from * nogil:
     ctypedef char* SlepcQEPType "const char*"
     SlepcQEPType QEPLINEAR
     SlepcQEPType QEPQARNOLDI
+    SlepcQEPType QEPQLANCZOS
 
     ctypedef enum SlepcQEPProblemType "QEPProblemType":
         QEP_GENERAL
@@ -16,6 +17,9 @@ cdef extern from * nogil:
         QEP_SMALLEST_REAL
         QEP_LARGEST_IMAGINARY
         QEP_SMALLEST_IMAGINARY
+        QEP_TARGET_MAGNITUDE
+        QEP_TARGET_REAL
+        QEP_TARGET_IMAGINARY
 
     ctypedef enum SlepcQEPConvergedReason "QEPConvergedReason":
         QEP_CONVERGED_TOL

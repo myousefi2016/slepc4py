@@ -3,6 +3,7 @@
 class QEPType(object):
     LINEAR   = S_(QEPLINEAR)
     QARNOLDI = S_(QEPQARNOLDI)
+    QLANCZOS = S_(QEPQLANCZOS)
 
 class QEPProblemType(object):
     GENERAL    = QEP_GENERAL
@@ -16,6 +17,9 @@ class QEPWhich(object):
     SMALLEST_REAL      = QEP_SMALLEST_REAL
     LARGEST_IMAGINARY  = QEP_LARGEST_IMAGINARY
     SMALLEST_IMAGINARY = QEP_SMALLEST_IMAGINARY
+    TARGET_MAGNITUDE   = QEP_TARGET_MAGNITUDE
+    TARGET_REAL        = QEP_TARGET_REAL
+    TARGET_IMAGINARY   = QEP_TARGET_IMAGINARY
 
 class QEPConvergedReason(object):
     CONVERGED_TOL       = QEP_CONVERGED_TOL
@@ -92,7 +96,7 @@ cdef class QEP(Object):
         Parameters
         ----------
         qep_type: `QEP.Type` enumerate
-            T5he solver to be used.
+            The solver to be used.
         """
         cdef SlepcQEPType cval = NULL
         qep_type = str2bytes(qep_type, &cval)
