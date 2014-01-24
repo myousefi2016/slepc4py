@@ -128,6 +128,9 @@ class TestObjectSVD(BaseTestObject, unittest.TestCase):
 class TestObjectQEP(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.QEP
 
+class TestObjectNEP(BaseTestObject, unittest.TestCase):
+    CLASS = SLEPc.NEP
+
 class TestObjectMFN(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.MFN
 
