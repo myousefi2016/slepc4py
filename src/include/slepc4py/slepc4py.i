@@ -18,6 +18,7 @@
 %define SWIG_TYPECHECK_SLEPC_QEP 555 %enddef
 %define SWIG_TYPECHECK_SLEPC_NEP 556 %enddef
 %define SWIG_TYPECHECK_SLEPC_MFN 557 %enddef
+%define SWIG_TYPECHECK_SLEPC_FN  558 %enddef
 
 %define %slepc4py_objt(Pkg, PyType, Type, CODE, OBJECT_NULL)
 %petsc4py_objt(Pkg, PyType, Type, CODE, OBJECT_NULL)
@@ -33,6 +34,7 @@
 %slepc4py_objt( Slepc , QEP , QEP , SLEPC_QEP , PETSC_NULL )
 %slepc4py_objt( Slepc , NEP , NEP , SLEPC_NEP , PETSC_NULL )
 %slepc4py_objt( Slepc , MFN , MFN , SLEPC_MFN , PETSC_NULL )
+%slepc4py_objt( Slepc , FN ,  FN ,  SLEPC_FN ,  PETSC_NULL )
 
 /* ---------------------------------------------------------------- */
 

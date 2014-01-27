@@ -4,7 +4,7 @@ PYTHON=python
 test: run
 
 .PHONY:run
-run: run_ex1 run_ex2 run_ex3 run_ex4 run_ex5 run_ex6 run_ex7
+run: run_ex1 run_ex2 run_ex3 run_ex4 run_ex5 run_ex6 run_ex7 run_ex8
 
 .PHONY:run_ex1
 run_ex1:
@@ -32,3 +32,7 @@ run_ex6:
 .PHONY:run_ex7
 run_ex7:
 	${PYTHON} ex7.py ${SLEPC_OPTIONS}
+
+.PHONY:run_ex8
+run_ex8:
+	${PYTHON} ex8.py ${SLEPC_OPTIONS}

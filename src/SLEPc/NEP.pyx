@@ -602,6 +602,34 @@ cdef class NEP(Object):
         if kargs is None: kargs = {}
         self.set_attr('__jacobian__', (jacobian, args, kargs))
 
+    def setSplitOperator(self, A, f, structure=None):
+        """
+        Sets the operator of the nonlinear eigenvalue problem
+        in split form.
+
+        Parameters
+        ----------
+        A: Mat or sequence of Mat
+            Coefficient matrices of the split form.
+        f: sequence of FN
+            Scalar functions of the split form.
+        structure: `Mat.Structure` enumerate, optional
+            Structure flag for matrices.
+        """
+        if isinstance(A, Mat): A = [A]
+        if isinstance(f, FN):  f = [f]
+        cdef PetscMat *As = NULL
+        cdef SlepcFN  *Fs = NULL
+        cdef Py_ssize_t i = 0, n = len(A)
+        cdef PetscMatStructure mstr = matstructure(structure)
+        assert n == len(f)
+        cdef tmp1 = allocate(<size_t>n*sizeof(Mat),<void**>&As)
+        cdef tmp2 = allocate(<size_t>n*sizeof(FN),<void**>&Fs)
+        for i in range(n):
+            As[i] = (<Mat?>A[i]).mat
+            Fs[i] = (<FN?>f[i]).fn
+        CHKERR( NEPSetSplitOperator(self.nep, <PetscInt>n, As, Fs, mstr) )
+
 # -----------------------------------------------------------------------------
 
 del NEPType

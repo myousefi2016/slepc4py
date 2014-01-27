@@ -60,9 +60,9 @@ cdef extern from * nogil:
     int NEPGetFunction(SlepcNEP,PetscMat*,PetscMat*,SlepcNEPFunction*,void**)
     int NEPSetJacobian(SlepcNEP,PetscMat,SlepcNEPJacobian,void*)
     int NEPGetJacobian(SlepcNEP,PetscMat*,SlepcNEPJacobian*,void**)
-#    int NEPSetSplitOperator(SlepcNEP,PetscInt,PetscMat*,SlepcFN*,PetscMatStructure)
-#    int NEPGetSplitOperatorTerm(SlepcNEP,PetscInt,PetscMat*,SlepcFN*)
-#    int NEPGetSplitOperatorInfo(SlepcNEP,PetscInt*,PetscMatStructure*)
+    int NEPSetSplitOperator(SlepcNEP,PetscInt,PetscMat[],SlepcFN[],PetscMatStructure)
+    int NEPGetSplitOperatorTerm(SlepcNEP,PetscInt,PetscMat*,SlepcFN*)
+    int NEPGetSplitOperatorInfo(SlepcNEP,PetscInt*,PetscMatStructure*)
 
     int NEPSetIP(SlepcNEP,SlepcIP)
     int NEPGetIP(SlepcNEP,SlepcIP*)

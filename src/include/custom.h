@@ -27,7 +27,7 @@ static PetscErrorCode SlepcInitializePackageAll(void)
   ierr = STInitializePackage();CHKERRQ(ierr);
   ierr = IPInitializePackage();CHKERRQ(ierr);
   ierr = DSInitializePackage();CHKERRQ(ierr);
-  /*ierr = FNInitializePackage();CHKERRQ(ierr);*/
+  ierr = FNInitializePackage();CHKERRQ(ierr);
   PetscFunctionReturn(0);
 }
 
