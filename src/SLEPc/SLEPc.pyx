@@ -114,18 +114,6 @@ cdef extern from "string.h"  nogil:
     void* memcpy(void*,void*,size_t)
     char* strdup(char*)
 
-# NumPy support
-# -------------
-
-include "arraynpy.pxi"
-
-import_array()
-
-IntType     = PyArray_TypeObjectFromType(NPY_PETSC_INT)
-RealType    = PyArray_TypeObjectFromType(NPY_PETSC_REAL)
-ScalarType  = PyArray_TypeObjectFromType(NPY_PETSC_SCALAR)
-ComplexType = PyArray_TypeObjectFromType(NPY_PETSC_COMPLEX)
-
 # -----------------------------------------------------------------------------
 
 include "slepcmpi.pxi"

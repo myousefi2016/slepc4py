@@ -17,7 +17,7 @@ cdef class FN(Object):
     FN
     """
 
-    Type             = FNType
+    Type = FNType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.fn
