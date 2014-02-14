@@ -6,9 +6,12 @@ convenient access to the functionality of SLEPc.
 
 SLEPc [1]_, [2]_ implements algorithms and tools for the numerical
 solution of large, sparse eigenvalue problems on parallel
-computers. It covers both standard and generalized eigenproblems
-(either symmetric or non-symmetric) as well as the singular value
-decomposition (SVD) and the quadratic eigenvalue problem (QEP).
+computers. It can be used for linear eigenvalue problems in either
+standard or generalized form, with real or complex arithmetic.
+It can also be used for computing a partial SVD of a large, sparse,
+rectangular matrix, and to solve nonlinear eigenvalue problems
+(quadratic or general). Additionally, SLEPc provides solvers for
+the computation of the action of a matrix function on a vector.
 
 SLEPc is intended for computing a subset of the spectrum of a matrix
 (or matrix pair). One can for instance approximate the largest
@@ -18,10 +21,10 @@ are harder to compute, so SLEPc provides different methodologies. One
 such method is to use a spectral transformation. Cheaper alternatives
 are also available.
 
-.. [1] V. Hernandez, J. E. Roman, E. Romero, A. Tomas and
-   V. Vidal. SLEPc Users Manual. DISC-II/24/02 - Revision 3.1
-   D. Sistemas Informáticos y Computación, Universidad Politécnica de
-   Valencia. 2010.
+.. [1] C. Campos, J. E. Roman, E. Romero, A. Tomas.
+   SLEPc Users Manual. DISC-II/24/02 - Revision 3.4
+   D. Sistemas Informáticos y Computación, Universitat Politècnica de
+   València. 2013.
 
 .. [2] Vicente Hernandez, Jose E. Roman and Vicente Vidal.
    SLEPc: A Scalable and Flexible Toolkit for the Solution of
@@ -47,6 +50,10 @@ Currently, the following types of eigenproblems can be addressed:
 
 * Quadratic eigenvalue problem, *(k^2M+kC+K)x=0*.
 
+* Nonlinear eigenvalue problem, *T(k)x=0*.
+
+* Computing the action of a matrix function on a vector, *w=f(alpha A)v*.
+
 For the eigenvalue problem, the following methods are available:
 
 * Krylov eigensolvers, particularly Krylov-Schur, Arnoldi, and
@@ -57,6 +64,10 @@ For the eigenvalue problem, the following methods are available:
 
 * Subspace iteration and single vector iterations (inverse iteration,
   RQI).
+
+* Conjugate gradient for the minimization of the Rayleigh quotient.
+
+* A contour integral solver.
 
 For singular value computations, the following alternatives can be
 used:
@@ -132,6 +143,14 @@ slepc4py for its use from Python.
       define the problem. Several parameters can be specified, as in
       the case of EPS. It is also possible to indicate whether the
       problem belongs to a special type, e.g., symmetric or gyroscopic.
+
+:NEP: This component covers the case of general nonlinear eigenproblems,
+      T(lambda)x=0.
+
+:MFN: This component provides the functionality for computing the action
+      of a matrix function on a vector. Given a matrix A and a vector b,
+      the call MFNSolve(mfn,b,x) computes x=f(A)b, where f is a function
+      such as the exponential. 
 
 :ST:  The Spectral Transformation is a component that provides
       convenient implementations of common spectral

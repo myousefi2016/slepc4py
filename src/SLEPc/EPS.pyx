@@ -14,6 +14,7 @@ class EPSType(object):
     - `GD`:           Generalized Davidson.
     - `JD`:           Jacobi-Davidson.
     - `RQCG`:         Rayleigh Quotient Conjugate Gradient.
+    - `CISS`:         Contour Integral Spectrum Slicing.
     - `LAPACK`:       Wrappers to dense eigensolvers in Lapack.
 
     Wrappers to sparse eigensolvers
@@ -24,6 +25,7 @@ class EPSType(object):
     - `TRLAN`:
     - `BLOPEX`:
     - `PRIMME`:
+    - `FEAST`:
     """
     # provided implementations
     POWER        = S_(EPSPOWER)
@@ -34,6 +36,7 @@ class EPSType(object):
     GD           = S_(EPSGD)
     JD           = S_(EPSJD)
     RQCG         = S_(EPSRQCG)
+    CISS         = S_(EPSCISS)
     LAPACK       = S_(EPSLAPACK)
     # with external libraries
     ARPACK       = S_(EPSARPACK)
@@ -41,6 +44,7 @@ class EPSType(object):
     TRLAN        = S_(EPSTRLAN)
     BLOPEX       = S_(EPSBLOPEX)
     PRIMME       = S_(EPSPRIMME)
+    FEAST        = S_(EPSFEAST)
 
 class EPSProblemType(object):
     """
@@ -1407,7 +1411,6 @@ cdef class EPS(Object):
 
         Returns
         -------
-
         norm: real
               The residual norm, computed as ``||y'A-ky'B||_2`` where
               ``k`` is the eigenvalue and ``y`` is the left

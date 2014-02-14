@@ -287,7 +287,7 @@ cdef class ST(Object):
         cdef Py_ssize_t k=0, n = len(operators)
         cdef tmp = allocate(<size_t>n*sizeof(PetscMat),<void**>&mats)
         for k from 0 <= k < n: mats[k] = (<Mat?>operators[k]).mat
-        CHKERR( STSetOperators(self.st, n, mats) )
+        CHKERR( STSetOperators(self.st, <PetscInt>n, mats) )
 
     def getOperators(self):
         """

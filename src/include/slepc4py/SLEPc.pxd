@@ -14,6 +14,9 @@ cdef extern from "slepc.h":
     struct _p_DS
     ctypedef _p_DS* SlepcDS "DS"
 
+    struct _p_FN
+    ctypedef _p_FN* SlepcFN "FN"
+
     struct _p_EPS
     ctypedef _p_EPS* SlepcEPS "EPS"
 
@@ -22,6 +25,12 @@ cdef extern from "slepc.h":
 
     struct _p_QEP
     ctypedef _p_QEP* SlepcQEP "QEP"
+
+    struct _p_NEP
+    ctypedef _p_NEP* SlepcNEP "NEP"
+
+    struct _p_MFN
+    ctypedef _p_MFN* SlepcMFN "MFN"
 
 # -----------------------------------------------------------------------------
 
@@ -45,6 +54,12 @@ ctypedef public api class DS(Object) [
     ]:
     cdef SlepcDS ds
 
+ctypedef public api class FN(Object) [
+    type   PySlepcFN_Type,
+    object PySlepcFNObject,
+    ]:
+    cdef SlepcFN fn
+
 ctypedef public api class EPS(Object) [
     type PySlepcEPS_Type,
     object PySlepcEPSObject,
@@ -62,5 +77,17 @@ ctypedef public api class QEP(Object) [
     object PySlepcQEPObject,
     ]:
     cdef SlepcQEP qep
+
+ctypedef public api class NEP(Object) [
+    type   PySlepcNEP_Type,
+    object PySlepcNEPObject,
+    ]:
+    cdef SlepcNEP nep
+
+ctypedef public api class MFN(Object) [
+    type   PySlepcMFN_Type,
+    object PySlepcMFNObject,
+    ]:
+    cdef SlepcMFN mfn
 
 # -----------------------------------------------------------------------------

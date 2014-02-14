@@ -107,6 +107,13 @@ cdef inline object toScalar(PetscScalar value):
 cdef inline PetscScalar asScalar(object value) except*:
     return PyPetscScalar_AsPetscScalar(value)
 
+# --------------------------------------------------------------------
+
+cdef extern from "string.h"  nogil:
+    void* memset(void*,int,size_t)
+    void* memcpy(void*,void*,size_t)
+    char* strdup(char*)
+
 # -----------------------------------------------------------------------------
 
 include "slepcmpi.pxi"
@@ -114,9 +121,12 @@ include "slepcsys.pxi"
 include "slepcst.pxi"
 include "slepcip.pxi"
 include "slepcds.pxi"
+include "slepcfn.pxi"
 include "slepceps.pxi"
 include "slepcsvd.pxi"
 include "slepcqep.pxi"
+include "slepcnep.pxi"
+include "slepcmfn.pxi"
 
 # -----------------------------------------------------------------------------
 
@@ -133,9 +143,12 @@ include "Sys.pyx"
 include "ST.pyx"
 include "IP.pyx"
 include "DS.pyx"
+include "FN.pyx"
 include "EPS.pyx"
 include "SVD.pyx"
 include "QEP.pyx"
+include "NEP.pyx"
+include "MFN.pyx"
 
 # -----------------------------------------------------------------------------
 
@@ -166,9 +179,12 @@ cdef extern from *:
     PetscClassId SLEPC_ST_CLASSID  "ST_CLASSID"
     PetscClassId SLEPC_IP_CLASSID  "IP_CLASSID"
     PetscClassId SLEPC_DS_CLASSID  "DS_CLASSID"
+    PetscClassId SLEPC_FN_CLASSID  "FN_CLASSID"
     PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
     PetscClassId SLEPC_SVD_CLASSID "SVD_CLASSID"
     PetscClassId SLEPC_QEP_CLASSID "QEP_CLASSID"
+    PetscClassId SLEPC_NEP_CLASSID "NEP_CLASSID"
+    PetscClassId SLEPC_MFN_CLASSID "MFN_CLASSID"
 
 cdef int register(char path[]) except -1:
     # make sure all SLEPc packages are initialized
@@ -177,9 +193,12 @@ cdef int register(char path[]) except -1:
     PyPetscType_Register(SLEPC_ST_CLASSID,  ST)
     PyPetscType_Register(SLEPC_IP_CLASSID,  IP)
     PyPetscType_Register(SLEPC_DS_CLASSID,  DS)
+    PyPetscType_Register(SLEPC_FN_CLASSID,  FN)
     PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)
     PyPetscType_Register(SLEPC_SVD_CLASSID, SVD)
     PyPetscType_Register(SLEPC_QEP_CLASSID, QEP)
+    PyPetscType_Register(SLEPC_NEP_CLASSID, NEP)
+    PyPetscType_Register(SLEPC_MFN_CLASSID, MFN)
     return 0
 
 cdef void finalize() nogil:
