@@ -231,11 +231,12 @@ cdef class IP(Object):
         mat: the matrix of the inner product
         """
         cdef Mat mat = Mat()
-        CHKERR( IPGetMatrix(self.ip, &mat.mat) )
+        cdef PetscScalar sval = 1.0
+        CHKERR( IPGetMatrix(self.ip, &mat.mat, &sval) )
         PetscINCREF(mat.obj)
-        return mat
+        return mat, toScalar(sval)
 
-    def setMatrix(self, Mat mat):
+    def setMatrix(self, Mat mat, sfact=1.0):
         """
         Sets the bilinear form to be used for inner products.
 
@@ -246,7 +247,8 @@ cdef class IP(Object):
         """
         cdef PetscMat m = NULL
         if mat is not None: m = mat.mat
-        CHKERR( IPSetMatrix(self.ip, m) )
+        cdef PetscScalar sval = asScalar(sfact)
+        CHKERR( IPSetMatrix(self.ip, m, sval) )
 
     def applyMatrix(self, Vec x not None, Vec y not None):
         """

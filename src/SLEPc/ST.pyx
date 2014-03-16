@@ -15,7 +15,6 @@ class STType(object):
     SHIFT   = S_(STSHIFT)
     SINVERT = S_(STSINVERT)
     CAYLEY  = S_(STCAYLEY)
-    FOLD    = S_(STFOLD)
     PRECOND = S_(STPRECOND)
 
 class STMatMode(object):

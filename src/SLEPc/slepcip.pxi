@@ -29,8 +29,8 @@ cdef extern from * nogil:
     int IPSetOrthogonalization(SlepcIP,SlepcIPOrthogType,SlepcIPOrthogRefineType,PetscReal)
     int IPGetOrthogonalization(SlepcIP,SlepcIPOrthogType*,SlepcIPOrthogRefineType*,PetscReal*)
 
-    int IPSetMatrix(SlepcIP,PetscMat)
-    int IPGetMatrix(SlepcIP,PetscMat*)
+    int IPSetMatrix(SlepcIP,PetscMat,PetscScalar)
+    int IPGetMatrix(SlepcIP,PetscMat*,PetscScalar*)
     int IPApplyMatrix(SlepcIP,PetscVec,PetscVec)
 
     int IPNorm(SlepcIP,PetscVec,PetscReal*)
