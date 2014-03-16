@@ -229,7 +229,7 @@ cdef class MFN(Object):
         alpha: float
             The scaling factor.
         """
-        cdef PetscReal sval = asScalar(alpha)
+        cdef PetscScalar sval = asScalar(alpha)
         CHKERR( MFNSetScaleFactor(self.mfn, sval) )
 
     def getIP(self):
