@@ -173,9 +173,8 @@ cdef class MFN(Object):
         max_it: int, optional
             The maximum number of iterations
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( MFNGetTolerances(self.mfn, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( MFNSetTolerances(self.mfn, rval, ival) )

@@ -321,9 +321,8 @@ cdef class SVD(Object):
         Use `DECIDE` for `max_it` to assign a reasonably good value,
         which is dependent on the solution method.
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( SVDGetTolerances(self.svd, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( SVDSetTolerances(self.svd, rval, ival) )
@@ -382,10 +381,9 @@ cdef class SVD(Object):
         large, `mpd` = `nsv` is a reasonable choice, otherwise a
         smaller value should be used.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( SVDGetDimensions(self.svd, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nsv is not None: ival1 = asInt(nsv)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)

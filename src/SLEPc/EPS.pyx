@@ -489,10 +489,9 @@ cdef class EPS(Object):
         cutoff: real
                 Cutoff value
         """
-        cdef SlepcEPSBalance val = <SlepcEPSBalance>PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        cdef PetscReal rval = PETSC_DECIDE
-        CHKERR( EPSGetBalance(self.eps, &val, &ival, &rval) )
+        cdef SlepcEPSBalance val = <SlepcEPSBalance>PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
+        cdef PetscReal rval = PETSC_DEFAULT
         if balance    is not None: val  = balance
         if iterations is not None: ival = asInt(iterations)
         if cutoff     is not None: rval = asReal(cutoff)
@@ -682,9 +681,8 @@ cdef class EPS(Object):
         Use `DECIDE` for maxits to assign a reasonably good value,
         which is dependent on the solution method.
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( EPSGetTolerances(self.eps, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
@@ -771,10 +769,9 @@ cdef class EPS(Object):
         large, `mpd` = `nev` is a reasonable choice, otherwise a
         smaller value should be used.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( EPSGetDimensions(self.eps, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)

@@ -234,12 +234,11 @@ cdef class NEP(Object):
         maxf: int, optional
             The maximum number of function evaluations.
         """
-        cdef PetscReal rval1 = PETSC_DECIDE
-        cdef PetscReal rval2 = PETSC_DECIDE
-        cdef PetscReal rval3 = PETSC_DECIDE
-        cdef PetscInt  ival1 = PETSC_DECIDE
-        cdef PetscInt  ival2 = PETSC_DECIDE
-        CHKERR( NEPGetTolerances(self.nep, &rval1, &rval2, &rval3, &ival1, &ival2) )
+        cdef PetscReal rval1 = PETSC_DEFAULT
+        cdef PetscReal rval2 = PETSC_DEFAULT
+        cdef PetscReal rval3 = PETSC_DEFAULT
+        cdef PetscInt  ival1 = PETSC_DEFAULT
+        cdef PetscInt  ival2 = PETSC_DEFAULT
         if abstol is not None: rval1 = asReal(abstol)
         if rtol   is not None: rval2 = asReal(rtol)
         if stol   is not None: rval3 = asReal(stol)
@@ -337,10 +336,9 @@ cdef class NEP(Object):
         mpd: int, optional
             Maximum dimension allowed for the projected problem.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( NEPGetDimensions(self.nep, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)

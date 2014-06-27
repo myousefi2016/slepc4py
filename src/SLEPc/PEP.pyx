@@ -315,9 +315,8 @@ cdef class PEP(Object):
         max_it: int, optional
             The maximum number of iterations
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( PEPGetTolerances(self.pep, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( PEPSetTolerances(self.pep, rval, ival) )
@@ -384,10 +383,9 @@ cdef class PEP(Object):
         mpd: int, optional
             Maximum dimension allowed for the projected problem.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( PEPGetDimensions(self.pep, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
@@ -432,9 +430,9 @@ cdef class PEP(Object):
             Approximation of the wanted eigenvalues (modulus).
         """
         cdef SlepcPEPScale senum = scale
-        cdef PetscReal rval1, rval2
-        cdef PetscInt ival
-        CHKERR( PEPGetScale(self.pep, &senum, &rval1, &ival, &rval2) )
+        cdef PetscReal rval1 = PETSC_DEFAULT
+        cdef PetscInt ival = PETSC_DEFAULT
+        cdef PetscReal rval2 = PETSC_DEFAULT
         if alpha is not None: rval1 = asReal(alpha)
         if its is not None:   ival = asInt(its)
         if lbda is not None:  rval2 = asReal(lbda)
