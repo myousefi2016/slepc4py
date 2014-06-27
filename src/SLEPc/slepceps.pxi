@@ -111,8 +111,6 @@ cdef extern from * nogil:
     int EPSGetTrackAll(SlepcEPS,PetscBool*)
 
     int EPSSetDeflationSpace(SlepcEPS,PetscInt,PetscVec*)
-    int EPSRemoveDeflationSpace(SlepcEPS)
-
     int EPSSetInitialSpace(SlepcEPS,PetscInt,PetscVec*)
 
     int EPSMonitorCancel(SlepcEPS)

@@ -393,28 +393,37 @@ cdef class SVD(Object):
 
     def getBV(self):
         """
-        Obtain the basis vectors object associated to the SVD object.
+        Obtain the basis vectors objects associated to the SVD object.
 
         Returns
         -------
-        bv: BV
-            The basis vectors context.
+        V: BV
+            The basis vectors context for right singular vectors.
+        U: BV
+            The basis vectors context for left singular vectors.
         """
-        cdef BV bv = BV()
-        CHKERR( SVDGetBV(self.svd, &bv.bv) )
-        PetscINCREF(bv.obj)
-        return bv
+        cdef BV V = BV()
+        cdef BV U = BV()
+        CHKERR( SVDGetBV(self.svd, &V.bv, &U.bv) )
+        PetscINCREF(V.obj)
+        PetscINCREF(U.obj)
+        return (V,U)
 
-    def setBV(self, BV bv not None):
+    def setBV(self, BV V not None,BV U=None):
         """
-        Associates a basis vectors object to the SVD solver.
+        Associates basis vectors objects to the SVD solver.
 
         Parameters
         ----------
-        bv: BV
-            The basis vectors context.
+        V: BV
+            The basis vectors context for right singular vectors.
+        U: BV
+            The basis vectors context for left singular vectors.
         """
-        CHKERR( SVDSetBV(self.svd, bv.bv) )
+        cdef SlepcBV VBV = V.bv
+        cdef SlepcBV UBV = NULL
+        if U is not None: UBV = U.bv
+        CHKERR( SVDSetBV(self.svd, VBV, UBV) )
 
     def getOperator(self):
         """

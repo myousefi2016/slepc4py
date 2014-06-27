@@ -909,14 +909,11 @@ cdef class EPS(Object):
         instance in the case that an invariant subspace is known
         beforehand (such as the nullspace of the matrix).
 
-        Basis vectors set by a previous call to `setDeflationSpace()`
-        are replaced.
-
         The vectors do not need to be mutually orthonormal, since they
         are explicitly orthonormalized internally.
 
-        These vectors persist from one `solve()` call to the other,
-        use `removeDeflationSpace()` to eliminate them.
+        These vectors do not persist from one `solve()` call to the other,
+        so the deflation space should be set every time.
         """
         if isinstance(space, Vec): space = [space]
         cdef PetscVec* vs = NULL
@@ -924,13 +921,6 @@ cdef class EPS(Object):
         cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
         CHKERR( EPSSetDeflationSpace(self.eps, <PetscInt>ns, vs) )
-
-    def removeDeflationSpace(self):
-        """
-        Removes the deflation space previously set with
-        `setDeflationSpace()`.
-        """
-        CHKERR( EPSRemoveDeflationSpace(self.eps) )
 
     #
 

@@ -10,7 +10,7 @@ class DSType(object):
     GHIEP   = S_(DSGHIEP)
     GNHEP   = S_(DSGNHEP)
     SVD     = S_(DSSVD)
-    QEP     = S_(DSQEP)
+    NEP     = S_(DSNEP)
 
 class DSStateType(object):
     """
