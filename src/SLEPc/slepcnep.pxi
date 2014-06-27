@@ -87,7 +87,6 @@ cdef extern from * nogil:
 
     int NEPMonitorCancel(SlepcNEP)
     int NEPGetIterationNumber(SlepcNEP,PetscInt*)
-    int NEPGetOperationCounters(SlepcNEP,PetscInt*,PetscInt*,PetscInt*)
 
     int NEPSetInitialSpace(SlepcNEP,PetscInt,PetscVec*)
     int NEPSetWhichEigenpairs(SlepcNEP,SlepcNEPWhich)

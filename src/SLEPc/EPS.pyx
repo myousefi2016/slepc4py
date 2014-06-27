@@ -1419,38 +1419,6 @@ cdef class EPS(Object):
         CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
         return toReal(rval)
 
-    def getOperationCounters(self):
-        """
-        Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `ST` object
-        during the last `solve()` call.
-
-        Returns
-        -------
-        ops: int
-             number of operator applications.
-        dots: int
-             number of inner product operations.
-        lits: int
-             number of linear iterations.
-
-        Notes
-        -----
-        When the eigensolver algorithm invokes `ST.apply()` then a
-        linear system must be solved (except in the case of standard
-        eigenproblems and shift transformation). The number of
-        iterations required in this solve is accumulated into a
-        counter whose value is returned by this function.
-
-        These counters are reset to zero at each successive call to
-        `solve()`.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        cdef PetscInt ival3 = 0
-        CHKERR( EPSGetOperationCounters(self.eps, &ival1, &ival2, &ival3) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3))
-
     #
 
     def setPowerShiftType(self, shift):

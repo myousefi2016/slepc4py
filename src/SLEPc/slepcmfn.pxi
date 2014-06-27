@@ -40,7 +40,6 @@ cdef extern from * nogil:
 
     int MFNMonitorCancel(SlepcMFN)
     int MFNGetIterationNumber(SlepcMFN,PetscInt*)
-    int MFNGetOperationCounters(SlepcMFN,PetscInt*,PetscInt*,PetscInt*)
 
     int MFNGetConvergedReason(SlepcMFN,SlepcMFNConvergedReason*)
 

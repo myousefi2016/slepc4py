@@ -139,7 +139,6 @@ cdef extern from * nogil:
     int EPSComputeRelativeErrorLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
-    int EPSGetOperationCounters(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT

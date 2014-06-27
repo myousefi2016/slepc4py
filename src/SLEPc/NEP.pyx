@@ -539,27 +539,6 @@ cdef class NEP(Object):
         CHKERR( NEPComputeResidualNorm(self.nep, i, &rval) )
         return toReal(rval)
 
-    def getOperationCounters(self):
-        """
-        Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `NEP` object
-        during the last `solve()` call.
-
-        Returns
-        -------
-        ops: int
-            number of operator applications.
-        dots: int
-            number of inner product operations.
-        lits: int
-            number of linear iterations.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        cdef PetscInt ival3 = 0
-        CHKERR( NEPGetOperationCounters(self.nep, &ival1, &ival2, &ival3) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3))
-
     def setFunction(self, function, Mat F, Mat P=None, args=None, kargs=None):
         """
         Sets the function to compute the nonlinear Function T(lambda)

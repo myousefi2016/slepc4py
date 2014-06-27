@@ -677,28 +677,6 @@ cdef class SVD(Object):
         CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
         return (toReal(rval1), toReal(rval2))
 
-    def getOperationCounters(self):
-        """
-        Gets the total number of matrix-vector and dot products used
-        by the `SVD` object during the last `solve()` call.
-
-        Returns
-        -------
-        matvecs: int
-              number of matrix-vector product operations.
-        dots: int
-              number of dot product operations.
-
-        Notes
-        -----
-        These counters are reset to zero at each successive call to
-        `solve()`.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        CHKERR( SVDGetOperationCounters(self.svd, &ival1, &ival2) )
-        return (toInt(ival1), toInt(ival2))
-
     #
 
     def setCrossEPS(self, EPS eps not None):
