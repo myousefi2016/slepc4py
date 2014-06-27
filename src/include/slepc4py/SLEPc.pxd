@@ -23,8 +23,8 @@ cdef extern from "slepc.h":
     struct _p_SVD
     ctypedef _p_SVD* SlepcSVD "SVD"
 
-    struct _p_QEP
-    ctypedef _p_QEP* SlepcQEP "QEP"
+    struct _p_PEP
+    ctypedef _p_PEP* SlepcPEP "PEP"
 
     struct _p_NEP
     ctypedef _p_NEP* SlepcNEP "NEP"
@@ -72,11 +72,11 @@ ctypedef public api class SVD(Object) [
     ]:
     cdef SlepcSVD svd
 
-ctypedef public api class QEP(Object) [
-    type   PySlepcQEP_Type,
-    object PySlepcQEPObject,
+ctypedef public api class PEP(Object) [
+    type   PySlepcPEP_Type,
+    object PySlepcPEPObject,
     ]:
-    cdef SlepcQEP qep
+    cdef SlepcPEP pep
 
 ctypedef public api class NEP(Object) [
     type   PySlepcNEP_Type,

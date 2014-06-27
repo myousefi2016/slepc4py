@@ -9,7 +9,7 @@ static PetscErrorCode SlepcInitializePackageAll(void)
   PetscFunctionBegin;
   ierr = EPSInitializePackage();CHKERRQ(ierr);
   ierr = SVDInitializePackage();CHKERRQ(ierr);
-  ierr = QEPInitializePackage();CHKERRQ(ierr);
+  ierr = PEPInitializePackage();CHKERRQ(ierr);
   ierr = NEPInitializePackage();CHKERRQ(ierr);
   ierr = MFNInitializePackage();CHKERRQ(ierr);
   ierr = STInitializePackage();CHKERRQ(ierr);
