@@ -193,11 +193,9 @@ class EPSOrthType(object):
 
     - `I`: standard orthogonalization
     - `B`: B-orthogonalization
-    - `BOPT`: B-orthogonalization with optimized method
     """
     I         =  EPS_ORTH_I
     B         =  EPS_ORTH_B
-    BOPT      =  EPS_ORTH_BOPT
 
 # --------------------------------------------------------------------
 

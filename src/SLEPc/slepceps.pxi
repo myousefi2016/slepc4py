@@ -167,7 +167,6 @@ cdef extern from * nogil:
     ctypedef enum SlepcEPSOrthType "EPSOrthType":
         EPS_ORTH_I
         EPS_ORTH_B
-        EPS_ORTH_BOPT
     int EPSGDSetKrylovStart(SlepcEPS,PetscBool)
     int EPSGDGetKrylovStart(SlepcEPS,PetscBool*)
     int EPSGDSetBlockSize(SlepcEPS,PetscInt)
