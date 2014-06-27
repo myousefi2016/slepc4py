@@ -88,8 +88,6 @@ cdef extern from * nogil:
     int EPSGetBalance(SlepcEPS,SlepcEPSBalance*,PetscInt*,PetscReal*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
     int EPSGetWhichEigenpairs(SlepcEPS,SlepcEPSWhich*)
-    int EPSSetLeftVectorsWanted(SlepcEPS,PetscBool)
-    int EPSGetLeftVectorsWanted(SlepcEPS,PetscBool*)
     int EPSSetTarget(SlepcEPS,PetscScalar)
     int EPSGetTarget(SlepcEPS,PetscScalar*)
     int EPSSetInterval(SlepcEPS,PetscReal,PetscReal)
@@ -116,7 +114,6 @@ cdef extern from * nogil:
     int EPSRemoveDeflationSpace(SlepcEPS)
 
     int EPSSetInitialSpace(SlepcEPS,PetscInt,PetscVec*)
-    int EPSSetInitialSpaceLeft(SlepcEPS,PetscInt,PetscVec*)
 
     int EPSMonitorCancel(SlepcEPS)
 
@@ -128,17 +125,12 @@ cdef extern from * nogil:
     int EPSGetConverged(SlepcEPS,PetscInt*)
     int EPSGetEigenvalue(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*)
     int EPSGetEigenvector(SlepcEPS,PetscInt,PetscVec,PetscVec)
-    int EPSGetEigenvectorLeft(SlepcEPS,PetscInt,PetscVec,PetscVec)
     int EPSGetEigenpair(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
-    int EPSGetInvariantSubspaceLeft(SlepcEPS,PetscVec*)
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
-    int EPSGetErrorEstimateLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeRelativeError(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeRelativeErrorLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT

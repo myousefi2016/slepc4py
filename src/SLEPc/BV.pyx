@@ -70,12 +70,6 @@ cdef class BV(Object):
         self.bv = NULL
         return self
 
-    def reset(self):
-        """
-        Resets the BV object.
-        """
-        CHKERR( BVReset(self.bv) )
-
     def create(self, comm=None):
         """
         Creates the BV object.

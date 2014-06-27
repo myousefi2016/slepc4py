@@ -18,7 +18,6 @@ cdef extern from * nogil:
     int BVCreate(MPI_Comm,SlepcBV*)
     int BVView(SlepcBV,PetscViewer)
     int BVDestroy(SlepcBV*)
-    int BVReset(SlepcBV)
     int BVSetType(SlepcBV,SlepcBVType)
     int BVGetType(SlepcBV,SlepcBVType*)
     int BVSetSizes(SlepcBV,PetscInt,PetscInt,PetscInt)
