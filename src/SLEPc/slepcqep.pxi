@@ -45,8 +45,8 @@ cdef extern from * nogil:
     int QEPSetUp(SlepcQEP)
     int QEPSolve(SlepcQEP)
 
-    int QEPSetIP(SlepcQEP,SlepcIP)
-    int QEPGetIP(SlepcQEP,SlepcIP*)
+    int QEPSetBV(SlepcQEP,SlepcBV)
+    int QEPGetBV(SlepcQEP,SlepcBV*)
     int QEPSetTolerances(SlepcQEP,PetscReal,PetscInt)
     int QEPGetTolerances(SlepcQEP,PetscReal*,PetscInt*)
 

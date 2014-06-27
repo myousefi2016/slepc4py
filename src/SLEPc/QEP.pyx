@@ -375,30 +375,30 @@ cdef class QEP(Object):
         cdef PetscReal rval = asReal(alpha)
         CHKERR( QEPSetScaleFactor(self.qep, rval) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the eigensolver.
+        Obtain the basis vectors object associated to the eigensolver.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( QEPGetIP(self.qep, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( QEPGetBV(self.qep, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the eigensolver.
+        Associates a basis vectors object to the eigensolver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( QEPSetIP(self.qep, ip.ip) )
+        CHKERR( QEPSetBV(self.qep, bv.bv) )
 
     def getOperators(self):
         """

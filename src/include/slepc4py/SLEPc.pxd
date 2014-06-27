@@ -8,8 +8,8 @@ cdef extern from "slepc.h":
     struct _p_ST
     ctypedef _p_ST* SlepcST "ST"
 
-    struct _p_IP
-    ctypedef _p_IP* SlepcIP "IP"
+    struct _p_BV
+    ctypedef _p_BV* SlepcBV "BV"
 
     struct _p_DS
     ctypedef _p_DS* SlepcDS "DS"
@@ -42,11 +42,11 @@ ctypedef public api class ST(Object) [
     ]:
     cdef SlepcST st
 
-ctypedef public api class IP(Object) [
-    type   PySlepcIP_Type,
-    object PySlepcIPObject,
+ctypedef public api class BV(Object) [
+    type   PySlepcBV_Type,
+    object PySlepcBVObject,
     ]:
-    cdef SlepcIP ip
+    cdef SlepcBV bv
 
 ctypedef public api class DS(Object) [
     type   PySlepcDS_Type,

@@ -64,8 +64,8 @@ cdef extern from * nogil:
     int NEPGetSplitOperatorTerm(SlepcNEP,PetscInt,PetscMat*,SlepcFN*)
     int NEPGetSplitOperatorInfo(SlepcNEP,PetscInt*,PetscMatStructure*)
 
-    int NEPSetIP(SlepcNEP,SlepcIP)
-    int NEPGetIP(SlepcNEP,SlepcIP*)
+    int NEPSetBV(SlepcNEP,SlepcBV)
+    int NEPGetBV(SlepcNEP,SlepcBV*)
     int NEPSetTolerances(SlepcNEP,PetscReal,PetscReal,PetscReal,PetscInt,PetscInt)
     int NEPGetTolerances(SlepcNEP,PetscReal*,PetscReal*,PetscReal*,PetscInt*,PetscInt*)
 

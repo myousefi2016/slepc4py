@@ -32,8 +32,8 @@ cdef extern from * nogil:
     int SVDGetOptionsPrefix(SlepcSVD,char*[])
     int SVDSetFromOptions(SlepcSVD)
 
-    int SVDSetIP(SlepcSVD,SlepcIP)
-    int SVDGetIP(SlepcSVD,SlepcIP*)
+    int SVDSetBV(SlepcSVD,SlepcBV)
+    int SVDGetBV(SlepcSVD,SlepcBV*)
 
     int SVDSetOperator(SlepcSVD,PetscMat)
     int SVDGetOperator(SlepcSVD,PetscMat*)

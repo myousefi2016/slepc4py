@@ -119,7 +119,7 @@ cdef extern from "string.h"  nogil:
 include "slepcmpi.pxi"
 include "slepcsys.pxi"
 include "slepcst.pxi"
-include "slepcip.pxi"
+include "slepcbv.pxi"
 include "slepcds.pxi"
 include "slepcfn.pxi"
 include "slepceps.pxi"
@@ -141,7 +141,7 @@ DETERMINE = PETSC_DETERMINE
 
 include "Sys.pyx"
 include "ST.pyx"
-include "IP.pyx"
+include "BV.pyx"
 include "DS.pyx"
 include "FN.pyx"
 include "EPS.pyx"
@@ -177,7 +177,7 @@ cdef extern from *:
     int SlepcInitializePackageAll()
     ctypedef int PetscClassId
     PetscClassId SLEPC_ST_CLASSID  "ST_CLASSID"
-    PetscClassId SLEPC_IP_CLASSID  "IP_CLASSID"
+    PetscClassId SLEPC_BV_CLASSID  "BV_CLASSID"
     PetscClassId SLEPC_DS_CLASSID  "DS_CLASSID"
     PetscClassId SLEPC_FN_CLASSID  "FN_CLASSID"
     PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
@@ -191,7 +191,7 @@ cdef int register(char path[]) except -1:
     CHKERR( SlepcInitializePackageAll() )
     # register Python types
     PyPetscType_Register(SLEPC_ST_CLASSID,  ST)
-    PyPetscType_Register(SLEPC_IP_CLASSID,  IP)
+    PyPetscType_Register(SLEPC_BV_CLASSID,  BV)
     PyPetscType_Register(SLEPC_DS_CLASSID,  DS)
     PyPetscType_Register(SLEPC_FN_CLASSID,  FN)
     PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)

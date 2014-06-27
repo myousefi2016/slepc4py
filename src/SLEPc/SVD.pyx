@@ -391,30 +391,30 @@ cdef class SVD(Object):
         if mpd is not None: ival3 = asInt(mpd)
         CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival3) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product object associated to the SVD object.
+        Obtain the basis vectors object associated to the SVD object.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( SVDGetIP(self.svd, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( SVDGetBV(self.svd, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product object to the SVD solver.
+        Associates a basis vectors object to the SVD solver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( SVDSetIP(self.svd, ip.ip) )
+        CHKERR( SVDSetBV(self.svd, bv.bv) )
 
     def getOperator(self):
         """
@@ -852,11 +852,11 @@ cdef class SVD(Object):
         def __set__(self, value):
             self.setTolerances(max_it=value)
 
-    property ip:
+    property bv:
         def __get__(self):
-            return self.getIP()
+            return self.getBV()
         def __set__(self, value):
-            self.setIP(value)
+            self.setBV(value)
 
 # -----------------------------------------------------------------------------
 

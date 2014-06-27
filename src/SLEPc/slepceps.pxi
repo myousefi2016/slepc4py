@@ -99,8 +99,8 @@ cdef extern from * nogil:
     int EPSSetDimensions(SlepcEPS,PetscInt,PetscInt,PetscInt)
     int EPSGetDimensions(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
-    int EPSSetIP(SlepcEPS,SlepcIP)
-    int EPSGetIP(SlepcEPS,SlepcIP*)
+    int EPSSetBV(SlepcEPS,SlepcBV)
+    int EPSGetBV(SlepcEPS,SlepcBV*)
     int EPSSetDS(SlepcEPS,SlepcDS)
     int EPSGetDS(SlepcEPS,SlepcDS*)
     int EPSSetST(SlepcEPS,SlepcST)

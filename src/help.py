@@ -63,11 +63,11 @@ def help(args=None):
         st.setFromOptions()
         st.destroy()
         del st
-    if 'ip' in args:
-        ip = SLEPc.IP().create(comm=COMM)
-        ip.setFromOptions()
-        ip.destroy()
-        del ip
+    if 'bv' in args:
+        bv = SLEPc.BV().create(comm=COMM)
+        bv.setFromOptions()
+        bv.destroy()
+        del bv
 
 if __name__ == '__main__':
     help()

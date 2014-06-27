@@ -11,7 +11,7 @@
 %init   %{import_slepc4py();%}
 
 %define SWIG_TYPECHECK_SLEPC_ST  550 %enddef
-%define SWIG_TYPECHECK_SLEPC_IP  551 %enddef
+%define SWIG_TYPECHECK_SLEPC_BV  551 %enddef
 %define SWIG_TYPECHECK_SLEPC_DS  552 %enddef
 %define SWIG_TYPECHECK_SLEPC_EPS 553 %enddef
 %define SWIG_TYPECHECK_SLEPC_SVD 554 %enddef
@@ -27,7 +27,7 @@
 /* ---------------------------------------------------------------- */
 
 %slepc4py_objt( Slepc , ST ,  ST ,  SLEPC_ST ,  PETSC_NULL )
-%slepc4py_objt( Slepc , IP ,  IP ,  SLEPC_IP ,  PETSC_NULL )
+%slepc4py_objt( Slepc , BV ,  BV ,  SLEPC_BV ,  PETSC_NULL )
 %slepc4py_objt( Slepc , DS ,  DS ,  SLEPC_DS ,  PETSC_NULL )
 %slepc4py_objt( Slepc , EPS , EPS , SLEPC_EPS , PETSC_NULL )
 %slepc4py_objt( Slepc , SVD , SVD , SLEPC_SVD , PETSC_NULL )

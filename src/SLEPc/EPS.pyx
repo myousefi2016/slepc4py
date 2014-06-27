@@ -836,30 +836,30 @@ cdef class EPS(Object):
         """
         CHKERR( EPSSetST(self.eps, st.st) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the eigensolver.
+        Obtain the basis vector objects associated to the eigensolver.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( EPSGetIP(self.eps, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( EPSGetBV(self.eps, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the eigensolver.
+        Associates a basis vectors object to the eigensolver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( EPSSetIP(self.eps, ip.ip) )
+        CHKERR( EPSSetBV(self.eps, bv.bv) )
 
     def getDS(self):
         """
@@ -1672,11 +1672,11 @@ cdef class EPS(Object):
         def __set__(self, value):
             self.setST(value)
 
-    property ip:
+    property bv:
         def __get__(self):
-            return self.getIP()
+            return self.getBV()
         def __set__(self, value):
-            self.setIP(value)
+            self.setBV(value)
 
 # -----------------------------------------------------------------------------
 
