@@ -44,6 +44,7 @@ def solve_eigensystem(A, problem_type=SLEPc.EPS.ProblemType.HEP):
     E.setOperators(A,None)
     E.setDimensions(3,PETSc.DECIDE)
     E.setProblemType( problem_type )
+    E.setFromOptions()
 
     # Solve the eigensystem
     E.solve()
