@@ -193,11 +193,9 @@ class EPSOrthType(object):
 
     - `I`: standard orthogonalization
     - `B`: B-orthogonalization
-    - `BOPT`: B-orthogonalization with optimized method
     """
     I         =  EPS_ORTH_I
     B         =  EPS_ORTH_B
-    BOPT      =  EPS_ORTH_BOPT
 
 # --------------------------------------------------------------------
 
@@ -491,10 +489,9 @@ cdef class EPS(Object):
         cutoff: real
                 Cutoff value
         """
-        cdef SlepcEPSBalance val = <SlepcEPSBalance>PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        cdef PetscReal rval = PETSC_DECIDE
-        CHKERR( EPSGetBalance(self.eps, &val, &ival, &rval) )
+        cdef SlepcEPSBalance val = <SlepcEPSBalance>PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
+        cdef PetscReal rval = PETSC_DEFAULT
         if balance    is not None: val  = balance
         if iterations is not None: ival = asInt(iterations)
         if cutoff     is not None: rval = asReal(cutoff)
@@ -569,33 +566,6 @@ cdef class EPS(Object):
         """
         cdef SlepcEPSWhich val = which
         CHKERR( EPSSetWhichEigenpairs(self.eps, val) )
-
-    def getLeftVectorsWanted(self):
-        """
-        Returns the flag indicating whether left eigenvectors are
-        required or not.
-
-        Returns
-        -------
-        wanted: boolean
-                Whether left eigenvectors are required or not.
-        """
-        cdef PetscBool tval = PETSC_FALSE
-        CHKERR( EPSGetLeftVectorsWanted(self.eps, &tval) )
-        return <bint>tval
-
-    def setLeftVectorsWanted(self, wanted):
-        """
-        Specifies the flag indicating whether left eigenvectors are
-        required or not.
-
-        Parameters
-        ----------
-        wanted: boolean
-                Whether left eigenvectors are required or not.
-        """
-        cdef PetscBool tval = wanted
-        CHKERR( EPSSetLeftVectorsWanted(self.eps, tval) )
 
     def getTarget(self):
         """
@@ -711,9 +681,8 @@ cdef class EPS(Object):
         Use `DECIDE` for maxits to assign a reasonably good value,
         which is dependent on the solution method.
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( EPSGetTolerances(self.eps, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
@@ -800,10 +769,9 @@ cdef class EPS(Object):
         large, `mpd` = `nev` is a reasonable choice, otherwise a
         smaller value should be used.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( EPSGetDimensions(self.eps, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
@@ -836,30 +804,30 @@ cdef class EPS(Object):
         """
         CHKERR( EPSSetST(self.eps, st.st) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the eigensolver.
+        Obtain the basis vector objects associated to the eigensolver.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( EPSGetIP(self.eps, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( EPSGetBV(self.eps, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the eigensolver.
+        Associates a basis vectors object to the eigensolver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( EPSSetIP(self.eps, ip.ip) )
+        CHKERR( EPSSetBV(self.eps, bv.bv) )
 
     def getDS(self):
         """
@@ -938,14 +906,11 @@ cdef class EPS(Object):
         instance in the case that an invariant subspace is known
         beforehand (such as the nullspace of the matrix).
 
-        Basis vectors set by a previous call to `setDeflationSpace()`
-        are replaced.
-
         The vectors do not need to be mutually orthonormal, since they
         are explicitly orthonormalized internally.
 
-        These vectors persist from one `solve()` call to the other,
-        use `removeDeflationSpace()` to eliminate them.
+        These vectors do not persist from one `solve()` call to the other,
+        so the deflation space should be set every time.
         """
         if isinstance(space, Vec): space = [space]
         cdef PetscVec* vs = NULL
@@ -953,13 +918,6 @@ cdef class EPS(Object):
         cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
         CHKERR( EPSSetDeflationSpace(self.eps, <PetscInt>ns, vs) )
-
-    def removeDeflationSpace(self):
-        """
-        Removes the deflation space previously set with
-        `setDeflationSpace()`.
-        """
-        CHKERR( EPSRemoveDeflationSpace(self.eps) )
 
     #
 
@@ -994,24 +952,6 @@ cdef class EPS(Object):
         cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
         CHKERR( EPSSetInitialSpace(self.eps, <PetscInt>ns, vs) )
-
-    def setInitialSpaceLeft(self, space):
-        """
-        Sets a basis of vectors that constitute the initial left space, that
-        is, the subspace from which the solver starts to iterate for building
-        the left subspace (in methods that work with two subspaces).
-
-        Parameters
-        ----------
-        space: Vec or sequence of Vec
-           The initial space
-        """
-        if isinstance(space, Vec): space = [space]
-        cdef PetscVec *vs = NULL
-        cdef Py_ssize_t i = 0, ns = len(space)
-        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
-        CHKERR( EPSSetInitialSpaceLeft(self.eps, <PetscInt>ns, vs) )
 
     #
 
@@ -1213,67 +1153,6 @@ cdef class EPS(Object):
 
     #
 
-    def getEigenvectorLeft(self, int i, Vec Wr not None, Vec Wi=None):
-        """
-        Gets the i-th left eigenvector as computed by `solve()`,
-        (only available in two-sided eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be obtained.
-        Wr: Vec
-            Placeholder for the returned left eigenvector (real part).
-        Wi: Vec, optional
-            Placeholder for the returned left eigenvector (imaginary
-            part).
-
-        Notes
-        -----
-        The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
-        according to the ordering criterion established with
-        `setWhichEigenpairs()`.
-        """
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Wr is not None: vecr = Wr.vec
-        if Wi is not None: veci = Wi.vec
-        CHKERR( EPSGetEigenvectorLeft(self.eps, i, vecr, veci) )
-
-    def getInvariantSubspaceLeft(self):
-        """
-        Gets an orthonormal basis of the computed left invariant
-        subspace (only available in two-sided eigensolvers).
-
-        Returns
-        -------
-        subspace: list of Vec
-           Basis of the left invariant subspace.
-
-        Notes
-        -----
-        See `getInvariantSubspace()` for additional information.
-        """
-        cdef PetscInt i = 0, ncv = 0
-        cdef PetscVec w = NULL, *isp = NULL
-        cdef list subspace = []
-        CHKERR( EPSGetConverged(self.eps, &ncv) )
-        if ncv == 0: return subspace
-        cdef PetscMat A = NULL
-        CHKERR( EPSGetOperators(self.eps, &A, NULL) )
-        CHKERR( MatGetVecs(A, &w, NULL) )
-        cdef Vec W = None
-        cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
-        for i in range(ncv):
-            if i == 0: isp[0] = w
-            if i >= 1: CHKERR( VecDuplicate(w, &isp[i]) )
-            W = Vec(); W.vec = isp[i]; subspace.append(W)
-        CHKERR( EPSGetInvariantSubspaceLeft(self.eps, isp) )
-        return subspace
-
-    #
-
     def getErrorEstimate(self, int i):
         """
         Returns the error estimate associated to the i-th computed
@@ -1297,31 +1176,6 @@ cdef class EPS(Object):
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
-        return toReal(rval)
-
-    def getErrorEstimateLeft(self, int i):
-        """
-        Returns the left error estimate associated to the i-th
-        computed eigenpair (only available in two-sided eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        e: real
-           Left error estimate.
-
-        Notes
-        -----
-        This is the error estimate used internally by the
-        eigensolver. The actual error bound can be computed with
-        `computeRelativeError()`.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSGetErrorEstimateLeft(self.eps, i, &rval) )
         return toReal(rval)
 
     def computeRelativeError(self, int i):
@@ -1353,29 +1207,6 @@ cdef class EPS(Object):
         CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
         return toReal(rval)
 
-    def computeRelativeErrorLeft(self, int i):
-        """
-        Computes the left relative error bound associated with the
-        i-th computed eigenpair (only available in two-sided
-        eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        e: real
-           The relative error bound, computed as
-           ``||y'A-ky'B||_2/||ky||_2`` where ``k`` is the eigenvalue
-           and ``y`` is the left eigenvector.  If ``k=0`` the relative
-           error is computed as ``||y'A||_2/||y||_2``.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSComputeRelativeErrorLeft(self.eps, i, &rval) )
-        return toReal(rval)
-
     def computeResidualNorm(self, int i):
         """
         Computes the norm of the residual vector associated with the
@@ -1397,61 +1228,6 @@ cdef class EPS(Object):
         cdef PetscReal rval = 0
         CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
         return toReal(rval)
-
-    def computeResidualNormLeft(self, int i):
-        """
-        Computes the norm of the residual vector associated with the
-        i-th computed left eigenpair (only available in two-sided
-        eigensolvers).
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        norm: real
-              The residual norm, computed as ``||y'A-ky'B||_2`` where
-              ``k`` is the eigenvalue and ``y`` is the left
-              eigenvector.  If ``k=0`` then the residual norm is
-              computed as ``||y'A||_2``.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSComputeResidualNormLeft(self.eps, i, &rval) )
-        return toReal(rval)
-
-    def getOperationCounters(self):
-        """
-        Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `ST` object
-        during the last `solve()` call.
-
-        Returns
-        -------
-        ops: int
-             number of operator applications.
-        dots: int
-             number of inner product operations.
-        lits: int
-             number of linear iterations.
-
-        Notes
-        -----
-        When the eigensolver algorithm invokes `ST.apply()` then a
-        linear system must be solved (except in the case of standard
-        eigenproblems and shift transformation). The number of
-        iterations required in this solve is accumulated into a
-        counter whose value is returned by this function.
-
-        These counters are reset to zero at each successive call to
-        `solve()`.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        cdef PetscInt ival3 = 0
-        CHKERR( EPSGetOperationCounters(self.eps, &ival1, &ival2, &ival3) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     #
 
@@ -1672,11 +1448,11 @@ cdef class EPS(Object):
         def __set__(self, value):
             self.setST(value)
 
-    property ip:
+    property bv:
         def __get__(self):
-            return self.getIP()
+            return self.getBV()
         def __set__(self, value):
-            self.setIP(value)
+            self.setBV(value)
 
 # -----------------------------------------------------------------------------
 

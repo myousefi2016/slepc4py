@@ -29,15 +29,13 @@ cdef extern from * nogil:
 
     ctypedef int (*SlepcNEPFunction)(SlepcNEP,
                                      PetscScalar,
-                                     PetscMat*,
-                                     PetscMat*,
-                                     PetscMatStructure*,
+                                     PetscMat,
+                                     PetscMat,
                                      void*) except PETSC_ERR_PYTHON
 
     ctypedef int (*SlepcNEPJacobian)(SlepcNEP,
                                      PetscScalar,
-                                     PetscMat*,
-                                     PetscMatStructure*,
+                                     PetscMat,
                                      void*) except PETSC_ERR_PYTHON
 
     int NEPCreate(MPI_Comm,SlepcNEP*)
@@ -64,8 +62,8 @@ cdef extern from * nogil:
     int NEPGetSplitOperatorTerm(SlepcNEP,PetscInt,PetscMat*,SlepcFN*)
     int NEPGetSplitOperatorInfo(SlepcNEP,PetscInt*,PetscMatStructure*)
 
-    int NEPSetIP(SlepcNEP,SlepcIP)
-    int NEPGetIP(SlepcNEP,SlepcIP*)
+    int NEPSetBV(SlepcNEP,SlepcBV)
+    int NEPGetBV(SlepcNEP,SlepcBV*)
     int NEPSetTolerances(SlepcNEP,PetscReal,PetscReal,PetscReal,PetscInt,PetscInt)
     int NEPGetTolerances(SlepcNEP,PetscReal*,PetscReal*,PetscReal*,PetscInt*,PetscInt*)
 
@@ -87,7 +85,6 @@ cdef extern from * nogil:
 
     int NEPMonitorCancel(SlepcNEP)
     int NEPGetIterationNumber(SlepcNEP,PetscInt*)
-    int NEPGetOperationCounters(SlepcNEP,PetscInt*,PetscInt*,PetscInt*)
 
     int NEPSetInitialSpace(SlepcNEP,PetscInt,PetscVec*)
     int NEPSetWhichEigenpairs(SlepcNEP,SlepcNEPWhich)
@@ -123,20 +120,18 @@ cdef inline NEP ref_NEP(SlepcNEP nep):
 cdef int NEP_Function(
     SlepcNEP    nep,
     PetscScalar mu,
-    PetscMat*   A,
-    PetscMat*   B,
-    PetscMatStructure* s,
+    PetscMat    A,
+    PetscMat    B,
     void*       ctx,
     ) except PETSC_ERR_PYTHON with gil:
     cdef NEP Nep  = ref_NEP(nep)
-    cdef Mat Amat = ref_Mat(A[0])
-    cdef Mat Bmat = ref_Mat(B[0])
+    cdef Mat Amat = ref_Mat(A)
+    cdef Mat Bmat = ref_Mat(B)
     (function, args, kargs) = Nep.get_attr('__function__')
     retv = function(Nep, mu, Amat, Bmat, *args, **kargs)
-    s[0] = matstructure(retv)
     cdef PetscMat Atmp = NULL, Btmp = NULL
-    Atmp = A[0]; A[0] = Amat.mat; Amat.mat = Atmp
-    Btmp = B[0]; B[0] = Bmat.mat; Bmat.mat = Btmp
+    Atmp = A; A = Amat.mat; Amat.mat = Atmp
+    Btmp = B; B = Bmat.mat; Bmat.mat = Btmp
     return 0
 
 # -----------------------------------------------------------------------------
@@ -144,16 +139,14 @@ cdef int NEP_Function(
 cdef int NEP_Jacobian(
     SlepcNEP    nep,
     PetscScalar mu,
-    PetscMat*   J,
-    PetscMatStructure* s,
+    PetscMat    J,
     void*       ctx,
     ) except PETSC_ERR_PYTHON with gil:
     cdef NEP Nep  = ref_NEP(nep)
-    cdef Mat Jmat = ref_Mat(J[0])
+    cdef Mat Jmat = ref_Mat(J)
     (jacobian, args, kargs) = Nep.get_attr('__jacobian__')
     retv = jacobian(Nep, mu, Jmat, *args, **kargs)
-    s[0] = matstructure(retv)
     cdef PetscMat Jtmp = NULL
-    Jtmp = J[0]; J[0] = Jmat.mat; Jmat.mat = Jtmp
+    Jtmp = J; J = Jmat.mat; Jmat.mat = Jtmp
     return 0
 

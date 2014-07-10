@@ -32,8 +32,8 @@ cdef extern from * nogil:
     int SVDGetOptionsPrefix(SlepcSVD,char*[])
     int SVDSetFromOptions(SlepcSVD)
 
-    int SVDSetIP(SlepcSVD,SlepcIP)
-    int SVDGetIP(SlepcSVD,SlepcIP*)
+    int SVDSetBV(SlepcSVD,SlepcBV,SlepcBV)
+    int SVDGetBV(SlepcSVD,SlepcBV*,SlepcBV*)
 
     int SVDSetOperator(SlepcSVD,PetscMat)
     int SVDGetOperator(SlepcSVD,PetscMat*)
@@ -59,7 +59,6 @@ cdef extern from * nogil:
     int SVDGetSingularTriplet(SlepcSVD,PetscInt,PetscReal*,PetscVec,PetscVec)
     int SVDComputeResidualNorms(SlepcSVD,PetscInt,PetscReal*,PetscReal*)
     int SVDComputeRelativeError(SlepcSVD,PetscInt,PetscReal*)
-    int SVDGetOperationCounters(SlepcSVD,PetscInt*,PetscInt*)
 
     int SVDCrossSetEPS(SlepcSVD,SlepcEPS)
     int SVDCrossGetEPS(SlepcSVD,SlepcEPS*)

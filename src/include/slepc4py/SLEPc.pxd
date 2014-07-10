@@ -8,8 +8,8 @@ cdef extern from "slepc.h":
     struct _p_ST
     ctypedef _p_ST* SlepcST "ST"
 
-    struct _p_IP
-    ctypedef _p_IP* SlepcIP "IP"
+    struct _p_BV
+    ctypedef _p_BV* SlepcBV "BV"
 
     struct _p_DS
     ctypedef _p_DS* SlepcDS "DS"
@@ -23,8 +23,8 @@ cdef extern from "slepc.h":
     struct _p_SVD
     ctypedef _p_SVD* SlepcSVD "SVD"
 
-    struct _p_QEP
-    ctypedef _p_QEP* SlepcQEP "QEP"
+    struct _p_PEP
+    ctypedef _p_PEP* SlepcPEP "PEP"
 
     struct _p_NEP
     ctypedef _p_NEP* SlepcNEP "NEP"
@@ -42,11 +42,11 @@ ctypedef public api class ST(Object) [
     ]:
     cdef SlepcST st
 
-ctypedef public api class IP(Object) [
-    type   PySlepcIP_Type,
-    object PySlepcIPObject,
+ctypedef public api class BV(Object) [
+    type   PySlepcBV_Type,
+    object PySlepcBVObject,
     ]:
-    cdef SlepcIP ip
+    cdef SlepcBV bv
 
 ctypedef public api class DS(Object) [
     type   PySlepcDS_Type,
@@ -72,11 +72,11 @@ ctypedef public api class SVD(Object) [
     ]:
     cdef SlepcSVD svd
 
-ctypedef public api class QEP(Object) [
-    type   PySlepcQEP_Type,
-    object PySlepcQEPObject,
+ctypedef public api class PEP(Object) [
+    type   PySlepcPEP_Type,
+    object PySlepcPEPObject,
     ]:
-    cdef SlepcQEP qep
+    cdef SlepcPEP pep
 
 ctypedef public api class NEP(Object) [
     type   PySlepcNEP_Type,

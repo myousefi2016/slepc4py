@@ -88,8 +88,6 @@ cdef extern from * nogil:
     int EPSGetBalance(SlepcEPS,SlepcEPSBalance*,PetscInt*,PetscReal*)
     int EPSSetWhichEigenpairs(SlepcEPS,SlepcEPSWhich)
     int EPSGetWhichEigenpairs(SlepcEPS,SlepcEPSWhich*)
-    int EPSSetLeftVectorsWanted(SlepcEPS,PetscBool)
-    int EPSGetLeftVectorsWanted(SlepcEPS,PetscBool*)
     int EPSSetTarget(SlepcEPS,PetscScalar)
     int EPSGetTarget(SlepcEPS,PetscScalar*)
     int EPSSetInterval(SlepcEPS,PetscReal,PetscReal)
@@ -99,8 +97,8 @@ cdef extern from * nogil:
     int EPSSetDimensions(SlepcEPS,PetscInt,PetscInt,PetscInt)
     int EPSGetDimensions(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
-    int EPSSetIP(SlepcEPS,SlepcIP)
-    int EPSGetIP(SlepcEPS,SlepcIP*)
+    int EPSSetBV(SlepcEPS,SlepcBV)
+    int EPSGetBV(SlepcEPS,SlepcBV*)
     int EPSSetDS(SlepcEPS,SlepcDS)
     int EPSGetDS(SlepcEPS,SlepcDS*)
     int EPSSetST(SlepcEPS,SlepcST)
@@ -113,10 +111,7 @@ cdef extern from * nogil:
     int EPSGetTrackAll(SlepcEPS,PetscBool*)
 
     int EPSSetDeflationSpace(SlepcEPS,PetscInt,PetscVec*)
-    int EPSRemoveDeflationSpace(SlepcEPS)
-
     int EPSSetInitialSpace(SlepcEPS,PetscInt,PetscVec*)
-    int EPSSetInitialSpaceLeft(SlepcEPS,PetscInt,PetscVec*)
 
     int EPSMonitorCancel(SlepcEPS)
 
@@ -128,18 +123,12 @@ cdef extern from * nogil:
     int EPSGetConverged(SlepcEPS,PetscInt*)
     int EPSGetEigenvalue(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*)
     int EPSGetEigenvector(SlepcEPS,PetscInt,PetscVec,PetscVec)
-    int EPSGetEigenvectorLeft(SlepcEPS,PetscInt,PetscVec,PetscVec)
     int EPSGetEigenpair(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
-    int EPSGetInvariantSubspaceLeft(SlepcEPS,PetscVec*)
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
-    int EPSGetErrorEstimateLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeRelativeError(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeRelativeErrorLeft(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeResidualNormLeft(SlepcEPS,PetscInt,PetscReal*)
-    int EPSGetOperationCounters(SlepcEPS,PetscInt*,PetscInt*,PetscInt*)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT
@@ -167,7 +156,6 @@ cdef extern from * nogil:
     ctypedef enum SlepcEPSOrthType "EPSOrthType":
         EPS_ORTH_I
         EPS_ORTH_B
-        EPS_ORTH_BOPT
     int EPSGDSetKrylovStart(SlepcEPS,PetscBool)
     int EPSGDGetKrylovStart(SlepcEPS,PetscBool*)
     int EPSGDSetBlockSize(SlepcEPS,PetscInt)

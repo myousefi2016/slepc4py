@@ -234,12 +234,11 @@ cdef class NEP(Object):
         maxf: int, optional
             The maximum number of function evaluations.
         """
-        cdef PetscReal rval1 = PETSC_DECIDE
-        cdef PetscReal rval2 = PETSC_DECIDE
-        cdef PetscReal rval3 = PETSC_DECIDE
-        cdef PetscInt  ival1 = PETSC_DECIDE
-        cdef PetscInt  ival2 = PETSC_DECIDE
-        CHKERR( NEPGetTolerances(self.nep, &rval1, &rval2, &rval3, &ival1, &ival2) )
+        cdef PetscReal rval1 = PETSC_DEFAULT
+        cdef PetscReal rval2 = PETSC_DEFAULT
+        cdef PetscReal rval3 = PETSC_DEFAULT
+        cdef PetscInt  ival1 = PETSC_DEFAULT
+        cdef PetscInt  ival2 = PETSC_DEFAULT
         if abstol is not None: rval1 = asReal(abstol)
         if rtol   is not None: rval2 = asReal(rtol)
         if stol   is not None: rval3 = asReal(stol)
@@ -337,39 +336,38 @@ cdef class NEP(Object):
         mpd: int, optional
             Maximum dimension allowed for the projected problem.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( NEPGetDimensions(self.nep, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
         CHKERR( NEPSetDimensions(self.nep, ival1, ival2, ival3) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the eigensolver.
+        Obtain the basis vectors object associated to the eigensolver.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( NEPGetIP(self.nep, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( NEPGetBV(self.nep, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the eigensolver.
+        Associates a basis vectors object to the eigensolver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( NEPSetIP(self.nep, ip.ip) )
+        CHKERR( NEPSetBV(self.nep, bv.bv) )
 
     #
 
@@ -538,27 +536,6 @@ cdef class NEP(Object):
         cdef PetscReal rval = 0
         CHKERR( NEPComputeResidualNorm(self.nep, i, &rval) )
         return toReal(rval)
-
-    def getOperationCounters(self):
-        """
-        Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `NEP` object
-        during the last `solve()` call.
-
-        Returns
-        -------
-        ops: int
-            number of operator applications.
-        dots: int
-            number of inner product operations.
-        lits: int
-            number of linear iterations.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        cdef PetscInt ival3 = 0
-        CHKERR( NEPGetOperationCounters(self.nep, &ival1, &ival2, &ival3) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     def setFunction(self, function, Mat F, Mat P=None, args=None, kargs=None):
         """

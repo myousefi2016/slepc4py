@@ -1,53 +1,124 @@
 # -----------------------------------------------------------------------------
 
-class QEPType(object):
-    LINEAR   = S_(QEPLINEAR)
-    QARNOLDI = S_(QEPQARNOLDI)
-    QLANCZOS = S_(QEPQLANCZOS)
+class PEPType(object):
+    """
+    PEP type
 
-class QEPProblemType(object):
-    GENERAL    = QEP_GENERAL
-    HERMITIAN  = QEP_HERMITIAN
-    GYROSCOPIC = QEP_GYROSCOPIC
+    Polynomial eigensolvers.
 
-class QEPWhich(object):
-    LARGEST_MAGNITUDE  = QEP_LARGEST_MAGNITUDE
-    SMALLEST_MAGNITUDE = QEP_SMALLEST_MAGNITUDE
-    LARGEST_REAL       = QEP_LARGEST_REAL
-    SMALLEST_REAL      = QEP_SMALLEST_REAL
-    LARGEST_IMAGINARY  = QEP_LARGEST_IMAGINARY
-    SMALLEST_IMAGINARY = QEP_SMALLEST_IMAGINARY
-    TARGET_MAGNITUDE   = QEP_TARGET_MAGNITUDE
-    TARGET_REAL        = QEP_TARGET_REAL
-    TARGET_IMAGINARY   = QEP_TARGET_IMAGINARY
+    - `LINEAR`:       Explicit linearization.
+    - `QARNOLDI`:     Q-Arnoldi for quadratic problems.
+    - `TOAR`:         Two-level orthogonal Arnoldi.
+    - `STOAR`:        Symmetric TOAR.
+    """
+    LINEAR   = S_(PEPLINEAR)
+    QARNOLDI = S_(PEPQARNOLDI)
+    TOAR     = S_(PEPTOAR)
+    STOAR    = S_(PEPSTOAR)
 
-class QEPConvergedReason(object):
-    CONVERGED_TOL       = QEP_CONVERGED_TOL
-    DIVERGED_ITS        = QEP_DIVERGED_ITS
-    DIVERGED_BREAKDOWN  = QEP_DIVERGED_BREAKDOWN
-    CONVERGED_ITERATING = QEP_CONVERGED_ITERATING
-    ITERATING           = QEP_CONVERGED_ITERATING
+class PEPProblemType(object):
+    """
+    PEP problem type
+
+    - `GENERAL`:      No structure.
+    - `HERMITIAN`:    Hermitian structure.
+    - `GYROSCOPY`:    Hamiltonian structure.
+    """
+    GENERAL    = PEP_GENERAL
+    HERMITIAN  = PEP_HERMITIAN
+    GYROSCOPIC = PEP_GYROSCOPIC
+
+class PEPWhich(object):
+    """
+    PEP desired part of spectrum
+
+    - `LARGEST_MAGNITUDE`:  Largest magnitude (default).
+    - `LARGEST_REAL`:       Largest real parts.
+    - `LARGEST_IMAGINARY`:  Largest imaginary parts in magnitude.
+    - `SMALLEST_MAGNITUDE`: Smallest magnitude.
+    - `SMALLEST_REAL`:      Smallest real parts.
+    - `SMALLEST_IMAGINARY`: Smallest imaginary parts in magnitude.
+    - `TARGET_MAGNITUDE`:   Closest to target (in magnitude).
+    - `TARGET_REAL`:        Real part closest to target.
+    - `TARGET_IMAGINARY`:   Imaginary part closest to target.
+    - `ALL`:                All eigenvalues in an interval.
+    """
+    LARGEST_MAGNITUDE  = PEP_LARGEST_MAGNITUDE
+    SMALLEST_MAGNITUDE = PEP_SMALLEST_MAGNITUDE
+    LARGEST_REAL       = PEP_LARGEST_REAL
+    SMALLEST_REAL      = PEP_SMALLEST_REAL
+    LARGEST_IMAGINARY  = PEP_LARGEST_IMAGINARY
+    SMALLEST_IMAGINARY = PEP_SMALLEST_IMAGINARY
+    TARGET_MAGNITUDE   = PEP_TARGET_MAGNITUDE
+    TARGET_REAL        = PEP_TARGET_REAL
+    TARGET_IMAGINARY   = PEP_TARGET_IMAGINARY
+
+class PEPBasis(object):
+    MONOMIAL   = PEP_BASIS_MONOMIAL
+    CHEBYSHEV1 = PEP_BASIS_CHEBYSHEV1
+    CHEBYSHEV2 = PEP_BASIS_CHEBYSHEV2
+    LEGENDRE   = PEP_BASIS_LEGENDRE
+    LAGUERRE   = PEP_BASIS_LAGUERRE
+    HERMITE    = PEP_BASIS_HERMITE
+
+class PEPScale(object):
+    NONE     = PEP_SCALE_NONE
+    SCALAR   = PEP_SCALE_SCALAR
+    DIAGONAL = PEP_SCALE_DIAGONAL
+    BOTH     = PEP_SCALE_BOTH
+
+class PEPConv(object):
+    """
+    PEP convergence test
+
+    - `ABS`:
+    - `EIG`:
+    - `NORM`:
+    - `USER`:
+    """
+    ABS  = EPS_CONV_ABS
+    EIG  = EPS_CONV_EIG
+    NORM = EPS_CONV_NORM
+    USER = EPS_CONV_USER
+
+class PEPConvergedReason(object):
+    """
+    PEP convergence reasons
+
+    - `CONVERGED_TOL`:
+    - `DIVERGED_ITS`:
+    - `DIVERGED_BREAKDOWN`:
+    - `CONVERGED_ITERATING`:
+    """
+    CONVERGED_TOL       = PEP_CONVERGED_TOL
+    DIVERGED_ITS        = PEP_DIVERGED_ITS
+    DIVERGED_BREAKDOWN  = PEP_DIVERGED_BREAKDOWN
+    CONVERGED_ITERATING = PEP_CONVERGED_ITERATING
+    ITERATING           = PEP_CONVERGED_ITERATING
 
 # -----------------------------------------------------------------------------
 
-cdef class QEP(Object):
+cdef class PEP(Object):
 
     """
-    QEP
+    PEP
     """
 
-    Type            = QEPType
-    ProblemType     = QEPProblemType
-    Which           = QEPWhich
-    ConvergedReason = QEPConvergedReason
+    Type            = PEPType
+    ProblemType     = PEPProblemType
+    Which           = PEPWhich
+    Basis           = PEPBasis
+    Scale           = PEPScale
+    Conv            = PEPConv
+    ConvergedReason = PEPConvergedReason
 
     def __cinit__(self):
-        self.obj = <PetscObject*> &self.qep
-        self.qep = NULL
+        self.obj = <PetscObject*> &self.pep
+        self.pep = NULL
 
     def view(self, Viewer viewer=None):
         """
-        Prints the QEP data structure.
+        Prints the PEP data structure.
 
         Parameters
         ----------
@@ -57,25 +128,25 @@ cdef class QEP(Object):
         """
         cdef PetscViewer vwr = NULL
         if viewer is not None: vwr = viewer.vwr
-        CHKERR( QEPView(self.qep, vwr) )
+        CHKERR( PEPView(self.pep, vwr) )
 
     def destroy(self):
         """
-        Destroys the QEP object.
+        Destroys the PEP object.
         """
-        CHKERR( QEPDestroy(&self.qep) )
-        self.qep = NULL
+        CHKERR( PEPDestroy(&self.pep) )
+        self.pep = NULL
         return self
 
     def reset(self):
         """
-        Resets the QEP object.
+        Resets the PEP object.
         """
-        CHKERR( QEPReset(self.qep) )
+        CHKERR( PEPReset(self.pep) )
 
     def create(self, comm=None):
         """
-        Creates the QEP object.
+        Creates the PEP object.
 
         Parameters
         ----------
@@ -84,98 +155,98 @@ cdef class QEP(Object):
             processes.
         """
         cdef MPI_Comm ccomm = def_Comm(comm, SLEPC_COMM_DEFAULT())
-        cdef SlepcQEP newqep = NULL
-        CHKERR( QEPCreate(ccomm, &newqep) )
-        SlepcCLEAR(self.obj); self.qep = newqep
+        cdef SlepcPEP newpep = NULL
+        CHKERR( PEPCreate(ccomm, &newpep) )
+        SlepcCLEAR(self.obj); self.pep = newpep
         return self
 
-    def setType(self, qep_type):
+    def setType(self, pep_type):
         """
-        Selects the particular solver to be used in the QEP object.
+        Selects the particular solver to be used in the PEP object.
 
         Parameters
         ----------
-        qep_type: `QEP.Type` enumerate
+        pep_type: `PEP.Type` enumerate
             The solver to be used.
         """
-        cdef SlepcQEPType cval = NULL
-        qep_type = str2bytes(qep_type, &cval)
-        CHKERR( QEPSetType(self.qep, cval) )
+        cdef SlepcPEPType cval = NULL
+        pep_type = str2bytes(pep_type, &cval)
+        CHKERR( PEPSetType(self.pep, cval) )
 
     def getType(self):
         """
-        Gets the QEP type of this object.
+        Gets the PEP type of this object.
 
         Returns
         -------
-        type: `QEP.Type` enumerate
+        type: `PEP.Type` enumerate
             The solver currently being used.
         """
-        cdef SlepcQEPType qep_type = NULL
-        CHKERR( QEPGetType(self.qep, &qep_type) )
-        return bytes2str(qep_type)
+        cdef SlepcPEPType pep_type = NULL
+        CHKERR( PEPGetType(self.pep, &pep_type) )
+        return bytes2str(pep_type)
 
     def getOptionsPrefix(self):
         """
-        Gets the prefix used for searching for all QEP options in the
+        Gets the prefix used for searching for all PEP options in the
         database.
 
         Returns
         -------
         prefix: string
-            The prefix string set for this QEP object.
+            The prefix string set for this PEP object.
         """
         cdef const_char *prefix = NULL
-        CHKERR( QEPGetOptionsPrefix(self.qep, &prefix) )
+        CHKERR( PEPGetOptionsPrefix(self.pep, &prefix) )
         return bytes2str(prefix)
 
     def setOptionsPrefix(self, prefix):
         """
-        Sets the prefix used for searching for all QEP options in the
+        Sets the prefix used for searching for all PEP options in the
         database.
 
         Parameters
         ----------
         prefix: string
-            The prefix string to prepend to all QEP option requests.
+            The prefix string to prepend to all PEP option requests.
         """
         cdef const_char *cval = NULL
         prefix = str2bytes(prefix, &cval)
-        CHKERR( QEPSetOptionsPrefix(self.qep, cval) )
+        CHKERR( PEPSetOptionsPrefix(self.pep, cval) )
 
     def appendOptionsPrefix(self, prefix):
         """
-        Appends to the prefix used for searching for all QEP options
+        Appends to the prefix used for searching for all PEP options
         in the database.
 
         Parameters
         ----------
         prefix: string
-            The prefix string to prepend to all QEP option requests.
+            The prefix string to prepend to all PEP option requests.
         """
         cdef const_char *cval = NULL
         prefix = str2bytes(prefix, &cval)
-        CHKERR( QEPAppendOptionsPrefix(self.qep, cval) )
+        CHKERR( PEPAppendOptionsPrefix(self.pep, cval) )
 
     def setFromOptions(self):
         """
-        Sets QEP options from the options database. This routine must
+        Sets PEP options from the options database. This routine must
         be called before `setUp()` if the user is to be allowed to set
         the solver type.
         """
-        CHKERR( QEPSetFromOptions(self.qep) )
+        CHKERR( PEPSetFromOptions(self.pep) )
 
     def getProblemType(self):
         """
-        Gets the problem type from the QEP object.
+        Gets the problem type from the PEP object.
 
         Returns
         -------
-        problem_type: `QEP.ProblemType` enumerate
+        problem_type: `PEP.ProblemType` enumerate
             The problem type that was previously set.
         """
-        cdef SlepcQEPProblemType val = QEP_GENERAL
-        CHKERR( QEPGetProblemType(self.qep, &val) )
+        cdef SlepcPEPProblemType val = PEP_GENERAL
+        CHKERR( PEPGetProblemType(self.pep, &val) )
         return val
 
     def setProblemType(self, problem_type):
@@ -184,11 +255,11 @@ cdef class QEP(Object):
 
         Parameters
         ----------
-        problem_type: `QEP.ProblemType` enumerate
+        problem_type: `PEP.ProblemType` enumerate
             The problem type to be set.
         """
-        cdef SlepcQEPProblemType val = problem_type
-        CHKERR( QEPSetProblemType(self.qep, val) )
+        cdef SlepcPEPProblemType val = problem_type
+        CHKERR( PEPSetProblemType(self.pep, val) )
 
     def getWhichEigenpairs(self):
         """
@@ -196,11 +267,11 @@ cdef class QEP(Object):
 
         Returns
         -------
-        which: `QEP.Which` enumerate
+        which: `PEP.Which` enumerate
             The portion of the spectrum to be sought by the solver.
         """
-        cdef SlepcQEPWhich val = QEP_LARGEST_MAGNITUDE
-        CHKERR( QEPGetWhichEigenpairs(self.qep, &val) )
+        cdef SlepcPEPWhich val = PEP_LARGEST_MAGNITUDE
+        CHKERR( PEPGetWhichEigenpairs(self.pep, &val) )
         return val
 
     def setWhichEigenpairs(self, which):
@@ -209,43 +280,16 @@ cdef class QEP(Object):
 
         Parameters
         ----------
-        which: `QEP.Which` enumerate
+        which: `PEP.Which` enumerate
             The portion of the spectrum to be sought by the solver.
         """
-        cdef SlepcQEPWhich val = which
-        CHKERR( QEPSetWhichEigenpairs(self.qep, val) )
-
-    def getLeftVectorsWanted(self):
-        """
-        Returns the flag indicating whether left eigenvectors are
-        required or not.
-
-        Returns
-        -------
-        wanted: boolean
-                Whether left eigenvectors are required or not.
-        """
-        cdef PetscBool tval = PETSC_FALSE
-        CHKERR( QEPGetLeftVectorsWanted(self.qep, &tval) )
-        return <bint>tval
-
-    def setLeftVectorsWanted(self, wanted):
-        """
-        Specifies the flag indicating whether left eigenvectors are
-        required or not.
-
-        Parameters
-        ----------
-        wanted: boolean
-                Whether left eigenvectors are required or not.
-        """
-        cdef PetscBool tval = wanted
-        CHKERR( QEPSetLeftVectorsWanted(self.qep, tval) )
+        cdef SlepcPEPWhich val = which
+        CHKERR( PEPSetWhichEigenpairs(self.pep, val) )
 
     def getTolerances(self):
         """
         Gets the tolerance and maximum iteration count used by the
-        default QEP convergence tests.
+        default PEP convergence tests.
 
         Returns
         -------
@@ -256,13 +300,13 @@ cdef class QEP(Object):
         """
         cdef PetscReal rval = 0
         cdef PetscInt  ival = 0
-        CHKERR( QEPGetTolerances(self.qep, &rval, &ival) )
+        CHKERR( PEPGetTolerances(self.pep, &rval, &ival) )
         return (toReal(rval), toInt(ival))
 
     def setTolerances(self, tol=None, max_it=None):
         """
         Sets the tolerance and maximum iteration count used by the
-        default QEP convergence tests.
+        default PEP convergence tests.
 
         Parameters
         ----------
@@ -271,12 +315,11 @@ cdef class QEP(Object):
         max_it: int, optional
             The maximum number of iterations
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( QEPGetTolerances(self.qep, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
-        CHKERR( QEPSetTolerances(self.qep, rval, ival) )
+        CHKERR( PEPSetTolerances(self.pep, rval, ival) )
 
     def getTrackAll(self):
         """
@@ -289,7 +332,7 @@ cdef class QEP(Object):
             Whether the solver compute all residuals or not.
         """
         cdef PetscBool tval = PETSC_FALSE
-        CHKERR( QEPGetTrackAll(self.qep, &tval) )
+        CHKERR( PEPGetTrackAll(self.pep, &tval) )
         return <bint>tval
 
     def setTrackAll(self, trackall):
@@ -303,7 +346,7 @@ cdef class QEP(Object):
             Whether compute all residuals or not.
         """
         cdef PetscBool tval = trackall
-        CHKERR( QEPSetTrackAll(self.qep, tval) )
+        CHKERR( PEPSetTrackAll(self.pep, tval) )
 
     def getDimensions(self):
         """
@@ -322,7 +365,7 @@ cdef class QEP(Object):
         cdef PetscInt ival1 = 0
         cdef PetscInt ival2 = 0
         cdef PetscInt ival3 = 0
-        CHKERR( QEPGetDimensions(self.qep, &ival1, &ival2, &ival3) )
+        CHKERR( PEPGetDimensions(self.pep, &ival1, &ival2, &ival3) )
         return (toInt(ival1), toInt(ival2), toInt(ival3))
 
     def setDimensions(self, nev=None, ncv=None, mpd=None):
@@ -340,65 +383,85 @@ cdef class QEP(Object):
         mpd: int, optional
             Maximum dimension allowed for the projected problem.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( QEPGetDimensions(self.qep, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nev is not None: ival1 = asInt(nev)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
-        CHKERR( QEPSetDimensions(self.qep, ival1, ival2, ival3) )
+        CHKERR( PEPSetDimensions(self.pep, ival1, ival2, ival3) )
 
-    def getScaleFactor(self):
+    def getScale(self):
         """
-        Gets the factor used for scaling the quadratic eigenproblem.
+        Gets the strategy used for scaling the polynomial eigenproblem.
 
         Returns
         -------
+        scale: `PEP.Scale` enumerate
+            The scaling strategy.
         alpha: real
             The scaling factor.
+        its: integer
+            The number of iteration of diagonal scaling.
+        lbda: real
+            Approximation of the wanted eigenvalues (modulus).
         """
-        cdef PetscReal rval = 0
-        CHKERR( QEPGetScaleFactor(self.qep, &rval) )
-        return toReal(rval)
+        cdef SlepcPEPScale scale = PEP_SCALE_NONE
+        cdef PetscReal alpha = 0
+        cdef PetscInt its = 0
+        cdef PetscReal lbda = 0
+        CHKERR( PEPGetScale(self.pep, &scale, &alpha, &its, &lbda) )
+        return (scale, toReal(alpha), toInt(its), toReal(lbda))
 
-    def setScaleFactor(self, alpha):
+    def setScale(self, scale, alpha=None, its=None, lbda=None):
         """
-        Sets the scaling factor to be used for scaling the quadratic problem
+        Sets the scaling strategy to be used for scaling the polynomial problem
         before attempting to solve.
 
         Parameters
         ----------
-        alpha: real
+        scale: `PEP.Scale` enumerate
+            The scaling strategy.
+        alpha: real, optional
             The scaling factor.
+        its: integer, optional
+            The number of iteration of diagonal scaling.
+        lbda: real, optional
+            Approximation of the wanted eigenvalues (modulus).
         """
-        cdef PetscReal rval = asReal(alpha)
-        CHKERR( QEPSetScaleFactor(self.qep, rval) )
+        cdef SlepcPEPScale senum = scale
+        cdef PetscReal rval1 = PETSC_DEFAULT
+        cdef PetscInt ival = PETSC_DEFAULT
+        cdef PetscReal rval2 = PETSC_DEFAULT
+        if alpha is not None: rval1 = asReal(alpha)
+        if its is not None:   ival = asInt(its)
+        if lbda is not None:  rval2 = asReal(lbda)
+        CHKERR( PEPSetScale(self.pep, senum, rval1, ival, rval2) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the eigensolver.
+        Obtain the basis vectors object associated to the eigensolver.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( QEPGetIP(self.qep, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( PEPGetBV(self.pep, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the eigensolver.
+        Associates a basis vectors object to the eigensolver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( QEPSetIP(self.qep, ip.ip) )
+        CHKERR( PEPSetBV(self.pep, bv.bv) )
 
     def getOperators(self):
         """
@@ -406,36 +469,35 @@ cdef class QEP(Object):
 
         Returns
         -------
-        M: Mat
-            The first coefficient matrix.
-        C: Mat
-            The second coefficient matrix.
-        K: Mat
-            The third coefficient matrix.
+        operators: tuple of Mat
+           The matrices associated with the eigensystem.
         """
-        cdef Mat M = Mat()
-        cdef Mat C = Mat()
-        cdef Mat K = Mat()
-        CHKERR( QEPGetOperators(self.qep, &M.mat, &C.mat, &K.mat) )
-        PetscINCREF(M.obj)
-        PetscINCREF(C.obj)
-        PetscINCREF(K.obj)
-        return (M, C, K)
+        cdef Mat A
+        cdef PetscMat mat = NULL
+        cdef PetscInt k=0, n=0
+        CHKERR( PEPGetNumMatrices(self.pep, &n) )
+        cdef object operators = []
+        for k from 0 <= k < n:
+            CHKERR( PEPGetOperators(self.pep, k, &mat) )
+            A = Mat(); A.mat = mat; PetscINCREF(A.obj)
+            operators.append(A)
+        return tuple(operators)
 
-    def setOperators(self, Mat M not None, Mat C not None, Mat K not None):
+    def setOperators(self, operators):
         """
         Sets the matrices associated with the eigenvalue problem.
 
         Parameters
         ----------
-        M: Mat
-            The first coefficient matrix.
-        C: Mat
-            The second coefficient matrix.
-        K: Mat
-            The third coefficient matrix.
+        operators: sequence of Mat
+           The matrices associated with the eigensystem.
         """
-        CHKERR( QEPSetOperators(self.qep, M.mat, C.mat, K.mat) )
+        operators = tuple(operators)
+        cdef PetscMat *mats = NULL
+        cdef Py_ssize_t k=0, n = len(operators)
+        cdef tmp = allocate(<size_t>n*sizeof(PetscMat),<void**>&mats)
+        for k from 0 <= k < n: mats[k] = (<Mat?>operators[k]).mat
+        CHKERR( PEPSetOperators(self.pep, <PetscInt>n, mats) )
 
     #
 
@@ -454,32 +516,15 @@ cdef class QEP(Object):
         cdef Py_ssize_t i = 0, ns = len(space)
         cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
-        CHKERR( QEPSetInitialSpace(self.qep, <PetscInt>ns, vs) )
-
-    def setInitialSpaceLeft(self, space):
-        """
-        Sets the initial left space from which the solver starts to
-        iterate.
-
-        Parameters
-        ----------
-        space: Vec or sequence of Vec
-           The initial left space
-        """
-        if isinstance(space, Vec): space = [space]
-        cdef PetscVec *vs = NULL
-        cdef Py_ssize_t i = 0, ns = len(space)
-        cdef tmp = allocate(<size_t>ns*sizeof(Vec),<void**>&vs)
-        for i in range(ns): vs[i] = (<Vec?>space[i]).vec
-        CHKERR( QEPSetInitialSpaceLeft(self.qep, <PetscInt>ns, vs) )
+        CHKERR( PEPSetInitialSpace(self.pep, <PetscInt>ns, vs) )
 
     #
 
     def cancelMonitor(self):
         """
-        Clears all monitors for a QEP object.
+        Clears all monitors for a PEP object.
         """
-        CHKERR( QEPMonitorCancel(self.qep) )
+        CHKERR( PEPMonitorCancel(self.pep) )
 
     #
 
@@ -488,13 +533,13 @@ cdef class QEP(Object):
         Sets up all the internal data structures necessary for the
         execution of the eigensolver.
         """
-        CHKERR( QEPSetUp(self.qep) )
+        CHKERR( PEPSetUp(self.pep) )
 
     def solve(self):
         """
         Solves the eigensystem.
         """
-        CHKERR( QEPSolve(self.qep) )
+        CHKERR( PEPSolve(self.pep) )
 
     def getIterationNumber(self):
         """
@@ -508,7 +553,7 @@ cdef class QEP(Object):
              Iteration number.
         """
         cdef PetscInt ival = 0
-        CHKERR( QEPGetIterationNumber(self.qep, &ival) )
+        CHKERR( PEPGetIterationNumber(self.pep, &ival) )
         return toInt(ival)
 
     def getConvergedReason(self):
@@ -517,12 +562,12 @@ cdef class QEP(Object):
 
         Returns
         -------
-        reason: `QEP.ConvergedReason` enumerate
+        reason: `PEP.ConvergedReason` enumerate
             Negative value indicates diverged, positive value
             converged.
         """
-        cdef SlepcQEPConvergedReason val = QEP_CONVERGED_ITERATING
-        CHKERR( QEPGetConvergedReason(self.qep, &val) )
+        cdef SlepcPEPConvergedReason val = PEP_CONVERGED_ITERATING
+        CHKERR( PEPGetConvergedReason(self.pep, &val) )
         return val
 
 
@@ -536,7 +581,7 @@ cdef class QEP(Object):
             Number of converged eigenpairs.
         """
         cdef PetscInt ival = 0
-        CHKERR( QEPGetConverged(self.qep, &ival) )
+        CHKERR( PEPGetConverged(self.pep, &ival) )
         return toInt(ival)
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
@@ -565,7 +610,7 @@ cdef class QEP(Object):
         cdef PetscVec veci = NULL
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
-        CHKERR( QEPGetEigenpair(self.qep, i, &sval1, &sval2, vecr, veci) )
+        CHKERR( PEPGetEigenpair(self.pep, i, &sval1, &sval2, vecr, veci) )
         return complex(toScalar(sval1), toScalar(sval2))
 
     def getErrorEstimate(self, int i):
@@ -584,7 +629,7 @@ cdef class QEP(Object):
             Error estimate.
         """
         cdef PetscReal rval = 0
-        CHKERR( QEPGetErrorEstimate(self.qep, i, &rval) )
+        CHKERR( PEPGetErrorEstimate(self.pep, i, &rval) )
         return toReal(rval)
 
     def computeRelativeError(self, int i):
@@ -603,7 +648,7 @@ cdef class QEP(Object):
             The relative error bound.
         """
         cdef PetscReal rval = 0
-        CHKERR( QEPComputeRelativeError(self.qep, i, &rval) )
+        CHKERR( PEPComputeRelativeError(self.pep, i, &rval) )
         return toReal(rval)
 
     def computeResidualNorm(self, int i):
@@ -622,35 +667,17 @@ cdef class QEP(Object):
             The residual norm.
         """
         cdef PetscReal rval = 0
-        CHKERR( QEPComputeResidualNorm(self.qep, i, &rval) )
+        CHKERR( PEPComputeResidualNorm(self.pep, i, &rval) )
         return toReal(rval)
-
-    def getOperationCounters(self):
-        """
-        Gets the total number of operator applications, inner product
-        operations and linear iterations used by the `QEP` object
-        during the last `solve()` call.
-
-        Returns
-        -------
-        ops: int
-            number of operator applications.
-        dots: int
-            number of inner product operations.
-        lits: int
-            number of linear iterations.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        cdef PetscInt ival3 = 0
-        CHKERR( QEPGetOperationCounters(self.qep, &ival1, &ival2, &ival3) )
-        return (toInt(ival1), toInt(ival2), toInt(ival3))
 
 # -----------------------------------------------------------------------------
 
-del QEPType
-del QEPProblemType
-del QEPWhich
-del QEPConvergedReason
+del PEPType
+del PEPProblemType
+del PEPWhich
+del PEPBasis
+del PEPScale
+del PEPConv
+del PEPConvergedReason
 
 # -----------------------------------------------------------------------------

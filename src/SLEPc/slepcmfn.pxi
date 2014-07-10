@@ -27,8 +27,8 @@ cdef extern from * nogil:
     int MFNSetUp(SlepcMFN)
     int MFNSolve(SlepcMFN,PetscVec,PetscVec)
 
-    int MFNSetIP(SlepcMFN,SlepcIP)
-    int MFNGetIP(SlepcMFN,SlepcIP*)
+    int MFNSetBV(SlepcMFN,SlepcBV)
+    int MFNGetBV(SlepcMFN,SlepcBV*)
     int MFNSetDS(SlepcMFN,SlepcDS)
     int MFNGetDS(SlepcMFN,SlepcDS*)
     int MFNSetTolerances(SlepcMFN,PetscReal,PetscInt)
@@ -40,7 +40,6 @@ cdef extern from * nogil:
 
     int MFNMonitorCancel(SlepcMFN)
     int MFNGetIterationNumber(SlepcMFN,PetscInt*)
-    int MFNGetOperationCounters(SlepcMFN,PetscInt*,PetscInt*,PetscInt*)
 
     int MFNGetConvergedReason(SlepcMFN,SlepcMFNConvergedReason*)
 

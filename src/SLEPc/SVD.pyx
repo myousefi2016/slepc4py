@@ -321,9 +321,8 @@ cdef class SVD(Object):
         Use `DECIDE` for `max_it` to assign a reasonably good value,
         which is dependent on the solution method.
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( SVDGetTolerances(self.svd, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( SVDSetTolerances(self.svd, rval, ival) )
@@ -382,39 +381,47 @@ cdef class SVD(Object):
         large, `mpd` = `nsv` is a reasonable choice, otherwise a
         smaller value should be used.
         """
-        cdef PetscInt ival1 = PETSC_DECIDE
-        cdef PetscInt ival2 = PETSC_DECIDE
-        cdef PetscInt ival3 = PETSC_DECIDE
-        CHKERR( SVDGetDimensions(self.svd, &ival1, &ival2, &ival3) )
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
         if nsv is not None: ival1 = asInt(nsv)
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
         CHKERR( SVDSetDimensions(self.svd, ival1, ival2, ival3) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product object associated to the SVD object.
+        Obtain the basis vectors objects associated to the SVD object.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        V: BV
+            The basis vectors context for right singular vectors.
+        U: BV
+            The basis vectors context for left singular vectors.
         """
-        cdef IP ip = IP()
-        CHKERR( SVDGetIP(self.svd, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV V = BV()
+        cdef BV U = BV()
+        CHKERR( SVDGetBV(self.svd, &V.bv, &U.bv) )
+        PetscINCREF(V.obj)
+        PetscINCREF(U.obj)
+        return (V,U)
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV V not None,BV U=None):
         """
-        Associates an inner product object to the SVD solver.
+        Associates basis vectors objects to the SVD solver.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        V: BV
+            The basis vectors context for right singular vectors.
+        U: BV
+            The basis vectors context for left singular vectors.
         """
-        CHKERR( SVDSetIP(self.svd, ip.ip) )
+        cdef SlepcBV VBV = V.bv
+        cdef SlepcBV UBV = NULL
+        if U is not None: UBV = U.bv
+        CHKERR( SVDSetBV(self.svd, VBV, UBV) )
 
     def getOperator(self):
         """
@@ -677,28 +684,6 @@ cdef class SVD(Object):
         CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
         return (toReal(rval1), toReal(rval2))
 
-    def getOperationCounters(self):
-        """
-        Gets the total number of matrix-vector and dot products used
-        by the `SVD` object during the last `solve()` call.
-
-        Returns
-        -------
-        matvecs: int
-              number of matrix-vector product operations.
-        dots: int
-              number of dot product operations.
-
-        Notes
-        -----
-        These counters are reset to zero at each successive call to
-        `solve()`.
-        """
-        cdef PetscInt ival1 = 0
-        cdef PetscInt ival2 = 0
-        CHKERR( SVDGetOperationCounters(self.svd, &ival1, &ival2) )
-        return (toInt(ival1), toInt(ival2))
-
     #
 
     def setCrossEPS(self, EPS eps not None):
@@ -852,11 +837,11 @@ cdef class SVD(Object):
         def __set__(self, value):
             self.setTolerances(max_it=value)
 
-    property ip:
+    property bv:
         def __get__(self):
-            return self.getIP()
+            return self.getBV()
         def __set__(self, value):
-            self.setIP(value)
+            self.setBV(value)
 
 # -----------------------------------------------------------------------------
 

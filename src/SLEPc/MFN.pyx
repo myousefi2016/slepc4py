@@ -173,9 +173,8 @@ cdef class MFN(Object):
         max_it: int, optional
             The maximum number of iterations
         """
-        cdef PetscReal rval = PETSC_DECIDE
-        cdef PetscInt  ival = PETSC_DECIDE
-        CHKERR( MFNGetTolerances(self.mfn, &rval, &ival) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( MFNSetTolerances(self.mfn, rval, ival) )
@@ -232,30 +231,30 @@ cdef class MFN(Object):
         cdef PetscScalar sval = asScalar(alpha)
         CHKERR( MFNSetScaleFactor(self.mfn, sval) )
 
-    def getIP(self):
+    def getBV(self):
         """
-        Obtain the inner product associated to the MFN object.
+        Obtain the basis vector object associated to the MFN object.
 
         Returns
         -------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        cdef IP ip = IP()
-        CHKERR( MFNGetIP(self.mfn, &ip.ip) )
-        PetscINCREF(ip.obj)
-        return ip
+        cdef BV bv = BV()
+        CHKERR( MFNGetBV(self.mfn, &bv.bv) )
+        PetscINCREF(bv.obj)
+        return bv
 
-    def setIP(self, IP ip not None):
+    def setBV(self, BV bv not None):
         """
-        Associates an inner product to the MFN object.
+        Associates a basis vector object to the MFN object.
 
         Parameters
         ----------
-        ip: IP
-            The inner product context.
+        bv: BV
+            The basis vectors context.
         """
-        CHKERR( MFNSetIP(self.mfn, ip.ip) )
+        CHKERR( MFNSetBV(self.mfn, bv.bv) )
 
     def getOperator(self):
         """

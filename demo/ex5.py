@@ -49,10 +49,14 @@ def construct_operators(m,n):
 
 def solve_eigensystem(M, C, K):
     # Setup the eigensolver
-    Q = SLEPc.QEP().create()
-    Q.setOperators(M, C, K)
+    Q = SLEPc.PEP().create()
+    A = [ ]
+    A.append(K)
+    A.append(C)
+    A.append(M)
+    Q.setOperators(A)
     Q.setDimensions(6)
-    Q.setProblemType(SLEPc.QEP.ProblemType.GENERAL)
+    Q.setProblemType(SLEPc.PEP.ProblemType.GENERAL)
     Q.setFromOptions()
     # Solve the eigensystem
     Q.solve()
