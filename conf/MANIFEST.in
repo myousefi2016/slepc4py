@@ -1,4 +1,4 @@
-include setup*.py *.cfg *.txt
+include setup*.py *.cfg *.rst
 
 recursive-include demo [M,m]akefile* *.py
 recursive-include conf *.py *.cfg *.in
@@ -8,6 +8,8 @@ recursive-include *    [M,m]akefile
 
 include docs/*.html
 include docs/*.pdf
+include docs/*.info
+include docs/*.[137]
 include docs/*.rst
 recursive-include docs/usrman *
 recursive-include docs/apiref *

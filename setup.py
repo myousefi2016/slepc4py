@@ -1,30 +1,24 @@
 #!/usr/bin/env python
+# Author:  Lisandro Dalcin
+# Contact: dalcinl@gmail.com
 
 """
-SLEPc for Python
-================
-
 Python bindings for SLEPc.
-
-.. tip::
-
-  You can also install `slepc4py-dev`_ with::
-
-    $ pip install petsc==dev slepc==dev petsc4py==dev slepc4py==dev 
-
-  .. _slepc4py-dev: https://bitbucket.org/slepc/slepc4py/get/master.tar.gz#egg=slepc4py-dev
 """
 
-## try:
-##     import setuptools
-## except ImportError:
-##     pass
+import sys
+import os
+#try:
+#    import setuptools
+#except ImportError:
+#    pass
 
-import sys, os
 
 # --------------------------------------------------------------------
 # Metadata
 # --------------------------------------------------------------------
+
+topdir = os.path.abspath(os.path.dirname(__file__))
 
 from conf.metadata import metadata
 
@@ -39,6 +33,12 @@ def version():
     m = re.search(r"__version__\s*=\s*'(.*)'", data)
     return m.groups()[0]
 
+def description():
+    f = open(os.path.join(topdir, 'DESCRIPTION.rst'))
+    try: data = f.read()
+    finally: f.close()
+    return data
+
 name     = name()
 version  = version()
 
@@ -51,8 +51,8 @@ keywords = ['SLEPc', 'PETSc', 'MPI']
 
 metadata['name'] = name
 metadata['version'] = version
-metadata['description'] = descr.pop(0)
-metadata['long_description'] = '\n'.join(descr)
+metadata['description'] = __doc__.strip()
+metadata['long_description'] = description()
 metadata['keywords'] += keywords
 metadata['classifiers'] += devstat
 metadata['url'] = url
@@ -97,12 +97,12 @@ def run_setup():
     if ('setuptools' in sys.modules):
         from os.path import exists, join
         metadata['zip_safe'] = False
-        metadata['install_requires'] = ['petsc4py>=3.4']
+        metadata['install_requires'] = ['petsc4py>=3.5']
         if not exists(join('src', 'slepc4py.SLEPc.c')):
             metadata['install_requires'] += ['Cython>='+CYTHON]
         SLEPC_DIR = os.environ.get('SLEPC_DIR')
         if not (SLEPC_DIR and os.path.isdir(SLEPC_DIR)):
-            metadata['install_requires'].append('slepc>=3.4,<3.5')
+            metadata['install_requires'].append('slepc>=3.5,<3.6')
     #
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],

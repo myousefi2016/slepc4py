@@ -79,7 +79,8 @@ class PetscConfig:
             raise DistutilsError("PETSc not found")
         if not os.path.isdir(petsc_dir):
             raise DistutilsError("invalid PETSC_DIR: %s" % petsc_dir)
-        self.configdict = self._get_petsc_conf(petsc_dir, petsc_arch)
+        self.version    = self._get_petsc_version(petsc_dir)
+        self.configdict = self._get_petsc_config(petsc_dir, petsc_arch)
         self.PETSC_DIR  = self['PETSC_DIR']
         self.PETSC_ARCH = self['PETSC_ARCH']
         language_map = {'CONLY':'c', 'CXXONLY':'c++'}
@@ -93,7 +94,26 @@ class PetscConfig:
         if compiler is not None:
             self.configure_compiler(compiler)
 
-    def _get_petsc_conf(self, petsc_dir, petsc_arch):
+    def _get_petsc_version(self, petsc_dir):
+        import os, re
+        version_re = {
+            'major'  : re.compile(r"#define\s+PETSC_VERSION_MAJOR\s+(\d+)"),
+            'minor'  : re.compile(r"#define\s+PETSC_VERSION_MINOR\s+(\d+)"),
+            'micro'  : re.compile(r"#define\s+PETSC_VERSION_SUBMINOR\s+(\d+)"),
+            'patch'  : re.compile(r"#define\s+PETSC_VERSION_PATCH\s+(\d+)"),
+            'release': re.compile(r"#define\s+PETSC_VERSION_RELEASE\s+(\d+)"),
+            }
+        petscversion_h = os.path.join(petsc_dir,'include','petscversion.h')
+        f = open(petscversion_h, 'rt')
+        try: data = f.read()
+        finally: f.close()
+        major = int(version_re['major'].search(data).groups()[0])
+        minor = int(version_re['minor'].search(data).groups()[0])
+        micro = int(version_re['micro'].search(data).groups()[0])
+        release = int(version_re['release'].search(data).groups()[0])
+        return  (major, minor, micro), bool(release)
+
+    def _get_petsc_config(self, petsc_dir, petsc_arch):
         PETSC_DIR  = petsc_dir
         PETSC_ARCH = petsc_arch
         #
@@ -101,7 +121,7 @@ class PetscConfig:
                 os.path.join(PETSC_DIR, PETSC_ARCH))):
             petscvars = os.path.join(
                 PETSC_DIR, 'conf', 'petscvariables')
-            petscvars = open(petscvars)
+            petscvars = open(petscvars, 'rt')
             PETSC_ARCH = makefile(petscvars).get('PETSC_ARCH')
         if not (PETSC_ARCH and os.path.isdir(
                 os.path.join(PETSC_DIR, PETSC_ARCH))):
@@ -111,15 +131,15 @@ class PetscConfig:
         if not os.path.exists(variables):
             variables = os.path.join(
                 PETSC_DIR, PETSC_ARCH, 'conf', 'variables')
-        petscvars = os.path.join(
+        petscvariables = os.path.join(
             PETSC_DIR, PETSC_ARCH, 'conf', 'petscvariables')
         #
         variables = open(variables)
         try: contents = variables.read()
         finally: variables.close()
-        petscvars = open(petscvars)
-        try: contents += petscvars.read()
-        finally: petscvars.close()
+        petscvariables = open(petscvariables)
+        try: contents += petscvariables.read()
+        finally: petscvariables.close()
         #
         confstr  = 'PETSC_DIR  = %s\n' % PETSC_DIR
         confstr += 'PETSC_ARCH = %s\n' % PETSC_ARCH
@@ -147,9 +167,12 @@ class PetscConfig:
         petsc_lib = flaglist(
             '-L%s %s' % (self['PETSC_LIB_DIR'], self['PETSC_LIB_BASIC']))
         petsc_lib['runtime_library_dirs'].append(self['PETSC_LIB_DIR'])
-        petsc_ext_lib = split_quoted(self['PETSC_EXTERNAL_LIB_BASIC'])
-        petsc_lib['extra_link_args'].extend(petsc_ext_lib)
-        #
+
+        # Link in extra libraries on static builds
+        if self['BUILDSHAREDLIB'] != 'yes':
+            petsc_ext_lib = split_quoted(self['PETSC_EXTERNAL_LIB_BASIC'])
+            petsc_lib['extra_link_args'].extend(petsc_ext_lib)
+
         self._configure_ext(extension, petsc_inc, preppend=True)
         self._configure_ext(extension, petsc_lib)
 
@@ -203,27 +226,39 @@ class PetscConfig:
             linker_so    = PLD_SHARED,
             )
         compiler.shared_lib_extension = so_ext
+        #
+        if sys.platform == 'darwin':
+            for attr in ('preprocessor',
+                         'compiler', 'compiler_cxx', 'compiler_so',
+                         'linker_so', 'linker_exe'):
+                compiler_cmd = getattr(compiler, attr, [])
+                while '-mno-fused-madd' in compiler_cmd:
+                    compiler_cmd.remove('-mno-fused-madd')
 
     def log_info(self):
-        log.info('PETSC_DIR:   %s' % self['PETSC_DIR']  )
-        log.info('PETSC_ARCH:  %s' % self['PETSC_ARCH'] )
+        PETSC_DIR  = self['PETSC_DIR']
+        PETSC_ARCH = self['PETSC_ARCH']
+        version = ".".join([str(i) for i in self.version[0]])
+        release = ("development", "release")[self.version[1]]
+        version_info = version + ' ' + release
         scalar_type = self['PETSC_SCALAR']
         precision   = self['PETSC_PRECISION']
         language    = self['PETSC_LANGUAGE']
         compiler    = self['PCC']
         linker      = self['PCC_LINKER']
+        log.info('PETSC_DIR:   %s' % PETSC_DIR )
+        log.info('PETSC_ARCH:  %s' % PETSC_ARCH )
+        log.info('version:     %s' % version_info)
         log.info('scalar-type: %s' % scalar_type)
         log.info('precision:   %s' % precision)
         log.info('language:    %s' % language)
         log.info('compiler:    %s' % compiler)
         log.info('linker:      %s' % linker)
 
-
 # --------------------------------------------------------------------
 
 class Extension(_Extension):
     pass
-
 
 # --------------------------------------------------------------------
 
@@ -306,10 +341,9 @@ class config(_config):
         if (not petsc_arch or '$PETSC_ARCH' in petsc_arch):
             have_dir_conf = os.path.isdir(os.path.join(petsc_dir, 'conf'))
             if have_dir_conf:
-                petscvars = os.path.join(petsc_dir, 'conf', 'petscvariables')
-                if os.path.exists(petscvars):
-                    conf = StringIO(open(petscvars).read())
-                    conf = makefile(conf)
+                petscvariables = os.path.join(petsc_dir, 'conf', 'petscvariables')
+                if os.path.exists(petscvariables):
+                    conf = makefile(open(petscvariables, 'rt'))
                     petsc_arch = conf.get('PETSC_ARCH', '')
             else:
                 petsc_arch = ''
@@ -452,7 +486,6 @@ class build_ext(_build_ext):
             name =  self.distribution.get_name()
             version = self.distribution.get_version()
             distdir = "%s-%s/" % (name, version)
-            newext.define_macros.append(('__INSDIR__', distdir))
             self._build_ext_arch(newext, pkgpath, ARCH)
 
     def build_extensions(self, *args, **kargs):
@@ -477,7 +510,7 @@ class build_ext(_build_ext):
             try: fh.write(config_data)
             finally: fh.close()
         execute(write_file, (config_file, config_data),
-                msg='writing %s' % config_file, 
+                msg='writing %s' % config_file,
                 verbose=self.verbose, dry_run=self.dry_run)
 
     def get_config_data(self, arch_list):
@@ -689,7 +722,7 @@ def makefile(fileobj, dct=None):
                             done[name] = value
                         del notdone[name]
             else:
-                # bogus variable reference; 
+                # bogus variable reference;
                 # just drop it since we can't deal
                 del notdone[name]
     # save the results in the global dictionary

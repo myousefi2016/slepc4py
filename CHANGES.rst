@@ -2,10 +2,14 @@
 HISTORY: SLEPc for Python
 =========================
 
-:Author:       Lisandro Dalcin
-:Contact:      dalcinl@gmail.com
-:Organization: CIMEC <http://www.cimec.org.ar>
-:Address:      CCT CONICET, 3000 Santa Fe, Argentina
+:Author:  Lisandro Dalcin
+:Contact: dalcinl@gmail.com
+
+
+Release 3.5
+===========
+
+- Update to SLEPc 3.5 release.
 
 
 Release 3.4
