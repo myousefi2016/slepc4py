@@ -78,7 +78,7 @@ cdef extern from * nogil:
     int NEPGetConstCorrectionTol(SlepcNEP,PetscBool*)
 
     int NEPGetConverged(SlepcNEP,PetscInt*)
-    int NEPGetEigenpair(SlepcNEP,PetscInt,PetscScalar*,PetscVec)
+    int NEPGetEigenpair(SlepcNEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int NEPComputeRelativeError(SlepcNEP,PetscInt,PetscReal*)
     int NEPComputeResidualNorm(SlepcNEP,PetscInt,PetscReal*)
     int NEPGetErrorEstimate(SlepcNEP,PetscInt,PetscReal*)

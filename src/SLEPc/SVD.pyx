@@ -26,16 +26,6 @@ class SVDWhich(object):
     LARGEST  = SVD_LARGEST
     SMALLEST = SVD_SMALLEST
 
-class SVDTransposeMode(object):
-    """
-    SVD handling of the transpose of the matrix
-
-    - `EXPLICIT`: matrix is built explicitly.
-    - `IMPLICIT`: matrix is handled implicitly.
-    """
-    EXPLICIT = SVD_TRANSPOSE_EXPLICIT
-    IMPLICIT = SVD_TRANSPOSE_IMPLICIT
-
 class SVDConvergedReason(object):
     """
     SVD convergence reasons
@@ -61,7 +51,6 @@ cdef class SVD(Object):
 
     Type            = SVDType
     Which           = SVDWhich
-    TransposeMode   = SVDTransposeMode
     ConvergedReason = SVDConvergedReason
 
     def __cinit__(self):
@@ -217,47 +206,40 @@ cdef class SVD(Object):
 
     #
 
-    def getTransposeMode(self):
+    def getImplicitTranspose(self):
         """
-        Gets the mode used to compute the transpose of the matrix
+        Gets the mode used to handle the transpose of the matrix
         associated with the singular value problem.
 
         Returns
         -------
-        mode: `SVD.TransposeMode` enumerate
-              The transpose mode (either explicit or implicit).
+        impl: boolean
+              How to handle the transpose (implicitly or not).
         """
-        cdef SlepcSVDTransposeMode val = SVD_TRANSPOSE_IMPLICIT
-        CHKERR( SVDGetTransposeMode(self.svd, &val) )
+        cdef PetscBool val = PETSC_FALSE
+        CHKERR( SVDGetImplicitTranspose(self.svd, &val) )
         return val
 
-    def setTransposeMode(self, mode):
+    def setImplicitTranspose(self, mode):
         """
-        Sets the mode used to compute the transpose of the matrix
+        Indicates how to handle the transpose of the matrix
         associated with the singular value problem.
 
         Parameters
         ----------
-        mode: `SVD.TransposeMode` enumerate
-              The transpose mode (either explicit or implicit).
+        impl: boolean
+              How to handle the transpose (implicitly or not).
 
         Notes
         -----
-        In the `SVD.TransposeMode.EXPLICIT` mode, the transpose of the
-        matrix is explicitly built.
+        By default, the transpose of the matrix is explicitly built
+        (if the matrix has defined the MatTranspose operation).
 
-        The option `SVD.TransposeMode.IMPLICIT` does not build the
-        transpose, but handles it implicitly via *multTranspose()*
-        matrix operation. This is likely to be more inefficient than
-        `SVD.TransposeMode.EXPLICIT`, both in sequential and in
-        parallel, but requires less storage.
-
-        The default is `SVD.TransposeMode.EXPLICIT` if the matrix has
-        defined the *transpose()* matrix operation, and
-        `SVD.TransposeMode.IMPLICIT` otherwise.
+        If this flag is set to true, the solver does not build the
+        transpose, but handles it implicitly via MatMultTranspose().
         """
-        cdef SlepcSVDTransposeMode val = mode
-        CHKERR( SVDSetTransposeMode(self.svd, val) )
+        cdef PetscBool val = mode
+        CHKERR( SVDSetImplicitTranspose(self.svd, val) )
 
     def getWhichSingularTriplets(self):
         """
@@ -847,7 +829,6 @@ cdef class SVD(Object):
 
 del SVDType
 del SVDWhich
-del SVDTransposeMode
 del SVDConvergedReason
 
 # -----------------------------------------------------------------------------

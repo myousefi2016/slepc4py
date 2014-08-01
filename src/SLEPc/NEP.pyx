@@ -454,7 +454,7 @@ cdef class NEP(Object):
         CHKERR( NEPGetConverged(self.nep, &ival) )
         return toInt(ival)
 
-    def getEigenpair(self, int i, Vec V=None):
+    def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
         """
         Gets the i-th solution of the eigenproblem as computed by
         `solve()`.  The solution consists of both the eigenvalue and
@@ -474,11 +474,14 @@ cdef class NEP(Object):
         e: scalar (possibly complex)
             The computed eigenvalue.
         """
-        cdef PetscScalar sval = 0
-        cdef PetscVec vec = NULL
-        if V is not None: vec = V.vec
-        CHKERR( NEPGetEigenpair(self.nep, i, &sval, vec) )
-        return toScalar(sval)
+        cdef PetscScalar sval1 = 0
+        cdef PetscScalar sval2 = 0
+        cdef PetscVec vecr = NULL
+        cdef PetscVec veci = NULL
+        if Vr is not None: vecr = Vr.vec
+        if Vi is not None: veci = Vi.vec
+        CHKERR( NEPGetEigenpair(self.nep, i, &sval1, &sval2, vecr, veci) )
+        return complex(toScalar(sval1), toScalar(sval2))
 
     def getErrorEstimate(self, int i):
         """

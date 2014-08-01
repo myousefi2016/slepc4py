@@ -7,10 +7,6 @@ cdef extern from * nogil:
     SlepcSVDType SVDLANCZOS
     SlepcSVDType SVDTRLANCZOS
 
-    ctypedef enum SlepcSVDTransposeMode "SVDTransposeMode":
-        SVD_TRANSPOSE_EXPLICIT
-        SVD_TRANSPOSE_IMPLICIT
-
     ctypedef enum SlepcSVDWhich "SVDWhich":
         SVD_LARGEST
         SVD_SMALLEST
@@ -40,8 +36,8 @@ cdef extern from * nogil:
 
     int SVDSetInitialSpace(SlepcSVD,PetscInt,PetscVec*)
 
-    int SVDSetTransposeMode(SlepcSVD,SlepcSVDTransposeMode)
-    int SVDGetTransposeMode(SlepcSVD,SlepcSVDTransposeMode*)
+    int SVDSetImplicitTranspose(SlepcSVD,PetscBool)
+    int SVDGetImplicitTranspose(SlepcSVD,PetscBool*)
     int SVDSetDimensions(SlepcSVD,PetscInt,PetscInt,PetscInt)
     int SVDGetDimensions(SlepcSVD,PetscInt*,PetscInt*,PetscInt*)
     int SVDSetTolerances(SlepcSVD,PetscReal,PetscInt)

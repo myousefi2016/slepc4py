@@ -9,12 +9,10 @@ class PEPType(object):
     - `LINEAR`:       Explicit linearization.
     - `QARNOLDI`:     Q-Arnoldi for quadratic problems.
     - `TOAR`:         Two-level orthogonal Arnoldi.
-    - `STOAR`:        Symmetric TOAR.
     """
     LINEAR   = S_(PEPLINEAR)
     QARNOLDI = S_(PEPQARNOLDI)
     TOAR     = S_(PEPTOAR)
-    STOAR    = S_(PEPSTOAR)
 
 class PEPProblemType(object):
     """

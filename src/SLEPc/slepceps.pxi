@@ -153,9 +153,6 @@ cdef extern from * nogil:
     int EPSLanczosSetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType)
     int EPSLanczosGetReorthog(SlepcEPS,SlepcEPSLanczosReorthogType*)
 
-    ctypedef enum SlepcEPSOrthType "EPSOrthType":
-        EPS_ORTH_I
-        EPS_ORTH_B
     int EPSGDSetKrylovStart(SlepcEPS,PetscBool)
     int EPSGDGetKrylovStart(SlepcEPS,PetscBool*)
     int EPSGDSetBlockSize(SlepcEPS,PetscInt)
@@ -164,8 +161,8 @@ cdef extern from * nogil:
     int EPSGDGetRestart(SlepcEPS,PetscInt*,PetscInt*)
     int EPSGDSetInitialSize(SlepcEPS,PetscInt)
     int EPSGDGetInitialSize(SlepcEPS,PetscInt*)
-    int EPSGDSetBOrth(SlepcEPS,SlepcEPSOrthType)
-    int EPSGDGetBOrth(SlepcEPS,SlepcEPSOrthType*)
+    int EPSGDSetBOrth(SlepcEPS,PetscBool)
+    int EPSGDGetBOrth(SlepcEPS,PetscBool*)
     int EPSGDSetWindowSizes(SlepcEPS,PetscInt,PetscInt)
     int EPSGDGetWindowSizes(SlepcEPS,PetscInt*,PetscInt*)
     int EPSGDSetDoubleExpansion(SlepcEPS,PetscBool)
@@ -183,8 +180,8 @@ cdef extern from * nogil:
     int EPSJDGetFix(SlepcEPS,PetscReal*)
     int EPSJDSetConstantCorrectionTolerance(SlepcEPS,PetscBool)
     int EPSJDGetConstantCorrectionTolerance(SlepcEPS,PetscBool*)
-    int EPSJDSetBOrth(SlepcEPS,SlepcEPSOrthType)
-    int EPSJDGetBOrth(SlepcEPS,SlepcEPSOrthType*)
+    int EPSJDSetBOrth(SlepcEPS,PetscBool)
+    int EPSJDGetBOrth(SlepcEPS,PetscBool*)
     int EPSJDGetWindowSizes(SlepcEPS,PetscInt*,PetscInt*)
     int EPSJDSetWindowSizes(SlepcEPS,PetscInt,PetscInt)
 

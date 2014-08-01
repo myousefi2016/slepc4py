@@ -187,16 +187,6 @@ class EPSLanczosReorthogType(object):
     PARTIAL   =  EPS_LANCZOS_REORTHOG_PARTIAL
     DELAYED   =  EPS_LANCZOS_REORTHOG_DELAYED
 
-class EPSOrthType(object):
-    """
-    EPS orthogonalization used in the search subspace
-
-    - `I`: standard orthogonalization
-    - `B`: B-orthogonalization
-    """
-    I         =  EPS_ORTH_I
-    B         =  EPS_ORTH_B
-
 # --------------------------------------------------------------------
 
 cdef class EPS(Object):
@@ -215,7 +205,6 @@ cdef class EPS(Object):
 
     PowerShiftType      = EPSPowerShiftType
     LanczosReorthogType = EPSLanczosReorthogType
-    OrthType            = EPSOrthType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.eps
@@ -1465,6 +1454,5 @@ del EPSConv
 del EPSConvergedReason
 del EPSPowerShiftType
 del EPSLanczosReorthogType
-del EPSOrthType
 
 # -----------------------------------------------------------------------------
