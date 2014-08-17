@@ -1,9 +1,15 @@
 build
-docs/html
+docs/*.html
+docs/*.info
 docs/*.pdf
+docs/*.[137]
+docs/apiref
+docs/usrman
 dist
 MANIFEST
 __pycache__
 *.pyc
 *.pyo
-*~
+.tox
+#slepc4py.SLEPc.c
+#slepc4py.SLEPc*.h
