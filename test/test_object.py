@@ -19,19 +19,16 @@ class BaseTestObject(object):
 
     def testTypeRegistry(self):
         type_reg = PETSc.__type_registry__
-        try:
-            classid = self.obj.getClassId()
-        except AttributeError:
-            classid = self.obj.getCookie()
-        self.assertTrue(type_reg[classid] is self.CLASS )
+        classid = self.obj.getClassId()
+        typeobj = self.CLASS
+        if isinstance(self.obj, PETSc.DMDA):
+            typeobj = PETSc.DM
+        self.assertTrue(type_reg[classid] is typeobj )
 
     def testLogClass(self):
         name = self.CLASS.__name__
         logcls = PETSc.Log.Class(name)
-        try:
-            classid = self.obj.getClassId()
-        except AttributeError:
-            classid = self.obj.getCookie()
+        classid = self.obj.getClassId()
         self.assertEqual(logcls.id, classid)
 
     def testClass(self):
@@ -72,6 +69,11 @@ class BaseTestObject(object):
         self.obj.setName(oldname)
         self.assertEqual(self.obj.getName(), oldname)
 
+    def testComm(self):
+        comm = self.obj.getComm()
+        self.assertTrue(isinstance(comm, PETSc.Comm))
+        self.assertTrue(comm in [PETSc.COMM_SELF, PETSc.COMM_WORLD])
+
     def testRefCount(self):
         self.assertEqual(self.obj.getRefCount(), 1)
         self.obj.incRef()
@@ -85,6 +87,16 @@ class BaseTestObject(object):
         self.obj.decRef()
         self.assertFalse(bool(self.obj))
 
+    def testHandle(self):
+        self.assertTrue(self.obj.handle)
+        self.assertTrue(self.obj.fortran)
+        h, f = self.obj.handle, self.obj.fortran
+        if (h>0 and f>0) or (h<0 and f<0):
+            self.assertEqual(h, f)
+        self.obj.destroy()
+        self.assertFalse(self.obj.handle)
+        self.assertFalse(self.obj.fortran)
+
     def testComposeQuery(self):
         self.assertEqual(self.obj.getRefCount(), 1)
         self.obj.compose('myobj', self.obj)
@@ -95,21 +107,38 @@ class BaseTestObject(object):
         self.assertEqual(self.obj.getRefCount(), 1)
         self.assertEqual(self.obj.query('myobj'), None)
 
-    def testComm(self):
-        comm = self.obj.getComm()
-        self.assertTrue(isinstance(comm, PETSc.Comm))
-        self.assertTrue(comm in [PETSc.COMM_SELF, PETSc.COMM_WORLD])
-
     def testProperties(self):
-        try:
-            self.assertEqual(self.obj.getClassId(),    self.obj.classid)
-        except AttributeError:
-            self.assertEqual(self.obj.getCookie(),    self.obj.cookie)
+        self.assertEqual(self.obj.getClassId(),   self.obj.classid)
         self.assertEqual(self.obj.getClassName(), self.obj.klass)
         self.assertEqual(self.obj.getType(),      self.obj.type)
         self.assertEqual(self.obj.getName(),      self.obj.name)
         self.assertEqual(self.obj.getComm(),      self.obj.comm)
         self.assertEqual(self.obj.getRefCount(),  self.obj.refcount)
+
+    def testShallowCopy(self):
+        import copy
+        rc = self.obj.getRefCount()
+        obj = copy.copy(self.obj)
+        self.assertTrue(obj is not self.obj)
+        self.assertTrue(obj == self.obj)
+        self.assertTrue(type(obj) is type(self.obj))
+        self.assertEqual(obj.getRefCount(), rc+1)
+        del obj
+        self.assertEqual(self.obj.getRefCount(), rc)
+
+    def testDeepCopy(self):
+        import copy
+        rc = self.obj.getRefCount()
+        try:
+            obj = copy.deepcopy(self.obj)
+        except NotImplementedError:
+            return
+        self.assertTrue(obj is not self.obj)
+        self.assertTrue(obj != self.obj)
+        self.assertTrue(type(obj) is type(self.obj))
+        self.assertEqual(self.obj.getRefCount(), rc)
+        self.assertEqual(obj.getRefCount(), 1)
+        del obj
 
 # --------------------------------------------------------------------
 
