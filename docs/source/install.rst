@@ -10,11 +10,11 @@ build *SLEPc for Python*:
 * Any MPI_ implementation [#]_ (e.g., MPICH_ or `Open MPI`_),
   built with shared libraries.
 
-* PETSc_ 3.4 or 3.3 built with shared libraries.
+* A matching version of PETSc_ built with shared libraries.
 
-* SLEPc_ 3.4 or 3.3 built with shared libraries.
+* A matching version of SLEPc_ built with shared libraries.
 
-* Python_ 2.4 to 2.7 or 3.1 to 3.3 [#]_.
+* Python_ 2.4 to 2.7 or 3.1 to 3.4 [#]_.
 
 * NumPy_ package.
 
