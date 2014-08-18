@@ -22,9 +22,9 @@ such method is to use a spectral transformation. Cheaper alternatives
 are also available.
 
 .. [1] C. Campos, J. E. Roman, E. Romero, A. Tomas.
-   SLEPc Users Manual. DISC-II/24/02 - Revision 3.4
+   SLEPc Users Manual. DISC-II/24/02 - Revision 3.5
    D. Sistemas Informáticos y Computación, Universitat Politècnica de
-   València. 2013.
+   València. 2014.
 
 .. [2] Vicente Hernandez, Jose E. Roman and Vicente Vidal.
    SLEPc: A Scalable and Flexible Toolkit for the Solution of
