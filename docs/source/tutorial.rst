@@ -185,24 +185,29 @@ view the particular settings that are currently being used::
 
     $ python demo/ex1.py -eps_view
 
-    EPS Object:
+    EPS Object: 1 MPI processes
+      type: krylovschur
+        Krylov-Schur: 50% of basis vectors kept after restart
       problem type: symmetric eigenvalue problem
-      method: krylovschur
-      extraction type: Rayleigh-Ritz
       selected portion of the spectrum: largest eigenvalues in magnitude
       number of eigenvalues (nev): 1
       number of column vectors (ncv): 16
       maximum dimension of projected problem (mpd): 16
       maximum number of iterations: 100
-      tolerance: 1e-07
+      tolerance: 1e-08
       convergence test: relative to the eigenvalue
-      estimates of matrix norms (constant): norm(A)=1
-      IP Object:
-        orthogonalization method:   classical Gram-Schmidt
-        orthogonalization refinement:   if needed (eta: 0.707100)
-      ST Object:
-        type: shift
-        shift: 0
+    BV Object: 1 MPI processes
+      type: svec
+      17 columns of global length 30
+      orthogonalization method: classical Gram-Schmidt
+      orthogonalization refinement: if needed (eta: 0.7071)
+    DS Object: 1 MPI processes
+      type: hep
+      solving the problem with: Implicit QR method (_steqr)
+    ST Object: 1 MPI processes
+      type: shift
+      shift: 0
+      number of matrices: 1
 
 Note that for computing eigenvalues of smallest magnitude we can use
 the option ``-eps_smallest_magnitude``, but for interior eigenvalues

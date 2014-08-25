@@ -10,7 +10,7 @@ computers. It can be used for linear eigenvalue problems in either
 standard or generalized form, with real or complex arithmetic.
 It can also be used for computing a partial SVD of a large, sparse,
 rectangular matrix, and to solve nonlinear eigenvalue problems
-(quadratic or general). Additionally, SLEPc provides solvers for
+(polynomial or general). Additionally, SLEPc provides solvers for
 the computation of the action of a matrix function on a vector.
 
 SLEPc is intended for computing a subset of the spectrum of a matrix
@@ -21,8 +21,8 @@ are harder to compute, so SLEPc provides different methodologies. One
 such method is to use a spectral transformation. Cheaper alternatives
 are also available.
 
-.. [1] C. Campos, J. E. Roman, E. Romero, A. Tomas.
-   SLEPc Users Manual. DISC-II/24/02 - Revision 3.5
+.. [1] J. E. Roman, C. Campos, E. Romero, A. Tomas.
+   SLEPc Users Manual. DSIC-II/24/02 - Revision 3.5
    D. Sistemas Informáticos y Computación, Universitat Politècnica de
    València. 2014.
 
@@ -48,13 +48,13 @@ Currently, the following types of eigenproblems can be addressed:
 * Partial singular value decomposition of a rectangular matrix,
   *Au=sv*.
 
-* Quadratic eigenvalue problem, *(k^2M+kC+K)x=0*.
+* Polynomial eigenvalue problem, *P(k)x=0*.
 
 * Nonlinear eigenvalue problem, *T(k)x=0*.
 
 * Computing the action of a matrix function on a vector, *w=f(alpha A)v*.
 
-For the eigenvalue problem, the following methods are available:
+For the linear eigenvalue problem, the following methods are available:
 
 * Krylov eigensolvers, particularly Krylov-Schur, Arnoldi, and
   Lanczos.
@@ -80,12 +80,13 @@ used:
 * Implicitly restarted Lanczos bidiagonalization (thick-restart
   Lanczos).
 
-For quadratic eigenvalue problems, the following methods are available:
+For polynomial eigenvalue problems, the following methods are available:
 
 * Use an eigensolver to solve the generalized eigenvalue problem 
   obtained after linearization.
 
-* Q-Arnoldi, a memory efficient variant of Arnoldi for quadratic problems.
+* TOAR and Q-Arnoldi, memory efficient variants of Arnoldi for polynomial
+  eigenproblems.
 
 Computation of interior eigenvalues is supported by means of the
 following methodologies:
@@ -117,8 +118,10 @@ Other remarkable features include:
 Components
 ----------
 
-SLEPc provides the following components, which are mirrored by
-slepc4py for its use from Python.
+SLEPc provides the following components, which are mirrored by slepc4py
+for its use from Python. The first five components are solvers for
+different classes of problems, while the rest can be considered
+auxiliary object.
 
 :EPS: The Eigenvalue Problem Solver is the component that provides all
       the functionality necessary to define and solve an
@@ -138,9 +141,9 @@ slepc4py for its use from Python.
       other parameters for fine tuning the computation. Different
       solvers are available, as in the case of EPS.
 
-:QEP: This component is the analog of EPS for the case of Quadratic
-      Eigenvalue Problems. The user provides three square matrices that
-      define the problem. Several parameters can be specified, as in
+:PEP: This component is the analog of EPS for the case of Polynomial
+      Eigenvalue Problems. The user provides the coefficient matrices of
+      the polynomial. Several parameters can be specified, as in
       the case of EPS. It is also possible to indicate whether the
       problem belongs to a special type, e.g., symmetric or gyroscopic.
 
@@ -160,9 +163,16 @@ slepc4py for its use from Python.
       spectral transformation is shift-and-invert, that allows for the
       computation of eigenvalues closest to a given target value.
 
-:IP:  This component encapsulates the concept of an Inner Product in a
-      vector space, which can be either the standard Hermitian inner
-      product *x'y* or the positive definite product *x'By* for a
-      given SPD matrix *B*. This component provides convenient access
+:BV:  This component encapsulates the concept of a set of Basis Vectors
+      spanning a vector space. This component provides convenient access
       to common operations such as orthogonalization of vectors. The
-      IP component is usually not required by end-users.
+      BV component is usually not required by end-users.
+
+:DS:  The Dense System (or Direct Solver) component, used internally to
+      solve dense eigenproblems of small size that appear in the course
+      of iterative eigensolvers.
+
+:FN:  A component used to define mathematical functions. This is required
+      by the end-user for instance to define function T(.) when solving
+      nonlinear eigenproblems with NEP in split form.
+
