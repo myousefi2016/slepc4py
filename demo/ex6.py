@@ -69,7 +69,7 @@ def solve_exp(t, A, b, x):
     tol, maxit = M.getTolerances()
     Print("Stopping condition: tol=%.4g, maxit=%d" % (tol, maxit))
     t = M.getScaleFactor()
-    Print("Computed vector at time t=%.4g has norm %g" % (t, x.norm()))
+    Print("Computed vector at time t=%.4g has norm %g" % (t.real, x.norm()))
     Print("")
 
 if __name__ == '__main__':
