@@ -1130,7 +1130,7 @@ cdef class EPS(Object):
         if ncv == 0: return subspace
         cdef PetscMat A = NULL
         CHKERR( EPSGetOperators(self.eps, &A, NULL) )
-        CHKERR( MatGetVecs(A, &v, NULL) )
+        CHKERR( MatCreateVecs(A, &v, NULL) )
         cdef Vec V = None
         cdef object tmp = allocate(ncv*sizeof(Vec),<void**>&isp)
         for i in range(ncv):
