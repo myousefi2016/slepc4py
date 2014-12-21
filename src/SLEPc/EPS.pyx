@@ -187,7 +187,7 @@ class EPSLanczosReorthogType(object):
     PARTIAL   =  EPS_LANCZOS_REORTHOG_PARTIAL
     DELAYED   =  EPS_LANCZOS_REORTHOG_DELAYED
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef class EPS(Object):
 
