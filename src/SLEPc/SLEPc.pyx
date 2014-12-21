@@ -107,7 +107,7 @@ cdef inline object toScalar(PetscScalar value):
 cdef inline PetscScalar asScalar(object value) except*:
     return PyPetscScalar_AsPetscScalar(value)
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef extern from "string.h"  nogil:
     void* memset(void*,int,size_t)
@@ -150,11 +150,11 @@ include "PEP.pyx"
 include "NEP.pyx"
 include "MFN.pyx"
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 include "CAPI.pyx"
 
-# --------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 cdef extern from "Python.h":
     int Py_AtExit(void (*)())
