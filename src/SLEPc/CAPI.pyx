@@ -69,6 +69,21 @@ cdef api SlepcFN PySlepcFN_Get(object arg) except ? NULL:
 
 # -----------------------------------------------------------------------------
 
+# -- RG --
+
+cdef api object PySlepcRG_New(SlepcRG arg):
+    cdef RG retv = RG()
+    setref(&retv.rg, arg)
+    return retv
+
+cdef api SlepcRG PySlepcRG_Get(object arg) except ? NULL:
+    cdef SlepcRG retv = NULL
+    cdef RG ob = <RG?> arg
+    retv = ob.rg
+    return retv
+
+# -----------------------------------------------------------------------------
+
 # -- EPS --
 
 cdef api object PySlepcEPS_New(SlepcEPS arg):
