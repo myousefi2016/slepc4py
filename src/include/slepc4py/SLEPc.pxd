@@ -17,6 +17,9 @@ cdef extern from "slepc.h":
     struct _p_FN
     ctypedef _p_FN* SlepcFN "FN"
 
+    struct _p_RG
+    ctypedef _p_RG* SlepcRG "RG"
+
     struct _p_EPS
     ctypedef _p_EPS* SlepcEPS "EPS"
 
@@ -59,6 +62,12 @@ ctypedef public api class FN(Object) [
     object PySlepcFNObject,
     ]:
     cdef SlepcFN fn
+
+ctypedef public api class RG(Object) [
+    type   PySlepcRG_Type,
+    object PySlepcRGObject,
+    ]:
+    cdef SlepcRG rg
 
 ctypedef public api class EPS(Object) [
     type PySlepcEPS_Type,

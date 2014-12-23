@@ -122,6 +122,7 @@ include "slepcst.pxi"
 include "slepcbv.pxi"
 include "slepcds.pxi"
 include "slepcfn.pxi"
+include "slepcrg.pxi"
 include "slepceps.pxi"
 include "slepcsvd.pxi"
 include "slepcpep.pxi"
@@ -144,6 +145,7 @@ include "ST.pyx"
 include "BV.pyx"
 include "DS.pyx"
 include "FN.pyx"
+include "RG.pyx"
 include "EPS.pyx"
 include "SVD.pyx"
 include "PEP.pyx"
@@ -184,6 +186,7 @@ cdef extern from *:
     PetscClassId SLEPC_BV_CLASSID  "BV_CLASSID"
     PetscClassId SLEPC_DS_CLASSID  "DS_CLASSID"
     PetscClassId SLEPC_FN_CLASSID  "FN_CLASSID"
+    PetscClassId SLEPC_RG_CLASSID  "RG_CLASSID"
     PetscClassId SLEPC_EPS_CLASSID "EPS_CLASSID"
     PetscClassId SLEPC_SVD_CLASSID "SVD_CLASSID"
     PetscClassId SLEPC_PEP_CLASSID "PEP_CLASSID"
@@ -198,6 +201,7 @@ cdef int register(char path[]) except -1:
     PyPetscType_Register(SLEPC_BV_CLASSID,  BV)
     PyPetscType_Register(SLEPC_DS_CLASSID,  DS)
     PyPetscType_Register(SLEPC_FN_CLASSID,  FN)
+    PyPetscType_Register(SLEPC_RG_CLASSID,  RG)
     PyPetscType_Register(SLEPC_EPS_CLASSID, EPS)
     PyPetscType_Register(SLEPC_SVD_CLASSID, SVD)
     PyPetscType_Register(SLEPC_PEP_CLASSID, PEP)
