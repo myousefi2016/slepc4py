@@ -68,6 +68,11 @@ def help(args=None):
         bv.setFromOptions()
         bv.destroy()
         del bv
+    if 'rg' in args:
+        rg = SLEPc.RG().create(comm=COMM)
+        rg.setFromOptions()
+        rg.destroy()
+        del rg
 
 if __name__ == '__main__':
     help()
