@@ -1,9 +1,18 @@
 =========================
-HISTORY: SLEPc for Python
+CHANGES: SLEPc for Python
 =========================
 
 :Author:  Lisandro Dalcin
 :Contact: dalcinl@gmail.com
+
+
+Release 3.5.1
+=============
+
+- Add RG class introduced in SLEPc 3.5 release.
+- Add PySlepcXXX_New/Get C API functions.
+- Fix compilation problem with complex scalars on OS X.
+- Fix outdated SWIG interface file.
 
 
 Release 3.5
