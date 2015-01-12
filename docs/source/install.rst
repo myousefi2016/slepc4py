@@ -1,34 +1,6 @@
 Installation
 ============
 
-Requirements
-------------
-
-You need to have the following software properly installed in order to
-build *SLEPc for Python*:
-
-* Any MPI_ implementation [#]_ (e.g., MPICH_ or `Open MPI`_),
-  built with shared libraries.
-
-* A matching version of PETSc_ built with shared libraries.
-
-* A matching version of SLEPc_ built with shared libraries.
-
-* Python_ 2.4 to 2.7 or 3.1 to 3.4 [#]_.
-
-* NumPy_ package.
-
-* petsc4py_ package.
-
-.. [#] Unless you have appropriately configured and built SLEPc and
-       PETSc without MPI (configure option ``--with-mpi=0``).
-
-.. [#] You may need to use a parallelized version of the Python
-       interpreter with some MPI-1 implementations (e.g. MPICH1).
-
-.. include:: links.txt
-
-
 Using **pip** or **easy_install**
 ---------------------------------
 
@@ -41,7 +13,7 @@ dependencies (:mod:`mpi4py` is optional but highly recommended)::
 
 Alternatively, you can use :program:`easy_install` (deprecated)::
 
-  $ [sudo] easy_install [--user] slepc4py
+  $ easy_install [--user] slepc4py
 
 If you already have working PETSc and SLEPc builds, set environment
 variables :envvar:`SLEPC_DIR` and :envvar:`PETSC_DIR` (and perhaps
@@ -56,6 +28,31 @@ next use :program:`pip`::
 
 Using **distutils**
 -------------------
+
+Requirements
+^^^^^^^^^^^^
+
+You need to have the following software properly installed in order to
+build *SLEPc for Python*:
+
+* Any MPI_ implementation [#]_ (e.g., MPICH_ or `Open MPI`_),
+  built with shared libraries.
+
+* A matching version of PETSc_ built with shared libraries.
+
+* A matching version of SLEPc_ built with shared libraries.
+
+* NumPy_ package.
+
+* petsc4py_ package.
+
+.. [#] Unless you have appropriately configured and built SLEPc and
+       PETSc without MPI (configure option ``--with-mpi=0``).
+
+.. [#] You may need to use a parallelized version of the Python
+       interpreter with some MPI-1 implementations (e.g. MPICH1).
+
+.. include:: links.txt
 
 Downloading
 ^^^^^^^^^^^
