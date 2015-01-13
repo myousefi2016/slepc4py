@@ -15,10 +15,10 @@ Alternatively, you can use :program:`easy_install` (deprecated)::
 
   $ easy_install [--user] slepc4py
 
-If you already have working PETSc and SLEPc builds, set environment
+If you already have working PETSc and SLEPc installs, set environment
 variables :envvar:`SLEPC_DIR` and :envvar:`PETSC_DIR` (and perhaps
-:envvar:`PETSC_ARCH` for prefix installs) to appropriate values and
-next use :program:`pip`::
+:envvar:`PETSC_ARCH` for non-prefix installs) to appropriate values
+and next use :program:`pip`::
 
   $ export SLEPC_DIR=/path/to/slepc
   $ export PETSC_DIR=/path/to/petsc
