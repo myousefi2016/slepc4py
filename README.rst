@@ -25,7 +25,7 @@ Dependencies
 
 .. _Python:   http://www.python.org
 .. _NumPy:    http://www.numpy.org
-.. _SLEPc:    http://www.grycap.upv.es/slepc/
+.. _SLEPc:    http://slepc.upv.es
 .. _PETSc:    http://www.mcs.anl.gov/petsc/
 .. _petsc4py: 
 .. _Cython:   http://www.cython.org

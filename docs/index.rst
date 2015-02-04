@@ -26,7 +26,7 @@ Online Documentation
 Discussion and Support
 ----------------------
 
-+ Mailing Lists: petsc-users@mcs.anl.gov, slepc-maint@grycap.upv.es
++ Mailing Lists: petsc-users@mcs.anl.gov, slepc-maint@upv.es
 
 
 Downloads and Development

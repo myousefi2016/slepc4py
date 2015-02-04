@@ -16,13 +16,13 @@ be used for either standard or generalized eigenproblems, with real or
 complex arithmetic. It can also be used for computing a partial SVD of
 a large, sparse, rectangular matrix.
 
-.. _SLEPc: http://www.grycap.upv.es/slepc
+.. _SLEPc: http://slepc.upv.es
 .. _PETSc: http://www.mcs.anl.gov/petsc
 """
 
 __author__    = 'Lisandro Dalcin'
 __version__   = '3.5.1'
-__credits__   = 'SLEPc Team <slepc-maint@grycap.upv.es>'
+__credits__   = 'SLEPc Team <slepc-maint@upv.es>'
 
 # -----------------------------------------------------------------------------
 
