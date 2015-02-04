@@ -6,7 +6,7 @@
 
 .. _PETSc:        http://www.mcs.anl.gov/petsc/
 
-.. _SLEPc:        http://www.grycap.upv.es/slepc/
+.. _SLEPc:        http://slepc.upv.es
 
 .. _TAO:          http://www.mcs.anl.gov/tao/
 
