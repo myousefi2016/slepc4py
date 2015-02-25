@@ -43,6 +43,9 @@ cdef extern from * nogil:
     int STGetOperationCounters(SlepcST,PetscInt*,PetscInt*)
     int STResetOperationCounters(SlepcST)
 
+    int STSetTransform(SlepcST,PetscBool)
+    int STGetTransform(SlepcST,PetscBool*)
+
     int STGetMatMode(SlepcST,SlepcSTMatMode*)
     int STSetMatMode(SlepcST,SlepcSTMatMode)
 
