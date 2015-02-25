@@ -220,6 +220,41 @@ cdef class ST(Object):
         CHKERR( STGetShift(self.st, &sval) )
         return toScalar(sval)
 
+    def setTransform(self, flag):
+        """
+        Sets a flag to indicate whether the transformed matrices 
+	are computed or not. .
+
+        Parameters
+        -------
+        flag: boolean
+               This flag is intended for the case of polynomial 
+	       eigenproblems solved via linearization. 
+	       If this flag is False (default) the spectral transformation 
+	       is applied to the linearization (handled by the eigensolver), 
+	       otherwise it is applied to the original problem. 
+        """
+        cdef PetscBool sval = flag
+        CHKERR( STSetTransform(self.st, sval) )
+
+    def getTransform(self):
+        """
+        Gets the flag indicating whether the transformed matrices 
+	are computed or not. .
+
+        Returns
+        -------
+        flag: boolean
+               This flag is intended for the case of polynomial 
+	       eigenproblems solved via linearization. 
+	       If this flag is False (default) the spectral transformation 
+	       is applied to the linearization (handled by the eigensolver), 
+	       otherwise it is applied to the original problem. 
+        """
+        cdef PetscBool sval = PETSC_FALSE
+        CHKERR( STGetTransform(self.st, &sval) )
+        return sval
+
     def setMatMode(self, mode):
         """
         Sets a flag to indicate how the matrix is being shifted in the
