@@ -389,6 +389,33 @@ cdef class PEP(Object):
         if mpd is not None: ival3 = asInt(mpd)
         CHKERR( PEPSetDimensions(self.pep, ival1, ival2, ival3) )
 
+    def getST(self):
+        """
+        Obtain the spectral transformation (`ST`) object associated to
+        the eigensolver object.
+
+        Returns
+        -------
+        st: ST
+            The spectral transformation.
+        """
+        cdef ST st = ST()
+        CHKERR( PEPGetST(self.pep, &st.st) )
+        PetscINCREF(st.obj)
+        return st
+
+    def setST(self, ST st not None):
+        """
+        Associates a spectral transformation object to the
+        eigensolver.
+
+        Parameters
+        ----------
+        st: ST
+            The spectral transformation.
+        """
+        CHKERR( PEPSetST(self.pep, st.st) )
+
     def getScale(self):
         """
         Gets the strategy used for scaling the polynomial eigenproblem.

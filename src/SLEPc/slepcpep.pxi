@@ -70,6 +70,8 @@ cdef extern from * nogil:
     int PEPGetBV(SlepcPEP,SlepcBV*)
     int PEPSetTolerances(SlepcPEP,PetscReal,PetscInt)
     int PEPGetTolerances(SlepcPEP,PetscReal*,PetscInt*)
+    int PEPSetST(SlepcPEP,SlepcST)
+    int PEPGetST(SlepcPEP,SlepcST*)
 
     int PEPSetTrackAll(SlepcPEP,PetscBool)
     int PEPGetTrackAll(SlepcPEP,PetscBool*)
