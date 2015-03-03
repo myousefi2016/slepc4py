@@ -695,6 +695,79 @@ cdef class PEP(Object):
         CHKERR( PEPComputeResidualNorm(self.pep, i, &rval) )
         return toReal(rval)
 
+    def setLinearEPS(self, EPS eps not None):
+        """
+        Associate an eigensolver object (EPS) to the polynomial eigenvalue solver.
+
+        Parameters
+        ----------
+        eps: EPS
+            The linear eigensolver.
+        """
+        CHKERR( PEPLinearSetEPS(self.pep, eps.eps) )
+
+    def getLinearEPS(self):
+        """
+        Retrieve the eigensolver object (EPS) associated to the polynomial eigenvalue solver.
+ 
+        Returns
+        -------
+        eps: EPS
+            The linear eigensolver.
+        """
+        cdef EPS eps = EPS()
+        CHKERR( PEPLinearGetEPS(self.pep, &eps.eps) )
+        PetscINCREF(eps.obj)
+        return eps
+        
+    def setLinearCompanionForm(self, cform not None):
+        """
+        Choose between the two companion forms available for the linearization of a quadratic eigenproblem.
+
+        Parameters
+        ----------
+        cform: integer
+            1 or 2 (first or second companion form).
+        """
+        CHKERR( PEPLinearSetCompanionForm(self.pep, cform) )
+
+    def getLinearCompanionForm(self):
+        """
+        Returns the number of the companion form that will be used for the linearization of a quadratic eigenproblem. 
+ 
+        Returns
+        -------
+        cform: integer
+            1 or 2 (first or second companion form).
+        """
+        cdef PetscInt cform = 0
+        CHKERR( PEPLinearGetCompanionForm(self.pep, &cform) )
+        return cform
+        
+    def setLinearExplicitMatrix(self, flag not None):
+        """
+        Indicate if the matrices A and B for the linearization of the problem must be built explicitly.
+
+        Parameters
+        ----------
+        flag: boolean
+            boolean flag indicating if the matrices are built explicitly .
+        """
+        cdef PetscBool sval = flag
+        CHKERR( PEPLinearSetExplicitMatrix(self.pep, sval) )
+
+    def getLinearExplicitMatrix(self):
+        """
+        Returns the flag indicating if the matrices A and B for the linearization are built explicitly.
+ 
+        Returns
+        -------
+        flag: boolean
+        """
+        cdef PetscBool sval = PETSC_FALSE
+        CHKERR( PEPLinearGetExplicitMatrix(self.pep, &sval) )
+        return sval
+
 # -----------------------------------------------------------------------------
 
 del PEPType
