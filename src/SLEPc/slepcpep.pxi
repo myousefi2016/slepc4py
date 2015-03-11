@@ -59,6 +59,8 @@ cdef extern from * nogil:
 
     int PEPSetType(SlepcPEP,SlepcPEPType)
     int PEPGetType(SlepcPEP,SlepcPEPType*)
+    int PEPSetBasis(SlepcPEP,SlepcPEPBasis)
+    int PEPGetBasis(SlepcPEP,SlepcPEPBasis*)
     int PEPSetProblemType(SlepcPEP,SlepcPEPProblemType)
     int PEPGetProblemType(SlepcPEP,SlepcPEPProblemType*)
     int PEPSetOperators(SlepcPEP,PetscInt,PetscMat*)
