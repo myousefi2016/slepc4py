@@ -247,6 +247,33 @@ cdef class PEP(Object):
         """
         CHKERR( PEPSetFromOptions(self.pep) )
 
+    def getBasis(self):
+        """
+        Gets the type of polynomial basis used to 
+        describe the polynomial eigenvalue problem.
+
+        Returns
+        -------
+        basis: `PEP.Basis` enumerate
+            the basis that was previously set.
+        """
+        cdef SlepcPEPBasis val = PEP_BASIS_MONOMIAL
+        CHKERR( PEPGetBasis(self.pep, &val) )
+        return val
+
+    def setBasis(self, basis):
+        """
+        Specifies the type of polynomial basis used to 
+        describe the polynomial eigenvalue problem.
+
+        Parameters
+        ----------
+        basis: `PEP.Basis` enumerate
+            the basis to be set.
+        """
+        cdef SlepcPEPBasis val = basis
+        CHKERR( PEPSetBasis(self.pep, val) )
+
     def getProblemType(self):
         """
         Gets the problem type from the PEP object.
