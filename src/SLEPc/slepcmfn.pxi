@@ -35,6 +35,8 @@ cdef extern from * nogil:
     int MFNGetTolerances(SlepcMFN,PetscReal*,PetscInt*)
     int MFNSetDimensions(SlepcMFN,PetscInt)
     int MFNGetDimensions(SlepcMFN,PetscInt*)
+    int MFNSetScaleFactor(SlepcMFN,PetscScalar)
+    int MFNGetScaleFactor(SlepcMFN,PetscScalar*)
 
     int MFNMonitorCancel(SlepcMFN)
     int MFNGetIterationNumber(SlepcMFN,PetscInt*)
