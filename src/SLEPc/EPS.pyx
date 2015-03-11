@@ -676,6 +676,62 @@ cdef class EPS(Object):
         if max_it is not None: ival = asInt(max_it)
         CHKERR( EPSSetTolerances(self.eps, rval, ival) )
 
+    def getConvergenceTest(self):
+        """
+        Return the method used to compute the error estimate 
+        used in the convergence test. 
+
+        Returns
+        -------
+        conv: EPS.Conv
+            The method used to compute the error estimate 
+            used in the convergence test. 
+        """
+        cdef SlepcEPSConv conv = EPS_CONV_EIG
+        CHKERR( EPSGetConvergenceTest(self.eps, &conv) )
+        return conv
+
+    def setConvergenceTest(self, conv):
+        """
+        Specifies how to compute the error estimate 
+        used in the convergence test. 
+
+        Parameters
+        ----------
+        conv: EPS.Conv
+            The method used to compute the error estimate 
+            used in the convergence test.
+        """
+        cdef SlepcEPSConv tconv = conv
+        CHKERR( EPSSetConvergenceTest(self.eps, tconv) )
+
+    def getTrueResidual(self):
+        """
+        Returns the flag indicating whether true residual must be
+        computed explicitly or not.
+
+        Returns
+        -------
+        trueres: bool
+            Whether the solver compute all residuals or not.
+        """
+        cdef PetscBool tval = PETSC_FALSE
+        CHKERR( EPSGetTrueResidual(self.eps, &tval) )
+        return <bint>tval
+
+    def setTrueResidual(self, trueres):
+        """
+        Specifies if the solver must compute the true residual 
+        explicitly or not.
+
+        Parameters
+        ----------
+        trueres: bool
+            Whether compute the true residual or not.
+        """
+        cdef PetscBool tval = trueres
+        CHKERR( EPSSetTrueResidual(self.eps, tval) )
+
     def getTrackAll(self):
         """
         Returns the flag indicating whether all residual norms must be

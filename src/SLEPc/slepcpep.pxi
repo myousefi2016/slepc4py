@@ -10,6 +10,11 @@ cdef extern from * nogil:
         PEP_HERMITIAN
         PEP_GYROSCOPIC
 
+    ctypedef enum SlepcPEPRefine "PEPRefine":
+        PEP_REFINE_NONE
+        PEP_REFINE_SIMPLE
+        PEP_REFINE_MULTIPLE
+
     ctypedef enum SlepcPEPWhich "PEPWhich":
         PEP_LARGEST_MAGNITUDE
         PEP_SMALLEST_MAGNITUDE
@@ -54,6 +59,8 @@ cdef extern from * nogil:
 
     int PEPSetType(SlepcPEP,SlepcPEPType)
     int PEPGetType(SlepcPEP,SlepcPEPType*)
+    int PEPSetBasis(SlepcPEP,SlepcPEPBasis)
+    int PEPGetBasis(SlepcPEP,SlepcPEPBasis*)
     int PEPSetProblemType(SlepcPEP,SlepcPEPProblemType)
     int PEPGetProblemType(SlepcPEP,SlepcPEPProblemType*)
     int PEPSetOperators(SlepcPEP,PetscInt,PetscMat*)
@@ -70,6 +77,8 @@ cdef extern from * nogil:
     int PEPGetBV(SlepcPEP,SlepcBV*)
     int PEPSetTolerances(SlepcPEP,PetscReal,PetscInt)
     int PEPGetTolerances(SlepcPEP,PetscReal*,PetscInt*)
+    int PEPSetST(SlepcPEP,SlepcST)
+    int PEPGetST(SlepcPEP,SlepcST*)
 
     int PEPSetTrackAll(SlepcPEP,PetscBool)
     int PEPGetTrackAll(SlepcPEP,PetscBool*)
@@ -84,6 +93,11 @@ cdef extern from * nogil:
     int PEPComputeRelativeError(SlepcPEP,PetscInt,PetscReal*)
     int PEPComputeResidualNorm(SlepcPEP,PetscInt,PetscReal*)
     int PEPGetErrorEstimate(SlepcPEP,PetscInt,PetscReal*)
+
+    int PEPSetConvergenceTest(SlepcPEP,SlepcPEPConv)
+    int PEPGetConvergenceTest(SlepcPEP,SlepcPEPConv*)
+    int PEPSetRefine(SlepcPEP,SlepcPEPRefine,PetscInt,PetscReal,PetscInt,PetscBool)
+    int PEPGetRefine(SlepcPEP,SlepcPEPRefine*,PetscInt*,PetscReal*,PetscInt*,PetscBool*)
 
     int PEPMonitorCancel(SlepcPEP)
     int PEPGetIterationNumber(SlepcPEP,PetscInt*)

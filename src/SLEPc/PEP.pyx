@@ -79,6 +79,18 @@ class PEPConv(object):
     NORM = EPS_CONV_NORM
     USER = EPS_CONV_USER
 
+class PEPRefine(object):
+    """
+    PEP refinement strategy
+
+    - `NONE`:
+    - `SIMPLE`:
+    - `MULTIPLE`:
+    """
+    NONE  = PEP_REFINE_NONE
+    SIMPLE  = PEP_REFINE_SIMPLE
+    MULTIPLE = PEP_REFINE_MULTIPLE
+
 class PEPConvergedReason(object):
     """
     PEP convergence reasons
@@ -107,6 +119,7 @@ cdef class PEP(Object):
     Which           = PEPWhich
     Basis           = PEPBasis
     Scale           = PEPScale
+    Refine          = PEPRefine
     Conv            = PEPConv
     ConvergedReason = PEPConvergedReason
 
@@ -234,6 +247,33 @@ cdef class PEP(Object):
         """
         CHKERR( PEPSetFromOptions(self.pep) )
 
+    def getBasis(self):
+        """
+        Gets the type of polynomial basis used to 
+        describe the polynomial eigenvalue problem.
+
+        Returns
+        -------
+        basis: `PEP.Basis` enumerate
+            the basis that was previously set.
+        """
+        cdef SlepcPEPBasis val = PEP_BASIS_MONOMIAL
+        CHKERR( PEPGetBasis(self.pep, &val) )
+        return val
+
+    def setBasis(self, basis):
+        """
+        Specifies the type of polynomial basis used to 
+        describe the polynomial eigenvalue problem.
+
+        Parameters
+        ----------
+        basis: `PEP.Basis` enumerate
+            the basis to be set.
+        """
+        cdef SlepcPEPBasis val = basis
+        CHKERR( PEPSetBasis(self.pep, val) )
+
     def getProblemType(self):
         """
         Gets the problem type from the PEP object.
@@ -319,6 +359,90 @@ cdef class PEP(Object):
         if max_it is not None: ival = asInt(max_it)
         CHKERR( PEPSetTolerances(self.pep, rval, ival) )
 
+    def getConvergenceTest(self):
+        """
+        Return the method used to compute the error estimate 
+        used in the convergence test. 
+
+        Returns
+        -------
+        conv: PEP.Conv
+            The method used to compute the error estimate 
+            used in the convergence test. 
+        """
+        cdef SlepcPEPConv conv = PEP_CONV_EIG
+        CHKERR( PEPGetConvergenceTest(self.pep, &conv) )
+        return conv
+
+    def setConvergenceTest(self, conv):
+        """
+        Specifies how to compute the error estimate 
+        used in the convergence test. 
+
+        Parameters
+        ----------
+        conv: PEP.Conv
+            The method used to compute the error estimate 
+            used in the convergence test.
+        """
+        cdef SlepcPEPConv tconv = conv
+        CHKERR( PEPSetConvergenceTest(self.pep, tconv) )
+
+    def getRefine(self):
+        """
+        Gets the refinement strategy used by the PEP object, 
+        and the associated parameters. 
+
+        Returns
+        -------
+        ref: PEP.Refine
+            The refinement type.
+        npart: int
+            The number of partitions of the communicator.
+        tol: real
+            The convergence tolerance.
+        its: int
+            The maximum number of refinement iterations.
+        schur: bool
+            Whether the Schur complement approach is being used
+        """
+        cdef SlepcPEPRefine ref = PEP_REFINE_NONE
+        cdef PetscInt npart = 1
+        cdef PetscReal tol = PETSC_DEFAULT
+        cdef PetscInt its = PETSC_DEFAULT
+        cdef PetscBool schur = PETSC_FALSE
+        CHKERR( PEPGetRefine(self.pep, &ref, &npart, &tol, &its, &schur) )
+        return (ref, toInt(npart), toReal(tol), toInt(its), <bint>schur)
+
+    def setRefine(self, ref, npart=None, tol=None, its=None, schur=None):
+        """
+        Sets the refinement strategy used by the PEP object, 
+        and the associated parameters. 
+
+        Parameters
+        -------
+        ref: PEP.Refine
+            The refinement type.
+        npart: int, optional
+            The number of partitions of the communicator.
+        tol: real, optional
+            The convergence tolerance.
+        its: int, optional
+            The maximum number of refinement iterations.
+        schur: bool, optional
+            Whether the Schur complement approach is being used
+        """
+        cdef SlepcPEPRefine tref = ref
+        cdef PetscInt tnpart = 1
+        cdef PetscReal ttol = PETSC_DEFAULT
+        cdef PetscInt tits = PETSC_DEFAULT
+        cdef PetscBool tschur = PETSC_FALSE
+        if npart is not None: tnpart = asInt(npart)
+        if tol is not None: ttol = asReal(tol)
+        if its is not None: tits = asInt(its)
+        if schur is not None: tschur = schur
+        CHKERR( PEPSetRefine(self.pep, tref, tnpart, ttol, tits, tschur) )
+
     def getTrackAll(self):
         """
         Returns the flag indicating whether all residual norms must be
@@ -388,6 +512,33 @@ cdef class PEP(Object):
         if ncv is not None: ival2 = asInt(ncv)
         if mpd is not None: ival3 = asInt(mpd)
         CHKERR( PEPSetDimensions(self.pep, ival1, ival2, ival3) )
+
+    def getST(self):
+        """
+        Obtain the spectral transformation (`ST`) object associated to
+        the eigensolver object.
+
+        Returns
+        -------
+        st: ST
+            The spectral transformation.
+        """
+        cdef ST st = ST()
+        CHKERR( PEPGetST(self.pep, &st.st) )
+        PetscINCREF(st.obj)
+        return st
+
+    def setST(self, ST st not None):
+        """
+        Associates a spectral transformation object to the
+        eigensolver.
+
+        Parameters
+        ----------
+        st: ST
+            The spectral transformation.
+        """
+        CHKERR( PEPSetST(self.pep, st.st) )
 
     def getScale(self):
         """
@@ -667,6 +818,79 @@ cdef class PEP(Object):
         cdef PetscReal rval = 0
         CHKERR( PEPComputeResidualNorm(self.pep, i, &rval) )
         return toReal(rval)
+
+    def setLinearEPS(self, EPS eps not None):
+        """
+        Associate an eigensolver object (EPS) to the polynomial eigenvalue solver.
+
+        Parameters
+        ----------
+        eps: EPS
+            The linear eigensolver.
+        """
+        CHKERR( PEPLinearSetEPS(self.pep, eps.eps) )
+
+    def getLinearEPS(self):
+        """
+        Retrieve the eigensolver object (EPS) associated to the polynomial eigenvalue solver.
+ 
+        Returns
+        -------
+        eps: EPS
+            The linear eigensolver.
+        """
+        cdef EPS eps = EPS()
+        CHKERR( PEPLinearGetEPS(self.pep, &eps.eps) )
+        PetscINCREF(eps.obj)
+        return eps
+        
+    def setLinearCompanionForm(self, cform not None):
+        """
+        Choose between the two companion forms available for the linearization of a quadratic eigenproblem.
+
+        Parameters
+        ----------
+        cform: integer
+            1 or 2 (first or second companion form).
+        """
+        CHKERR( PEPLinearSetCompanionForm(self.pep, cform) )
+
+    def getLinearCompanionForm(self):
+        """
+        Returns the number of the companion form that will be used for the linearization of a quadratic eigenproblem. 
+ 
+        Returns
+        -------
+        cform: integer
+            1 or 2 (first or second companion form).
+        """
+        cdef PetscInt cform = 0
+        CHKERR( PEPLinearGetCompanionForm(self.pep, &cform) )
+        return cform
+        
+    def setLinearExplicitMatrix(self, flag not None):
+        """
+        Indicate if the matrices A and B for the linearization of the problem must be built explicitly.
+
+        Parameters
+        ----------
+        flag: boolean
+            boolean flag indicating if the matrices are built explicitly .
+        """
+        cdef PetscBool sval = flag
+        CHKERR( PEPLinearSetExplicitMatrix(self.pep, sval) )
+
+    def getLinearExplicitMatrix(self):
+        """
+        Returns the flag indicating if the matrices A and B for the linearization are built explicitly.
+ 
+        Returns
+        -------
+        flag: boolean
+        """
+        cdef PetscBool sval = PETSC_FALSE
+        CHKERR( PEPLinearGetExplicitMatrix(self.pep, &sval) )
+        return sval
 
 # -----------------------------------------------------------------------------
 
