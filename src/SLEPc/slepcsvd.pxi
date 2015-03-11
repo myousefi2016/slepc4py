@@ -11,6 +11,10 @@ cdef extern from * nogil:
         SVD_LARGEST
         SVD_SMALLEST
 
+    ctypedef enum SlepcSVDErrorType "SVDErrorType":
+        SVD_ERROR_ABSOLUTE
+        SVD_ERROR_RELATIVE
+
     ctypedef enum SlepcSVDConvergedReason "SVDConvergedReason":
         SVD_CONVERGED_ITERATING
         SVD_CONVERGED_TOL
@@ -53,8 +57,7 @@ cdef extern from * nogil:
     int SVDGetConvergedReason(SlepcSVD,SlepcSVDConvergedReason*)
     int SVDGetConverged(SlepcSVD,PetscInt*)
     int SVDGetSingularTriplet(SlepcSVD,PetscInt,PetscReal*,PetscVec,PetscVec)
-    int SVDComputeResidualNorms(SlepcSVD,PetscInt,PetscReal*,PetscReal*)
-    int SVDComputeRelativeError(SlepcSVD,PetscInt,PetscReal*)
+    int SVDComputeError(SlepcSVD,PetscInt,SlepcSVDErrorType,PetscReal*)
 
     int SVDCrossSetEPS(SlepcSVD,SlepcEPS)
     int SVDCrossGetEPS(SlepcSVD,SlepcEPS*)

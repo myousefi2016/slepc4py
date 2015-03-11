@@ -62,6 +62,6 @@ if nconv > 0:
   Print("-------------  ---------------")
   for i in range(nconv):
     sigma = S.getSingularTriplet(i, u, v)
-    error = S.computeRelativeError(i)
+    error = S.computeError(i)
     Print( "   %6f     %12g" % (sigma, error) )
   Print()

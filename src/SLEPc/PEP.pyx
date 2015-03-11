@@ -26,6 +26,18 @@ class PEPProblemType(object):
     HERMITIAN  = PEP_HERMITIAN
     GYROSCOPIC = PEP_GYROSCOPIC
 
+class PEPErrorType(object):
+    """
+    PEP error type to assess accuracy of computed solutions
+
+    - `ABSOLUTE`:  Absolute error.
+    - `RELATIVE`:  Relative error.
+    - `BACKWARD`:  Backward error.
+    """
+    ABSOLUTE = PEP_ERROR_ABSOLUTE
+    RELATIVE = PEP_ERROR_RELATIVE
+    BACKWARD = PEP_ERROR_BACKWARD
+
 class PEPWhich(object):
     """
     PEP desired part of spectrum
@@ -120,6 +132,7 @@ cdef class PEP(Object):
     Basis           = PEPBasis
     Scale           = PEPScale
     Refine          = PEPRefine
+    ErrorType       = PEPErrorType
     Conv            = PEPConv
     ConvergedReason = PEPConvergedReason
 
@@ -781,43 +794,36 @@ cdef class PEP(Object):
         CHKERR( PEPGetErrorEstimate(self.pep, i, &rval) )
         return toReal(rval)
 
-    def computeRelativeError(self, int i):
+    def computeError(self, int i, etype=None):
         """
-        Computes the relative error bound associated with the i-th
+        Computes the error (based on the residual norm) associated with the i-th
         computed eigenpair.
 
         Parameters
         ----------
         i: int
             Index of the solution to be considered.
+        etype: `PEP.ErrorType` enumerate
+           The error type to compute.
 
         Returns
         -------
         error: real
-            The relative error bound.
+            The error bound, computed in various ways from the residual norm
+           ``||P(l)x||_2`` where ``l`` is the eigenvalue and ``x`` is the eigenvector.
+
+        Notes
+        -----
+        The index ``i`` should be a value between ``0`` and
+        ``nconv-1`` (see `getConverged()`).
         """
+        cdef SlepcPEPErrorType et = PEP_ERROR_BACKWARD
         cdef PetscReal rval = 0
-        CHKERR( PEPComputeRelativeError(self.pep, i, &rval) )
+        if etype is not None: et = etype
+        CHKERR( PEPComputeError(self.pep, i, et, &rval) )
         return toReal(rval)
 
-    def computeResidualNorm(self, int i):
-        """
-        Computes the norm of the residual vector associated with the
-        i-th computed eigenpair.
-
-        Parameters
-        ----------
-        i: int
-            Index of the solution to be considered.
-
-        Returns
-        -------
-        norm: real
-            The residual norm.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( PEPComputeResidualNorm(self.pep, i, &rval) )
-        return toReal(rval)
+    #
 
     def setLinearEPS(self, EPS eps not None):
         """
@@ -832,7 +838,8 @@ cdef class PEP(Object):
 
     def getLinearEPS(self):
         """
-        Retrieve the eigensolver object (EPS) associated to the polynomial eigenvalue solver.
+        Retrieve the eigensolver object (EPS) associated to the polynomial
+        eigenvalue solver.
  
         Returns
         -------
@@ -846,7 +853,8 @@ cdef class PEP(Object):
         
     def setLinearCompanionForm(self, cform not None):
         """
-        Choose between the two companion forms available for the linearization of a quadratic eigenproblem.
+        Choose between the two companion forms available for the linearization of
+        a quadratic eigenproblem.
 
         Parameters
         ----------
@@ -857,7 +865,8 @@ cdef class PEP(Object):
 
     def getLinearCompanionForm(self):
         """
-        Returns the number of the companion form that will be used for the linearization of a quadratic eigenproblem. 
+        Returns the number of the companion form that will be used for the
+        linearization of a quadratic eigenproblem. 
  
         Returns
         -------
@@ -870,7 +879,8 @@ cdef class PEP(Object):
         
     def setLinearExplicitMatrix(self, flag not None):
         """
-        Indicate if the matrices A and B for the linearization of the problem must be built explicitly.
+        Indicate if the matrices A and B for the linearization of the problem
+        must be built explicitly.
 
         Parameters
         ----------
@@ -882,7 +892,8 @@ cdef class PEP(Object):
 
     def getLinearExplicitMatrix(self):
         """
-        Returns the flag indicating if the matrices A and B for the linearization are built explicitly.
+        Returns the flag indicating if the matrices A and B for the linearization
+        are built explicitly.
  
         Returns
         -------
@@ -899,6 +910,7 @@ del PEPProblemType
 del PEPWhich
 del PEPBasis
 del PEPScale
+del PEPErrorType
 del PEPConv
 del PEPConvergedReason
 

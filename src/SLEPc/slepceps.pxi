@@ -54,6 +54,11 @@ cdef extern from * nogil:
         EPS_BALANCE_TWOSIDE
         EPS_BALANCE_USER
 
+    ctypedef enum SlepcEPSErrorType "EPSErrorType":
+        EPS_ERROR_ABSOLUTE
+        EPS_ERROR_RELATIVE
+        EPS_ERROR_BACKWARD
+
     ctypedef enum SlepcEPSConv "EPSConv":
         EPS_CONV_ABS
         EPS_CONV_EIG
@@ -133,8 +138,7 @@ cdef extern from * nogil:
     int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeRelativeError(SlepcEPS,PetscInt,PetscReal*)
-    int EPSComputeResidualNorm(SlepcEPS,PetscInt,PetscReal*)
+    int EPSComputeError(SlepcEPS,PetscInt,SlepcEPSErrorType,PetscReal*)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT

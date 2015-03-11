@@ -15,6 +15,11 @@ cdef extern from * nogil:
         PEP_REFINE_SIMPLE
         PEP_REFINE_MULTIPLE
 
+    ctypedef enum SlepcPEPErrorType "PEPErrorType":
+        PEP_ERROR_ABSOLUTE
+        PEP_ERROR_RELATIVE
+        PEP_ERROR_BACKWARD
+
     ctypedef enum SlepcPEPWhich "PEPWhich":
         PEP_LARGEST_MAGNITUDE
         PEP_SMALLEST_MAGNITUDE
@@ -90,8 +95,7 @@ cdef extern from * nogil:
 
     int PEPGetConverged(SlepcPEP,PetscInt*)
     int PEPGetEigenpair(SlepcPEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
-    int PEPComputeRelativeError(SlepcPEP,PetscInt,PetscReal*)
-    int PEPComputeResidualNorm(SlepcPEP,PetscInt,PetscReal*)
+    int PEPComputeError(SlepcPEP,PetscInt,SlepcPEPErrorType,PetscReal*)
     int PEPGetErrorEstimate(SlepcPEP,PetscInt,PetscReal*)
 
     int PEPSetConvergenceTest(SlepcPEP,SlepcPEPConv)

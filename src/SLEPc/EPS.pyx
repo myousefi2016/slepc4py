@@ -100,6 +100,18 @@ class EPSBalance(object):
     TWOSIDE = EPS_BALANCE_TWOSIDE
     USER    = EPS_BALANCE_USER
 
+class EPSErrorType(object):
+    """
+    EPS error type to assess accuracy of computed solutions
+
+    - `ABSOLUTE`:  Absolute error.
+    - `RELATIVE`:  Relative error.
+    - `BACKWARD`:  Backward error.
+    """
+    ABSOLUTE = EPS_ERROR_ABSOLUTE
+    RELATIVE = EPS_ERROR_RELATIVE
+    BACKWARD = EPS_ERROR_BACKWARD
+
 class EPSWhich(object):
     """
     EPS desired piece of spectrum
@@ -199,6 +211,7 @@ cdef class EPS(Object):
     ProblemType     = EPSProblemType
     Extraction      = EPSExtraction
     Balance         = EPSBalance
+    ErrorType       = EPSErrorType
     Which           = EPSWhich
     Conv            = EPSConv
     ConvergedReason = EPSConvergedReason
@@ -1217,61 +1230,40 @@ cdef class EPS(Object):
         -----
         This is the error estimate used internally by the
         eigensolver. The actual error bound can be computed with
-        `computeRelativeError()`.
+        `computeError()`.
         """
         cdef PetscReal rval = 0
         CHKERR( EPSGetErrorEstimate(self.eps, i, &rval) )
         return toReal(rval)
 
-    def computeRelativeError(self, int i):
+    def computeError(self, int i, etype=None):
         """
-        Computes the relative error bound associated with the i-th
+        Computes the error (based on the residual norm) associated with the i-th
         computed eigenpair.
 
         Parameters
         ----------
         i: int
            Index of the solution to be considered.
+        etype: `EPS.ErrorType` enumerate
+           The error type to compute.
 
         Returns
         -------
         e: real
-           The relative error bound, computed as
-           ``||Ax-kBx||_2/||kx||_2`` where ``k`` is the eigenvalue and
-           ``x`` is the eigenvector.  If ``k=0`` the relative error is
-           computed as ``||Ax||_2/||x||_2``.
+           The error bound, computed in various ways from the residual norm
+           ``||Ax-kBx||_2`` where ``k`` is the eigenvalue and
+           ``x`` is the eigenvector.
 
         Notes
         -----
         The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
-        according to the ordering criterion established with
-        `setWhichEigenpairs()`.
+        ``nconv-1`` (see `getConverged()`).
         """
+        cdef SlepcEPSErrorType et = EPS_ERROR_RELATIVE
         cdef PetscReal rval = 0
-        CHKERR( EPSComputeRelativeError(self.eps, i, &rval) )
-        return toReal(rval)
-
-    def computeResidualNorm(self, int i):
-        """
-        Computes the norm of the residual vector associated with the
-        i-th computed eigenpair.
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        norm: real
-              The residual norm, computed as ``||Ax-kBx||_2`` where
-              ``k`` is the eigenvalue and ``x`` is the eigenvector.
-              If ``k=0`` then the residual norm is computed as
-              ``||Ax||_2``.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( EPSComputeResidualNorm(self.eps, i, &rval) )
+        if etype is not None: et = etype
+        CHKERR( EPSComputeError(self.eps, i, et, &rval) )
         return toReal(rval)
 
     #
@@ -1505,6 +1497,7 @@ del EPSType
 del EPSProblemType
 del EPSExtraction
 del EPSBalance
+del EPSErrorType
 del EPSWhich
 del EPSConv
 del EPSConvergedReason

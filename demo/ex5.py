@@ -81,7 +81,7 @@ def solve_eigensystem(M, C, K):
         Print("-------------------- -------------------------")
         for i in range(nconv):
             k = Q.getEigenpair(i, xr, xi)
-            error = Q.computeRelativeError(i)
+            error = Q.computeError(i)
             if k.imag != 0.0: 
                 Print("%9f%+9f j    %12g" % (k.real, k.imag, error))
             else: 

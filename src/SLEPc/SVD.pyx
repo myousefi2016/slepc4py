@@ -16,6 +16,16 @@ class SVDType(object):
     LANCZOS   = S_(SVDLANCZOS)
     TRLANCZOS = S_(SVDTRLANCZOS)
 
+class SVDErrorType(object):
+    """
+    SVD error type to assess accuracy of computed solutions
+
+    - `ABSOLUTE`:  Absolute error.
+    - `RELATIVE`:  Relative error.
+    """
+    ABSOLUTE = SVD_ERROR_ABSOLUTE
+    RELATIVE = SVD_ERROR_RELATIVE
+
 class SVDWhich(object):
     """
     SVD desired piece of spectrum
@@ -50,6 +60,7 @@ cdef class SVD(Object):
     """
 
     Type            = SVDType
+    ErrorType       = SVDErrorType
     Which           = SVDWhich
     ConvergedReason = SVDConvergedReason
 
@@ -610,61 +621,37 @@ cdef class SVD(Object):
 
     #
 
-    def computeRelativeError(self, int i):
+    def computeError(self, int i, etype=None):
         """
-        Computes the relative error bound associated with the i-th
+        Computes the error (based on the residual norm) associated with the i-th
         singular triplet.
 
         Parameters
         ----------
         i: int
            Index of the solution to be considered.
+        etype: `SVD.ErrorType` enumerate
+           The error type to compute.
 
         Returns
         -------
         e: real
-           The relative error bound, computed as
-           ``sqrt(n1^2+n2^2)/sigma`` where ``n1 = ||A*v-sigma*u||_2``,
+           The relative error bound, computed in various ways from the residual norm
+           ``sqrt(n1^2+n2^2)`` where ``n1 = ||A*v-sigma*u||_2``,
            ``n2 = ||A^T*u-sigma*v||_2``, ``sigma`` is the singular
            value, ``u`` and ``v`` are the left and right singular
-           vectors.  If ``sigma`` is too small the relative error is
-           computed as ``sqrt(n1^2+n2^2)``.
+           vectors.
 
         Notes
         -----
         The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Singular triplets are
-        indexed according to the ordering criterion established with
-        `setWhichSingularTriplets()`.
+        ``nconv-1`` (see `getConverged()`).
         """
+        cdef SlepcSVDErrorType et = SVD_ERROR_RELATIVE
         cdef PetscReal rval = 0
-        CHKERR( SVDComputeRelativeError(self.svd, i, &rval) )
+        if etype is not None: et = etype
+        CHKERR( SVDComputeError(self.svd, i, et, &rval) )
         return toReal(rval)
-
-    def computeResidualNorms(self, int i):
-        """
-        Computes the norms of the residual vectors associated with the
-        i-th computed singular triplet.
-
-        Parameters
-        ----------
-        i: int
-           Index of the solution to be considered.
-
-        Returns
-        -------
-        norm1: real
-               The residual norm ``||A*v-sigma*u||_2`` where ``sigma``
-               is the singular value, ``u`` and ``v`` are the singular
-               vectors.
-        norm2: real
-               The residual norm ``||A^T*u-sigma*v||_2`` with the same
-               ``sigma``, ``u`` and ``v``.
-        """
-        cdef PetscReal rval1 = 0
-        cdef PetscReal rval2 = 0
-        CHKERR( SVDComputeResidualNorms(self.svd, i, &rval1, &rval2) )
-        return (toReal(rval1), toReal(rval2))
 
     #
 
@@ -828,6 +815,7 @@ cdef class SVD(Object):
 # -----------------------------------------------------------------------------
 
 del SVDType
+del SVDErrorType
 del SVDWhich
 del SVDConvergedReason
 

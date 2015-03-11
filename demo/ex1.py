@@ -70,7 +70,7 @@ if nconv > 0:
   Print("----------------- ------------------")
   for i in range(nconv):
     k = E.getEigenpair(i, vr, vi)
-    error = E.computeRelativeError(i)
+    error = E.computeError(i)
     if k.imag != 0.0:
       Print( " %9f%+9f j %12g" % (k.real, k.imag, error) )
     else:

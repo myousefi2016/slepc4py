@@ -5,6 +5,16 @@ class NEPType(object):
     SLP      = S_(NEPSLP)
     NARNOLDI = S_(NEPNARNOLDI)
 
+class NEPErrorType(object):
+    """
+    NEP error type to assess accuracy of computed solutions
+
+    - `ABSOLUTE`:  Absolute error.
+    - `RELATIVE`:  Relative error.
+    """
+    ABSOLUTE = NEP_ERROR_ABSOLUTE
+    RELATIVE = NEP_ERROR_RELATIVE
+
 class NEPWhich(object):
     LARGEST_MAGNITUDE  = NEP_LARGEST_MAGNITUDE
     SMALLEST_MAGNITUDE = NEP_SMALLEST_MAGNITUDE
@@ -37,6 +47,7 @@ cdef class NEP(Object):
     """
 
     Type            = NEPType
+    ErrorType       = NEPErrorType
     Which           = NEPWhich
     ConvergedReason = NEPConvergedReason
 
@@ -502,42 +513,29 @@ cdef class NEP(Object):
         CHKERR( NEPGetErrorEstimate(self.nep, i, &rval) )
         return toReal(rval)
 
-    def computeRelativeError(self, int i):
+    def computeError(self, int i, etype=None):
         """
-        Computes the relative error bound associated with the i-th
+        Computes the error (based on the residual norm) associated with the i-th
         computed eigenpair.
 
         Parameters
         ----------
         i: int
             Index of the solution to be considered.
+        etype: `NEP.ErrorType` enumerate
+           The error type to compute.
 
         Returns
         -------
         error: real
-            The relative error bound.
+            The error bound, computed in various ways from the residual norm
+           ``||T(lambda)x||_2`` where ``lambda`` is the eigenvalue and
+           ``x`` is the eigenvector.
         """
+        cdef SlepcNEPErrorType et = NEP_ERROR_RELATIVE
         cdef PetscReal rval = 0
-        CHKERR( NEPComputeRelativeError(self.nep, i, &rval) )
-        return toReal(rval)
-
-    def computeResidualNorm(self, int i):
-        """
-        Computes the norm of the residual vector associated with the
-        i-th computed eigenpair.
-
-        Parameters
-        ----------
-        i: int
-            Index of the solution to be considered.
-
-        Returns
-        -------
-        norm: real
-            The residual norm.
-        """
-        cdef PetscReal rval = 0
-        CHKERR( NEPComputeResidualNorm(self.nep, i, &rval) )
+        if etype is not None: et = etype
+        CHKERR( NEPComputeError(self.nep, i, et, &rval) )
         return toReal(rval)
 
     def setFunction(self, function, Mat F, Mat P=None, args=None, kargs=None):
@@ -614,6 +612,7 @@ cdef class NEP(Object):
 
 del NEPType
 del NEPWhich
+del NEPErrorType
 del NEPConvergedReason
 
 # -----------------------------------------------------------------------------

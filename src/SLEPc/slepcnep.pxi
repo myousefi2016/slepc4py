@@ -16,6 +16,10 @@ cdef extern from * nogil:
         NEP_TARGET_REAL
         NEP_TARGET_IMAGINARY
 
+    ctypedef enum SlepcNEPErrorType "NEPErrorType":
+        NEP_ERROR_ABSOLUTE
+        NEP_ERROR_RELATIVE
+
     ctypedef enum SlepcNEPConvergedReason "NEPConvergedReason":
         NEP_CONVERGED_FNORM_ABS
         NEP_CONVERGED_FNORM_RELATIVE
@@ -79,8 +83,7 @@ cdef extern from * nogil:
 
     int NEPGetConverged(SlepcNEP,PetscInt*)
     int NEPGetEigenpair(SlepcNEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
-    int NEPComputeRelativeError(SlepcNEP,PetscInt,PetscReal*)
-    int NEPComputeResidualNorm(SlepcNEP,PetscInt,PetscReal*)
+    int NEPComputeError(SlepcNEP,PetscInt,SlepcNEPErrorType,PetscReal*)
     int NEPGetErrorEstimate(SlepcNEP,PetscInt,PetscReal*)
 
     int NEPMonitorCancel(SlepcNEP)
