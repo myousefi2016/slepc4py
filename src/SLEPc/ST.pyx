@@ -223,7 +223,7 @@ cdef class ST(Object):
     def setTransform(self, flag):
         """
         Sets a flag to indicate whether the transformed matrices 
-	are computed or not.
+        are computed or not.
 
         Parameters
         -------
@@ -240,7 +240,7 @@ cdef class ST(Object):
     def getTransform(self):
         """
         Gets the flag indicating whether the transformed matrices 
-	are computed or not.
+        are computed or not.
 
         Returns
         -------
