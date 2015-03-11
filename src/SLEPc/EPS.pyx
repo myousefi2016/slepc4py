@@ -712,24 +712,24 @@ cdef class EPS(Object):
 
         Returns
         -------
-        trackall: bool
+        trueres: bool
             Whether the solver compute all residuals or not.
         """
         cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSGetTrueResidual(self.eps, &tval) )
         return <bint>tval
 
-    def setTrueResidual(self, val):
+    def setTrueResidual(self, trueres):
         """
         Specifies if the solver must compute the true residual 
         explicitly or not.
 
         Parameters
         ----------
-        val: bool
+        trueres: bool
             Whether compute the true residual or not.
         """
-        cdef PetscBool tval = val
+        cdef PetscBool tval = trueres
         CHKERR( EPSSetTrueResidual(self.eps, tval) )
 
     def getTrackAll(self):

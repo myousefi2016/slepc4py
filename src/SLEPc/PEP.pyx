@@ -382,7 +382,7 @@ cdef class PEP(Object):
         cdef SlepcPEPRefine ref = PEP_REFINE_NONE
         cdef PetscInt npart = 1
         cdef PetscReal tol = PETSC_DEFAULT
-        cdef PetscInt its = 1
+        cdef PetscInt its = PETSC_DEFAULT
         cdef PetscBool schur = PETSC_FALSE
         CHKERR( PEPGetRefine(self.pep, &ref, &npart, &tol, &its, &schur) )
         return (ref, toInt(npart), toReal(tol), toInt(its), <bint>schur)
@@ -408,7 +408,7 @@ cdef class PEP(Object):
         cdef SlepcPEPRefine tref = ref
         cdef PetscInt tnpart = 1
         cdef PetscReal ttol = PETSC_DEFAULT
-        cdef PetscInt tits = 1
+        cdef PetscInt tits = PETSC_DEFAULT
         cdef PetscBool tschur = PETSC_FALSE
         if npart is not None: tnpart = asInt(npart)
         if tol is not None: ttol = asReal(tol)
