@@ -53,7 +53,9 @@ def solve_exp(t, A, b, x):
     # Setup the solver
     M = SLEPc.MFN().create()
     M.setOperator(A)
-    M.setScaleFactor(t)
+    f = M.getFN()
+    f.setType(SLEPc.FN.Type.EXP)
+    f.setParameters([t])
     M.setTolerances(1e-7)
     M.setFromOptions()
     # Solve the problem
@@ -68,7 +70,6 @@ def solve_exp(t, A, b, x):
     Print("Subspace dimension: %i" % ncv)
     tol, maxit = M.getTolerances()
     Print("Stopping condition: tol=%.4g, maxit=%d" % (tol, maxit))
-    t = M.getScaleFactor()
     Print("Computed vector at time t=%.4g has norm %g" % (t.real, x.norm()))
     Print("")
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
     b.set(0)
     b[0] = 1
     b.assemble()
-    t = 1
+    t = 2
     solve_exp(t, A, b, x)    # compute x=exp(t*A)*b
     A = None
     b = x = None

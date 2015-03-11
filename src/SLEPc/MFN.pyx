@@ -205,6 +205,31 @@ cdef class MFN(Object):
         cdef PetscInt ival = asInt(ncv)
         CHKERR( MFNSetDimensions(self.mfn, ival) )
 
+    def getFN(self):
+        """
+        Obtain the math function object associated to the MFN object.
+
+        Returns
+        -------
+        fn: FN
+            The math function context.
+        """
+        cdef FN fn = FN()
+        CHKERR( MFNGetFN(self.mfn, &fn.fn) )
+        PetscINCREF(fn.obj)
+        return fn
+
+    def setFN(self, FN fn not None):
+        """
+        Associates a math function object to the MFN object.
+
+        Parameters
+        ----------
+        fn: FN
+            The math function context.
+        """
+        CHKERR( MFNSetFN(self.mfn, fn.fn) )
+
     def getBV(self):
         """
         Obtain the basis vector object associated to the MFN object.

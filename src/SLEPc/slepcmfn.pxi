@@ -29,8 +29,8 @@ cdef extern from * nogil:
 
     int MFNSetBV(SlepcMFN,SlepcBV)
     int MFNGetBV(SlepcMFN,SlepcBV*)
-    int MFNSetDS(SlepcMFN,SlepcDS)
-    int MFNGetDS(SlepcMFN,SlepcDS*)
+    int MFNSetFN(SlepcMFN,SlepcFN)
+    int MFNGetFN(SlepcMFN,SlepcFN*)
     int MFNSetTolerances(SlepcMFN,PetscReal,PetscInt)
     int MFNGetTolerances(SlepcMFN,PetscReal*,PetscInt*)
     int MFNSetDimensions(SlepcMFN,PetscInt)
