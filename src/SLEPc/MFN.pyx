@@ -205,32 +205,6 @@ cdef class MFN(Object):
         cdef PetscInt ival = asInt(ncv)
         CHKERR( MFNSetDimensions(self.mfn, ival) )
 
-    def getScaleFactor(self):
-        """
-        Gets the factor used for scaling the matrix.
-
-        Returns
-        -------
-        alpha: real
-            The scaling factor.
-        """
-        cdef PetscScalar sval = 0
-        CHKERR( MFNGetScaleFactor(self.mfn, &sval) )
-        return toScalar(sval)
-
-    def setScaleFactor(self, alpha):
-        """
-        Sets the scale factor to multiply the matrix (the
-        argument of the function).
-
-        Parameters
-        ----------
-        alpha: float
-            The scaling factor.
-        """
-        cdef PetscScalar sval = asScalar(alpha)
-        CHKERR( MFNSetScaleFactor(self.mfn, sval) )
-
     def getBV(self):
         """
         Obtain the basis vector object associated to the MFN object.
