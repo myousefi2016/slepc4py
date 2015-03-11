@@ -79,6 +79,18 @@ class PEPConv(object):
     NORM = EPS_CONV_NORM
     USER = EPS_CONV_USER
 
+class PEPRefine(object):
+    """
+    PEP refinement strategy
+
+    - `NONE`:
+    - `SIMPLE`:
+    - `MULTIPLE`:
+    """
+    NONE  = PEP_REFINE_NONE
+    SIMPLE  = PEP_REFINE_SIMPLE
+    MULTIPLE = PEP_REFINE_MULTIPLE
+
 class PEPConvergedReason(object):
     """
     PEP convergence reasons
@@ -107,6 +119,7 @@ cdef class PEP(Object):
     Which           = PEPWhich
     Basis           = PEPBasis
     Scale           = PEPScale
+    Refine          = PEPRefine
     Conv            = PEPConv
     ConvergedReason = PEPConvergedReason
 
@@ -318,6 +331,90 @@ cdef class PEP(Object):
         if tol    is not None: rval = asReal(tol)
         if max_it is not None: ival = asInt(max_it)
         CHKERR( PEPSetTolerances(self.pep, rval, ival) )
+
+    def getConvergenceTest(self):
+        """
+        Return the method used to compute the error estimate 
+        used in the convergence test. 
+
+        Returns
+        -------
+        conv: PEP.Conv
+            The method used to compute the error estimate 
+            used in the convergence test. 
+        """
+        cdef SlepcPEPConv conv = PEP_CONV_EIG
+        CHKERR( PEPGetConvergenceTest(self.pep, &conv) )
+        return conv
+
+    def setConvergenceTest(self, conv):
+        """
+        Specifies how to compute the error estimate 
+        used in the convergence test. 
+
+        Parameters
+        ----------
+        conv: PEP.Conv
+            The method used to compute the error estimate 
+            used in the convergence test.
+        """
+        cdef SlepcPEPConv tconv = conv
+        CHKERR( PEPSetConvergenceTest(self.pep, tconv) )
+
+    def getRefine(self):
+        """
+        Gets the refinement strategy used by the PEP object, 
+        and the associated parameters. 
+
+        Returns
+        -------
+        ref: PEP.Refine
+            The refinement type.
+        npart: int
+            The number of partitions of the communicator.
+        tol: real
+            The convergence tolerance.
+        its: int
+            The maximum number of refinement iterations.
+        schur: bool
+            Whether the Schur complement approach is being used
+        """
+        cdef SlepcPEPRefine ref = PEP_REFINE_NONE
+        cdef PetscInt npart = 1
+        cdef PetscReal tol = PETSC_DEFAULT
+        cdef PetscInt its = PETSC_DEFAULT
+        cdef PetscBool schur = PETSC_FALSE
+        CHKERR( PEPGetRefine(self.pep, &ref, &npart, &tol, &its, &schur) )
+        return (ref, toInt(npart), toReal(tol), toInt(its), <bint>schur)
+
+    def setRefine(self, ref, npart=None, tol=None, its=None, schur=None):
+        """
+        Sets the refinement strategy used by the PEP object, 
+        and the associated parameters. 
+
+        Parameters
+        -------
+        ref: PEP.Refine
+            The refinement type.
+        npart: int, optional
+            The number of partitions of the communicator.
+        tol: real, optional
+            The convergence tolerance.
+        its: int, optional
+            The maximum number of refinement iterations.
+        schur: bool, optional
+            Whether the Schur complement approach is being used
+        """
+        cdef SlepcPEPRefine tref = ref
+        cdef PetscInt tnpart = 1
+        cdef PetscReal ttol = PETSC_DEFAULT
+        cdef PetscInt tits = PETSC_DEFAULT
+        cdef PetscBool tschur = PETSC_FALSE
+        if npart is not None: tnpart = asInt(npart)
+        if tol is not None: ttol = asReal(tol)
+        if its is not None: tits = asInt(its)
+        if schur is not None: tschur = schur
+        CHKERR( PEPSetRefine(self.pep, tref, tnpart, ttol, tits, tschur) )
 
     def getTrackAll(self):
         """

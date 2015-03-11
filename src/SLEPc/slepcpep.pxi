@@ -10,6 +10,11 @@ cdef extern from * nogil:
         PEP_HERMITIAN
         PEP_GYROSCOPIC
 
+    ctypedef enum SlepcPEPRefine "PEPRefine":
+        PEP_REFINE_NONE
+        PEP_REFINE_SIMPLE
+        PEP_REFINE_MULTIPLE
+
     ctypedef enum SlepcPEPWhich "PEPWhich":
         PEP_LARGEST_MAGNITUDE
         PEP_SMALLEST_MAGNITUDE
@@ -86,6 +91,11 @@ cdef extern from * nogil:
     int PEPComputeRelativeError(SlepcPEP,PetscInt,PetscReal*)
     int PEPComputeResidualNorm(SlepcPEP,PetscInt,PetscReal*)
     int PEPGetErrorEstimate(SlepcPEP,PetscInt,PetscReal*)
+
+    int PEPSetConvergenceTest(SlepcPEP,SlepcPEPConv)
+    int PEPGetConvergenceTest(SlepcPEP,SlepcPEPConv*)
+    int PEPSetRefine(SlepcPEP,SlepcPEPRefine,PetscInt,PetscReal,PetscInt,PetscBool)
+    int PEPGetRefine(SlepcPEP,SlepcPEPRefine*,PetscInt*,PetscReal*,PetscInt*,PetscBool*)
 
     int PEPMonitorCancel(SlepcPEP)
     int PEPGetIterationNumber(SlepcPEP,PetscInt*)
