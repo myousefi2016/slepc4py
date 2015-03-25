@@ -55,7 +55,7 @@ def solve_exp(t, A, b, x):
     M.setOperator(A)
     f = M.getFN()
     f.setType(SLEPc.FN.Type.EXP)
-    f.setParameters([t])
+    f.setScale(t)
     M.setTolerances(1e-7)
     M.setFromOptions()
     # Solve the problem

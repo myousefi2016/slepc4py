@@ -89,7 +89,6 @@ class EPSBalance(object):
     """
     EPS type of balancing used for non-Hermitian problems
 
-
     - `NONE`:     None.
     - `ONESIDE`:  One-sided eigensolver, only right eigenvectors.
     - `TWOSIDE`:  Two-sided eigensolver, right and left eigenvectors.

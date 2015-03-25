@@ -4,10 +4,26 @@ class FNType(object):
     """
     FN type
     """
+    COMBINE  = S_(FNCOMBINE)
     RATIONAL = S_(FNRATIONAL)
     EXP      = S_(FNEXP)
     LOG      = S_(FNLOG)
     PHI      = S_(FNPHI)
+    SQRT     = S_(FNSQRT)
+
+class FNCombineType(object):
+    """
+    FN type of combination of child functions
+
+    - `ADD`:       Addition         f(x) = f1(x)+f2(x)
+    - `MULTIPLY`:  Multiplication   f(x) = f1(x)*f2(x)
+    - `DIVIDE`:    Division         f(x) = f1(x)/f2(x)
+    - `COMPOSE`:   Composition      f(x) = f2(f1(x))
+    """
+    ADD      = FN_COMBINE_ADD
+    MULTIPLY = FN_COMBINE_MULTIPLY
+    DIVIDE   = FN_COMBINE_DIVIDE
+    COMPOSE  = FN_COMBINE_COMPOSE
 
 # -----------------------------------------------------------------------------
 
@@ -135,27 +151,6 @@ cdef class FN(Object):
 
     #
 
-    def setParameters(self, alpha=None, beta=None):
-        """
-        Sets the parameters that define the matematical function.
-
-        Parameters
-        ----------
-        alpha: array of scalars
-            First group of parameters.
-        beta: array of scalars
-            Second group of parameters.
-        """
-        cdef PetscInt na = 0, nb = 0
-        cdef PetscScalar *a = NULL
-        cdef PetscScalar *b = NULL
-        cdef object tmp1, tmp2
-        if alpha is not None:
-            tmp1 = iarray_s(alpha, &na, &a)
-        if beta is not None:
-            tmp2 = iarray_s(beta, &nb, &b)
-        CHKERR( FNSetParameters(self.fn, na, a, nb, b) )
-
     def evaluateFunction(self, x):
         """
         Computes the value of the function f(x) for a given x.
@@ -192,8 +187,71 @@ cdef class FN(Object):
         CHKERR( FNEvaluateDerivative(self.fn, x, &sval) )
         return toScalar(sval)
 
+    def setScale(self, alpha=None, beta=None):
+        """
+        Sets the scaling parameters that define the matematical function.
+
+        Parameters
+        ----------
+        alpha: scalar (possibly complex)
+               inner scaling (argument).
+        beta: scalar (possibly complex)
+               outer scaling (result).
+        """
+        cdef PetscScalar aval = 1.0
+        cdef PetscScalar bval = 1.0
+        if alpha is not None: aval = asScalar(alpha)
+        if beta  is not None: bval = asScalar(beta)
+        CHKERR( FNSetScale(self.fn, aval, bval) )
+
+    def getScale(self):
+        """
+        Gets the scaling parameters that define the matematical function.
+
+        Returns
+        -------
+        alpha: scalar (possibly complex)
+               inner scaling (argument).
+        beta: scalar (possibly complex)
+               outer scaling (result).
+        """
+        cdef PetscScalar aval = 0, bval = 0
+        CHKERR( FNGetScale(self.fn, &aval, &bval) )
+        return (toScalar(aval), toScalar(bval))
+
+    #
+
+    def setRationalNumerator(self, alpha not None):
+        """
+        Sets the coefficients of the numerator of the rational function.
+
+        Parameters
+        ----------
+        alpha: array of scalars
+            Coefficients.
+        """
+        cdef PetscInt na = 0
+        cdef PetscScalar *a = NULL
+        cdef object tmp1 = iarray_s(alpha, &na, &a)
+        CHKERR( FNRationalSetNumerator(self.fn, na, a) )
+
+    def setRationalDenominator(self, alpha not None):
+        """
+        Sets the coefficients of the denominator of the rational function.
+
+        Parameters
+        ----------
+        alpha: array of scalars
+            Coefficients.
+        """
+        cdef PetscInt na = 0
+        cdef PetscScalar *a = NULL
+        cdef object tmp1 = iarray_s(alpha, &na, &a)
+        CHKERR( FNRationalSetDenominator(self.fn, na, a) )
+
 # -----------------------------------------------------------------------------
 
 del FNType
+del FNCombineType
 
 # -----------------------------------------------------------------------------

@@ -75,13 +75,13 @@ B.setOption(PETSc.Mat.Option.HERMITIAN, True)
 # Functions: f1=-lambda, f2=1.0, f3=exp(-tau*lambda)
 f1 = SLEPc.FN().create()
 f1.setType(SLEPc.FN.Type.RATIONAL)
-f1.setParameters([-1, 0])
+f1.setRationalNumerator([-1, 0])
 f2 = SLEPc.FN().create()
 f2.setType(SLEPc.FN.Type.RATIONAL)
-f2.setParameters([1])
+f2.setRationalNumerator([1])
 f3 = SLEPc.FN().create()
 f3.setType(SLEPc.FN.Type.EXP)
-f3.setParameters([-tau])
+f3.setScale(-tau)
 
 # Set the split operator. Note that A is passed first so that
 #      SUBSET_NONZERO_PATTERN can be used

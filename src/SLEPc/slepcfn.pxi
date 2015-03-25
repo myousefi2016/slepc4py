@@ -1,10 +1,18 @@
 cdef extern from * nogil:
 
     ctypedef char* SlepcFNType "const char*"
+    SlepcFNType FNCOMBINE
     SlepcFNType FNRATIONAL
     SlepcFNType FNEXP
     SlepcFNType FNLOG
     SlepcFNType FNPHI
+    SlepcFNType FNSQRT
+
+    ctypedef enum SlepcFNCombineType "FNCombineType":
+        FN_COMBINE_ADD
+        FN_COMBINE_MULTIPLY
+        FN_COMBINE_DIVIDE
+        FN_COMBINE_COMPOSE
 
     int FNCreate(MPI_Comm,SlepcFN*)
     int FNView(SlepcFN,PetscViewer)
@@ -18,12 +26,22 @@ cdef extern from * nogil:
     int FNAppendOptionsPrefix(SlepcFN,char[])
     int FNSetFromOptions(SlepcFN)
 
-    int FNSetParameters(SlepcFN,PetscInt,PetscScalar[],PetscInt,PetscScalar[])
-    int FNGetParameters(SlepcFN,PetscInt*,PetscScalar*[],PetscInt*,PetscScalar*[])
-
+    int FNSetScale(SlepcFN,PetscScalar,PetscScalar)
+    int FNGetScale(SlepcFN,PetscScalar*,PetscScalar*)
     int FNEvaluateFunction(SlepcFN,PetscScalar,PetscScalar*)
     int FNEvaluateDerivative(SlepcFN,PetscScalar,PetscScalar*)
+    int FNEvaluateFunctionMat(SlepcFN,PetscMat,PetscMat*)
 
+    int FNRationalSetNumerator(SlepcFN,PetscInt,PetscScalar[])
+    int FNRationalGetNumerator(SlepcFN,PetscInt*,PetscScalar*[])
+    int FNRationalSetDenominator(SlepcFN,PetscInt,PetscScalar[])
+    int FNRationalGetDenominator(SlepcFN,PetscInt*,PetscScalar*[])
+
+    int FNCombineSetChildren(SlepcFN,SlepcFNCombineType,SlepcFN,SlepcFN)
+    int FNCombineGetChildren(SlepcFN,SlepcFNCombineType*,SlepcFN*,SlepcFN*)
+
+    int FNPhiSetIndex(SlepcFN,PetscInt)
+    int FNPhiGetIndex(SlepcFN,PetscInt*)
 
 cdef object iarray_s(object array, PetscInt* size, PetscScalar** data):
     cdef Py_ssize_t i = 0, n = len(array)
