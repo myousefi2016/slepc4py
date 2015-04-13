@@ -144,7 +144,7 @@ if nconv > 0:
   for i in range(nconv):
     k = nep.getEigenpair(i, x)
     res = nep.computeError(i)
-    error = pde.checkSolution(k,x)
+    error = pde.checkSolution(k.real,x)
     if k.imag != 0.0:
       Print( " %9f%+9f j %12g     %12g" % (k.real, k.imag, res, error) )
     else:

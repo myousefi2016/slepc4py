@@ -9,7 +9,7 @@ Options Database. It outputs a listing of the many SLEPc options
 indicating option names, default values and descriptions. If you have
 Python 2.4 and above, then you can issue at the command line::
 
-  $ python -m slepc4py.help [eps|svd|st|ip] [<slepc-option-list>]
+  $ python -m slepc4py.help [eps|svd|pep|nep|mfn|st|bv|rg|fn|ds] [<slepc-option-list>]
 
 """
 
@@ -73,6 +73,16 @@ def help(args=None):
         rg.setFromOptions()
         rg.destroy()
         del rg
+    if 'fn' in args:
+        fn = SLEPc.FN().create(comm=COMM)
+        fn.setFromOptions()
+        fn.destroy()
+        del fn
+    if 'ds' in args:
+        ds = SLEPc.DS().create(comm=COMM)
+        ds.setFromOptions()
+        ds.destroy()
+        del ds
 
 if __name__ == '__main__':
     help()
