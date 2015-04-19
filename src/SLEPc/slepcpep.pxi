@@ -90,8 +90,8 @@ cdef extern from * nogil:
 
     int PEPSetDimensions(SlepcPEP,PetscInt,PetscInt,PetscInt)
     int PEPGetDimensions(SlepcPEP,PetscInt*,PetscInt*,PetscInt*)
-    int PEPSetScale(SlepcPEP,SlepcPEPScale,PetscReal,PetscInt,PetscReal)
-    int PEPGetScale(SlepcPEP,SlepcPEPScale*,PetscReal*,PetscInt*,PetscReal*)
+    int PEPSetScale(SlepcPEP,SlepcPEPScale,PetscReal,PetscVec,PetscVec,PetscInt,PetscReal)
+    int PEPGetScale(SlepcPEP,SlepcPEPScale*,PetscReal*,PetscVec*,PetscVec*,PetscInt*,PetscReal*)
 
     int PEPGetConverged(SlepcPEP,PetscInt*)
     int PEPGetEigenpair(SlepcPEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)

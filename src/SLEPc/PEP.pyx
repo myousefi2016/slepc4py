@@ -553,9 +553,16 @@ cdef class PEP(Object):
         """
         CHKERR( PEPSetST(self.pep, st.st) )
 
-    def getScale(self):
+    def getScale(self, Vec Dl=None, Vec Dr=None):
         """
         Gets the strategy used for scaling the polynomial eigenproblem.
+
+        Parameters
+        ----------
+        Dl: Vec, optional
+            Placeholder for the returned left diagonal matrix.
+        Dr: Vec, optional
+            Placeholder for the returned right diagonal matrix.
 
         Returns
         -------
@@ -572,10 +579,14 @@ cdef class PEP(Object):
         cdef PetscReal alpha = 0
         cdef PetscInt its = 0
         cdef PetscReal lbda = 0
-        CHKERR( PEPGetScale(self.pep, &scale, &alpha, &its, &lbda) )
+        cdef PetscVec vecl = NULL
+        cdef PetscVec vecr = NULL
+        if Dl is not None: vecl = Dl.vec
+        if Dr is not None: vecr = Dr.vec
+        CHKERR( PEPGetScale(self.pep, &scale, &alpha, vecl, vecr, &its, &lbda) )
         return (scale, toReal(alpha), toInt(its), toReal(lbda))
 
-    def setScale(self, scale, alpha=None, its=None, lbda=None):
+    def setScale(self, scale, alpha=None, Vec Dl=None, Vec Dr=None, its=None, lbda=None):
         """
         Sets the scaling strategy to be used for scaling the polynomial problem
         before attempting to solve.
@@ -586,6 +597,10 @@ cdef class PEP(Object):
             The scaling strategy.
         alpha: real, optional
             The scaling factor.
+        Dl: Vec, optional
+            The left diagonal matrix.
+        Dr: Vec, optional
+            The right diagonal matrix.
         its: integer, optional
             The number of iteration of diagonal scaling.
         lbda: real, optional
@@ -595,10 +610,14 @@ cdef class PEP(Object):
         cdef PetscReal rval1 = PETSC_DEFAULT
         cdef PetscInt ival = PETSC_DEFAULT
         cdef PetscReal rval2 = PETSC_DEFAULT
+        cdef PetscVec vecl = NULL
+        cdef PetscVec vecr = NULL
         if alpha is not None: rval1 = asReal(alpha)
+        if Dl is not None:    vecl = Dl.vec
+        if Dr is not None:    vecr = Dr.vec
         if its is not None:   ival = asInt(its)
         if lbda is not None:  rval2 = asReal(lbda)
-        CHKERR( PEPSetScale(self.pep, senum, rval1, ival, rval2) )
+        CHKERR( PEPSetScale(self.pep, senum, rval1, Dl, Dr, ival, rval2) )
 
     def getBV(self):
         """
