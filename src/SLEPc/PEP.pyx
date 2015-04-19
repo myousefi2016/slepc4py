@@ -627,7 +627,7 @@ cdef class PEP(Object):
         if Dr is not None:    vecr = Dr.vec
         if its is not None:   ival = asInt(its)
         if lbda is not None:  rval2 = asReal(lbda)
-        CHKERR( PEPSetScale(self.pep, senum, rval1, Dl, Dr, ival, rval2) )
+        CHKERR( PEPSetScale(self.pep, senum, rval1, vecl, vecr, ival, rval2) )
 
     def getBV(self):
         """

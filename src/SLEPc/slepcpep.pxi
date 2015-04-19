@@ -117,3 +117,9 @@ cdef extern from * nogil:
     int PEPLinearGetExplicitMatrix(SlepcPEP,PetscBool*)
     int PEPLinearSetEPS(SlepcPEP,SlepcEPS)
     int PEPLinearGetEPS(SlepcPEP,SlepcEPS*)
+
+cdef extern from * nogil:
+    int VecCopy(PetscVec,PetscVec)
+    int VecSet(PetscVec,PetscScalar)
+    int VecDestroy(PetscVec*)
+
