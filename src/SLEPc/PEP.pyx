@@ -581,9 +581,19 @@ cdef class PEP(Object):
         cdef PetscReal lbda = 0
         cdef PetscVec vecl = NULL
         cdef PetscVec vecr = NULL
-        if Dl is not None: vecl = Dl.vec
-        if Dr is not None: vecr = Dr.vec
-        CHKERR( PEPGetScale(self.pep, &scale, &alpha, vecl, vecr, &its, &lbda) )
+        CHKERR( PEPGetScale(self.pep, &scale, &alpha, &vecl, &vecr, &its, &lbda) )
+        if Dl.vec != NULL:
+            if vecl != NULL:
+                CHKERR( VecCopy(vecl, Dl.vec) )
+            else:
+                CHKERR( VecSet(Dl.vec, 1.0) )
+        if Dr.vec != NULL:
+            if vecr != NULL:
+                CHKERR( VecCopy(vecr, Dr.vec) )
+            else:
+                CHKERR( VecSet(Dr.vec, 1.0) )
+        CHKERR( VecDestroy(&vecl) )
+        CHKERR( VecDestroy(&vecr) )
         return (scale, toReal(alpha), toInt(its), toReal(lbda))
 
     def setScale(self, scale, alpha=None, Vec Dl=None, Vec Dr=None, its=None, lbda=None):
