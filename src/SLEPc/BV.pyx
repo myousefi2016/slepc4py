@@ -31,6 +31,16 @@ class BVOrthogRefineType(object):
     NEVER    = BV_ORTHOG_REFINE_NEVER
     ALWAYS   = BV_ORTHOG_REFINE_ALWAYS
 
+class BVOrthogBlockType(object):
+    """
+    BV block-orthogonalization types
+
+    - `GS`:   Gram-Schmidt.
+    - `CHOL`: Cholesky.
+    """
+    GS   = BV_ORTHOG_BLOCK_GS
+    CHOL = BV_ORTHOG_BLOCK_CHOL
+
 # -----------------------------------------------------------------------------
 
 cdef class BV(Object):
@@ -43,6 +53,8 @@ cdef class BV(Object):
     OrthogType       = BVOrthogType
     OrthogRefineType = BVOrthogRefineType
     RefineType       = BVOrthogRefineType
+    OrthogBlockType  = BVOrthogBlockType
+    BlockType        = BVOrthogBlockType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.bv
@@ -173,19 +185,22 @@ cdef class BV(Object):
         eta:  float
               Parameter for selective refinement (used when the the
               refinement type `BV.OrthogRefineType.IFNEEDED`).
+        block: `BV.OrthogBlockType` enumerate
+              The type of block orthogonalization .
         """
         cdef SlepcBVOrthogType val1 = BV_ORTHOG_CGS
         cdef SlepcBVOrthogRefineType val2 = BV_ORTHOG_REFINE_IFNEEDED
+        cdef SlepcBVOrthogBlockType val3 = BV_ORTHOG_BLOCK_GS
         cdef PetscReal rval = PETSC_DEFAULT
-        CHKERR( BVGetOrthogonalization(self.bv, &val1, &val2, &rval) )
-        return (val1, val2, toReal(rval))
+        CHKERR( BVGetOrthogonalization(self.bv, &val1, &val2, &rval, &val3) )
+        return (val1, val2, toReal(rval), val3)
 
-    def setOrthogonalization(self, type=None, refine=None, eta=None):
+    def setOrthogonalization(self, type=None, refine=None, eta=None, block=None):
         """
-        Specifies the type of orthogonalization technique to be used
-        (classical or modified Gram-Schmidt with or without
-        refinement).
-
+        Specifies the method used for the orthogonalization of vectors
+        (classical or modified Gram-Schmidt with or without refinement),
+        and for the block-orthogonalization (simultaneous orthogonalization
+        of a set of vectors).
 
         Parameters
         ----------
@@ -195,6 +210,8 @@ cdef class BV(Object):
               The type of refinement.
         eta:  float, optional
               Parameter for selective refinement.
+        block: `BV.OrthogBlockType` enumerate, optional
+              The type of block orthogonalization.
 
         Notes
         -----
@@ -206,14 +223,19 @@ cdef class BV(Object):
 
         When using several processors, `BV.OrthogType.MGS` is likely to
         result in bad scalability.
+
+        If the method set for block orthogonalization is GS, then the
+        computation is done column by column with the vector orthogonalization.
         """
         cdef SlepcBVOrthogType val1 = BV_ORTHOG_CGS
         cdef SlepcBVOrthogRefineType val2 = BV_ORTHOG_REFINE_IFNEEDED
+        cdef SlepcBVOrthogBlockType val3 = BV_ORTHOG_BLOCK_GS
         cdef PetscReal rval = PETSC_DEFAULT
         if type   is not None: val1= type
         if refine is not None: val2= refine
+        if block  is not None: val3= block
         if eta    is not None: rval = asReal(eta)
-        CHKERR( BVSetOrthogonalization(self.bv, val1, val2, rval) )
+        CHKERR( BVSetOrthogonalization(self.bv, val1, val2, rval, val3) )
 
     #
 

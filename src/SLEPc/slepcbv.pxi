@@ -15,6 +15,10 @@ cdef extern from * nogil:
         BV_ORTHOG_REFINE_NEVER
         BV_ORTHOG_REFINE_ALWAYS
 
+    ctypedef enum SlepcBVOrthogBlockType "BVOrthogBlockType":
+        BV_ORTHOG_BLOCK_GS
+        BV_ORTHOG_BLOCK_CHOL
+
     int BVCreate(MPI_Comm,SlepcBV*)
     int BVView(SlepcBV,PetscViewer)
     int BVDestroy(SlepcBV*)
@@ -29,8 +33,8 @@ cdef extern from * nogil:
     int BVAppendOptionsPrefix(SlepcBV,char[])
     int BVSetFromOptions(SlepcBV)
 
-    int BVSetOrthogonalization(SlepcBV,SlepcBVOrthogType,SlepcBVOrthogRefineType,PetscReal)
-    int BVGetOrthogonalization(SlepcBV,SlepcBVOrthogType*,SlepcBVOrthogRefineType*,PetscReal*)
+    int BVSetOrthogonalization(SlepcBV,SlepcBVOrthogType,SlepcBVOrthogRefineType,PetscReal,SlepcBVOrthogBlockType)
+    int BVGetOrthogonalization(SlepcBV,SlepcBVOrthogType*,SlepcBVOrthogRefineType*,PetscReal*,SlepcBVOrthogBlockType*)
 
     int BVSetMatrix(SlepcBV,PetscMat,PetscBool)
     int BVGetMatrix(SlepcBV,PetscMat*,PetscBool*)
