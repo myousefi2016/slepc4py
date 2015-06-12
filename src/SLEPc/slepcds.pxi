@@ -7,6 +7,7 @@ cdef extern from * nogil:
     SlepcDSType DSGHIEP
     SlepcDSType DSGNHEP
     SlepcDSType DSSVD
+    SlepcDSType DSPEP
     SlepcDSType DSNEP
 
     ctypedef enum SlepcDSStateType "DSStateType":

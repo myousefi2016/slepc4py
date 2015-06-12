@@ -1,9 +1,22 @@
 # -----------------------------------------------------------------------------
 
 class NEPType(object):
+    """
+    NEP type
+
+    Nonlinear eigensolvers.
+
+    - `RII`:      Residual inverse iteration.
+    - `SLP`:      Successive linear problems.
+    - `NARNOLDI`: Nonlinear Arnoldi.
+    - `CISS`:     Contour integral spectrum slice.
+    - `INTERPOL`: Polynomial interpolation.
+    """
     RII      = S_(NEPRII)
     SLP      = S_(NEPSLP)
     NARNOLDI = S_(NEPNARNOLDI)
+    CISS     = S_(NEPCISS)
+    INTERPOL = S_(NEPINTERPOL)
 
 class NEPErrorType(object):
     """

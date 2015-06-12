@@ -9,6 +9,7 @@ cdef extern from * nogil:
     SlepcEPSType EPSGD
     SlepcEPSType EPSJD
     SlepcEPSType EPSRQCG
+    SlepcEPSType EPSLOBPCG
     SlepcEPSType EPSCISS
     SlepcEPSType EPSLAPACK
     SlepcEPSType EPSARPACK

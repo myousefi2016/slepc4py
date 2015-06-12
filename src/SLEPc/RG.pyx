@@ -7,6 +7,7 @@ class RGType(object):
     INTERVAL   = S_(RGINTERVAL)
     POLYGON    = S_(RGPOLYGON)
     ELLIPSE    = S_(RGELLIPSE)
+    RING       = S_(RGRING)
 
 # -----------------------------------------------------------------------------
 

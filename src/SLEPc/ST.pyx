@@ -8,7 +8,6 @@ class STType(object):
     - `SHIFT`:  Shift from origin.
     - `SINVERT`: Shift-and-invert.
     - `CAYLEY`: Cayley transform.
-    - `FOLD`:   Folded spectrum.
     - `PRECOND`: Preconditioner.
     """
     SHELL   = S_(STSHELL)

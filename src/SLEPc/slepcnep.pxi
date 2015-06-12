@@ -4,6 +4,8 @@ cdef extern from * nogil:
     SlepcNEPType NEPRII
     SlepcNEPType NEPSLP
     SlepcNEPType NEPNARNOLDI
+    SlepcNEPType NEPCISS
+    SlepcNEPType NEPINTERPOL
 
     ctypedef enum SlepcNEPWhich "NEPWhich":
         NEP_LARGEST_MAGNITUDE

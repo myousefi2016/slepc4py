@@ -4,6 +4,7 @@ cdef extern from * nogil:
     SlepcRGType RGINTERVAL
     SlepcRGType RGPOLYGON
     SlepcRGType RGELLIPSE
+    SlepcRGType RGRING
 
     int RGCreate(MPI_Comm,SlepcRG*)
     int RGView(SlepcRG,PetscViewer)

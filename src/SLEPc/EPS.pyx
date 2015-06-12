@@ -14,6 +14,7 @@ class EPSType(object):
     - `GD`:           Generalized Davidson.
     - `JD`:           Jacobi-Davidson.
     - `RQCG`:         Rayleigh Quotient Conjugate Gradient.
+    - `LOBPCG`:       Locally Optimal Block Preconditioned Conjugate Gradient.
     - `CISS`:         Contour Integral Spectrum Slicing.
     - `LAPACK`:       Wrappers to dense eigensolvers in Lapack.
 
@@ -36,6 +37,7 @@ class EPSType(object):
     GD           = S_(EPSGD)
     JD           = S_(EPSJD)
     RQCG         = S_(EPSRQCG)
+    LOBPCG       = S_(EPSLOBPCG)
     CISS         = S_(EPSCISS)
     LAPACK       = S_(EPSLAPACK)
     # with external libraries

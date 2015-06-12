@@ -6,13 +6,17 @@ class PEPType(object):
 
     Polynomial eigensolvers.
 
-    - `LINEAR`:       Explicit linearization.
+    - `LINEAR`:       Linearization via EPS.
     - `QARNOLDI`:     Q-Arnoldi for quadratic problems.
     - `TOAR`:         Two-level orthogonal Arnoldi.
+    - `STOAR`:        Symmetric TOAR.
+    - `JD`:           Polynomial Jacobi-Davidson.
     """
     LINEAR   = S_(PEPLINEAR)
     QARNOLDI = S_(PEPQARNOLDI)
     TOAR     = S_(PEPTOAR)
+    STOAR    = S_(PEPSTOAR)
+    JD       = S_(PEPJD)
 
 class PEPProblemType(object):
     """
