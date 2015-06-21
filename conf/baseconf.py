@@ -2,36 +2,57 @@
 
 __all__ = ['PetscConfig',
            'setup', 'Extension',
-           'log', 'config',
-           'build', 'build_src', 'build_ext',
-           'test', 'sdist',
+           'config', 'build', 'build_src', 'build_ext',
+           'clean', 'test', 'sdist',
+           'log',
            ]
 
 # --------------------------------------------------------------------
 
-import sys, os, re
+import sys, os
 try:
-    from cStringIO import StringIO
+    import setuptools
 except ImportError:
-    from io import StringIO
-from copy import deepcopy
+    setuptools = None
 
-from distutils.core import setup
-from distutils.core import Extension as _Extension
-from distutils.core import Command
-from distutils.command.config    import config     as _config
-from distutils.command.build     import build      as _build
-from distutils.command.build_ext import build_ext  as _build_ext
-from distutils.command.sdist     import sdist      as _sdist
-from distutils.util import split_quoted, execute
+def import_command(cmd):
+    try:
+        from importlib import import_module
+    except ImportError:
+        import_module = lambda n:  __import__(n, fromlist=[None])
+    try:
+        if not setuptools: raise ImportError
+        mod = import_module('setuptools.command.' + cmd)
+        return getattr(mod, cmd)
+    except ImportError:
+        mod = import_module('distutils.command.' + cmd)
+        return getattr(mod, cmd)
+
+if setuptools:
+    from setuptools import setup
+    from setuptools import Extension as _Extension
+    from setuptools import Command
+else:
+    from distutils.core import setup
+    from distutils.core import Extension as _Extension
+    from distutils.core import Command
+
+_config    = import_command('config')
+_build     = import_command('build')
+_build_ext = import_command('build_ext')
+_install   = import_command('install')
+_clean     = import_command('clean')
+_sdist     = import_command('sdist')
+
+from distutils import sysconfig
 from distutils import log
+from distutils.util import split_quoted, execute
 from distutils.errors import DistutilsError
 
 # --------------------------------------------------------------------
 
-from distutils import sysconfig
-
 def fix_config_vars(names, values):
+    import os, re
     values = list(values)
     if sys.platform == 'darwin':
         if 'ARCHFLAGS' in os.environ:
@@ -95,7 +116,7 @@ class PetscConfig:
             self.configure_compiler(compiler)
 
     def _get_petsc_version(self, petsc_dir):
-        import os, re
+        import re
         version_re = {
             'major'  : re.compile(r"#define\s+PETSC_VERSION_MAJOR\s+(\d+)"),
             'minor'  : re.compile(r"#define\s+PETSC_VERSION_MINOR\s+(\d+)"),
@@ -104,9 +125,7 @@ class PetscConfig:
             'release': re.compile(r"#define\s+PETSC_VERSION_RELEASE\s+(\d+)"),
             }
         petscversion_h = os.path.join(petsc_dir, 'include', 'petscversion.h')
-        f = open(petscversion_h, 'rt')
-        try: data = f.read()
-        finally: f.close()
+        with open(petscversion_h, 'rt') as f: data = f.read()
         major = int(version_re['major'].search(data).groups()[0])
         minor = int(version_re['minor'].search(data).groups()[0])
         micro = int(version_re['micro'].search(data).groups()[0])
@@ -130,13 +149,15 @@ class PetscConfig:
             variables  = join(PETSC_DIR, PETSC_ARCH, confdir, 'variables')
         petscvariables = join(PETSC_DIR, PETSC_ARCH, confdir, 'petscvariables')
         #
-        variables = open(variables)
-        try: contents = variables.read()
-        finally: variables.close()
-        petscvariables = open(petscvariables)
-        try: contents += petscvariables.read()
-        finally: petscvariables.close()
+        with open(variables) as f:
+            contents = f.read()
+        with open(petscvariables) as f:
+            contents += f.read()
         #
+        try:
+            from cStringIO import StringIO
+        except ImportError:
+            from io import StringIO
         confstr  = 'PETSC_DIR  = %s\n' % PETSC_DIR
         confstr += 'PETSC_ARCH = %s\n' % PETSC_ARCH
         confstr += contents
@@ -416,8 +437,6 @@ class build_ext(_build_ext):
         self.set_undefined_options('build',
                                    ('petsc_dir',  'petsc_dir'),
                                    ('petsc_arch', 'petsc_arch'))
-        import sys, os
-        from distutils import sysconfig
         if ((sys.platform.startswith('linux') or
              sys.platform.startswith('gnu') or
              sys.platform.startswith('sunos')) and
@@ -440,6 +459,7 @@ class build_ext(_build_ext):
                 self.rpath.remove(pylib_dir)
 
     def _copy_ext(self, ext):
+        from copy import deepcopy
         extclass = ext.__class__
         fullname = self.get_ext_fullname(ext.name)
         modpath = str.split(fullname, '.')
@@ -503,9 +523,8 @@ class build_ext(_build_ext):
                                    dist_name.replace('4py', '') + '.cfg')
         #
         def write_file(filename, data):
-            fh = open(filename, 'w')
-            try: fh.write(config_data)
-            finally: fh.close()
+            with open(filename, 'w') as fh:
+                fh.write(config_data)
         execute(write_file, (config_file, config_data),
                 msg='writing %s' % config_file,
                 verbose=self.verbose, dry_run=self.dry_run)
@@ -536,6 +555,26 @@ PETSC_ARCH = %(PETSC_ARCH)s
                 outputs.append(outfile)
         outputs = list(set(outputs))
         return outputs
+
+class install(_install):
+    def run(self):
+        _install.run(self)
+
+class clean(_clean):
+    def run(self):
+        _clean.run(self)
+        from distutils.dir_util import remove_tree
+        if self.all:
+            # remove the <package>.egg_info directory
+            try:
+                egg_info = self.get_finalized_command('egg_info').egg_info
+                if os.path.exists(egg_info):
+                    remove_tree(egg_info, dry_run=self.dry_run)
+                else:
+                    log.debug("'%s' does not exist -- can't clean it",
+                              egg_info)
+            except DistutilsError:
+                pass
 
 class test(Command):
     description = "run the test suite"
@@ -651,10 +690,10 @@ def flaglist(flags):
 from distutils.text_file import TextFile
 
 # Regexes needed for parsing Makefile-like syntaxes
-import re as sre
-_variable_rx = sre.compile("([a-zA-Z][a-zA-Z0-9_]+)\s*=\s*(.*)")
-_findvar1_rx = sre.compile(r"\$\(([A-Za-z][A-Za-z0-9_]*)\)")
-_findvar2_rx = sre.compile(r"\${([A-Za-z][A-Za-z0-9_]*)}")
+import re as _re
+_variable_rx = _re.compile("([a-zA-Z][a-zA-Z0-9_]+)\s*=\s*(.*)")
+_findvar1_rx = _re.compile(r"\$\(([A-Za-z][A-Za-z0-9_]*)\)")
+_findvar2_rx = _re.compile(r"\${([A-Za-z][A-Za-z0-9_]*)}")
 
 def makefile(fileobj, dct=None):
     """Parse a Makefile-style file.

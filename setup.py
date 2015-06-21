@@ -8,11 +8,16 @@ SLEPc for Python
 
 import sys
 import os
-#try:
-#    import setuptools
-#except ImportError:
-#    pass
+import re
 
+try:
+    import setuptools
+except ImportError:
+    setuptools = None
+
+pyver = sys.version_info[:2]
+if pyver < (2, 6) or (3, 0) <= pyver < (3, 2):
+    raise RuntimeError("Python version 2.6, 2.7 or >= 3.2 required")
 
 # --------------------------------------------------------------------
 # Metadata
@@ -26,18 +31,13 @@ def name():
     return 'slepc4py'
 
 def version():
-    import re
-    fh = open(os.path.join('src', '__init__.py'))
-    try: data = fh.read()
-    finally: fh.close()
-    m = re.search(r"__version__\s*=\s*'(.*)'", data)
-    return m.groups()[0]
+    with open(os.path.join(topdir, 'src', '__init__.py')) as f:
+        m = re.search(r"__version__\s*=\s*'(.*)'", f.read())
+        return m.groups()[0]
 
 def description():
-    f = open(os.path.join(topdir, 'DESCRIPTION.rst'))
-    try: data = f.read()
-    finally: f.close()
-    return data
+    with open(os.path.join(topdir, 'DESCRIPTION.rst')) as f:
+        return f.read()
 
 name     = name()
 version  = version()
@@ -87,24 +87,29 @@ def get_ext_modules(Extension):
 # --------------------------------------------------------------------
 
 from conf.slepcconf import setup, Extension
-from conf.slepcconf import config, build, build_src, build_ext
-from conf.slepcconf import test, sdist
+from conf.slepcconf import config, build, build_src, build_ext, install
+from conf.slepcconf import clean, test, sdist
 
-CYTHON = '0.15'
+CYTHON = '0.22'
 
 def run_setup():
-    if ('setuptools' in sys.modules):
-        from os.path import exists, join
-        vstr = metadata['version'].split('.')[:2]
+    setup_args = metadata.copy()
+    if setuptools:
+        setup_args['zip_safe'] = False
+        vstr = setup_args['version'].split('.')[:2]
         x, y = int(vstr[0]), int(vstr[1])
-        reqs = ">=%s.%s,<%s.%s" % (x, y, x, y+1)
-        metadata['zip_safe'] = False
-        metadata['install_requires'] = ['petsc4py'+reqs]
-        if not exists(join('src', 'slepc4py.SLEPc.c')):
-            metadata['install_requires'] += ['Cython>='+CYTHON]
+        PETSC = SLEPC = ">=%s.%s,<%s.%s" % (x, y, x, y+1)
+        setup_args['install_requires'] = ['petsc4py'+PETSC]
         SLEPC_DIR = os.environ.get('SLEPC_DIR')
         if not (SLEPC_DIR and os.path.isdir(SLEPC_DIR)):
-            metadata['install_requires'].append('slepc'+reqs)
+            setup_args['install_requires'] += ['slepc'+SLEPC]
+    if setuptools:
+        src = os.path.join('src', 'slepc4py.SLEPc.c')
+        has_src = os.path.exists(os.path.join(topdir, src))
+        has_git = os.path.isdir(os.path.join(topdir, '.git'))
+        has_hg  = os.path.isdir(os.path.join(topdir, '.hg'))
+        if not has_src or has_git or has_hg:
+            setup_args['setup_requires'] = ['Cython>='+CYTHON]
     #
     setup(packages     = ['slepc4py',
                           'slepc4py.lib',],
@@ -121,24 +126,18 @@ def run_setup():
                           'build'      : build,
                           'build_src'  : build_src,
                           'build_ext'  : build_ext,
+                          'install'    : install,
+                          'clean'      : clean,
                           'test'       : test,
                           'sdist'      : sdist,
                           },
-          **metadata)
+          **setup_args)
 
 def chk_cython(VERSION):
-    import re
     from distutils import log
     from distutils.version import LooseVersion
     from distutils.version import StrictVersion
     warn = lambda msg='': sys.stderr.write(msg+'\n')
-    #
-    cython_zip = 'cython.zip'
-    if os.path.isfile(cython_zip):
-        path = os.path.abspath(cython_zip)
-        if sys.path[0] != path:
-            sys.path.insert(0, path)
-            log.info("adding '%s' to sys.path", cython_zip)
     #
     try:
         import Cython
@@ -177,13 +176,13 @@ def chk_cython(VERSION):
     return True
 
 def run_cython(source, depends=(), includes=(),
-               destdir_c=None, destdir_h=None, wdir=None,
-               force=False, VERSION=None):
+               destdir_c=None, destdir_h=None,
+               wdir=None, force=False, VERSION=None):
     from glob import glob
     from distutils import log
     from distutils import dep_util
     from distutils.errors import DistutilsError
-    target = os.path.splitext(source)[0]+".c"
+    target = os.path.splitext(source)[0]+'.c'
     cwd = os.getcwd()
     try:
         if wdir: os.chdir(wdir)
@@ -235,7 +234,14 @@ def run_testsuite(cmd):
         from runtests import main
     finally:
         del sys.path[0]
-    err = main(cmd.args or [])
+    if cmd.dry_run:
+        return
+    args = cmd.args[:] or []
+    if cmd.verbose < 1:
+        args.insert(0,'-q')
+    if cmd.verbose > 1:
+        args.insert(0,'-v')
+    err = main(args)
     if err:
         raise DistutilsError("test")
 
