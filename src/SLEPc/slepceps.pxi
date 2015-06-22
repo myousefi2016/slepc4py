@@ -153,6 +153,16 @@ cdef extern from * nogil:
 
     int EPSKrylovSchurSetRestart(SlepcEPS,PetscReal)
     int EPSKrylovSchurGetRestart(SlepcEPS,PetscReal*)
+    int EPSKrylovSchurSetLocking(SlepcEPS,PetscBool);
+    int EPSKrylovSchurGetLocking(SlepcEPS,PetscBool*);
+    int EPSKrylovSchurSetPartitions(SlepcEPS,PetscInt);
+    int EPSKrylovSchurGetPartitions(SlepcEPS,PetscInt*);
+    int EPSKrylovSchurSetDetectZeros(SlepcEPS,PetscBool);
+    int EPSKrylovSchurGetDetectZeros(SlepcEPS,PetscBool*);
+    int EPSKrylovSchurSetDimensions(SlepcEPS,PetscInt,PetscInt,PetscInt);
+    int EPSKrylovSchurGetDimensions(SlepcEPS,PetscInt*,PetscInt*,PetscInt*);
+    int EPSKrylovSchurGetSubcommInfo(SlepcEPS,PetscInt*,PetscInt*,PetscVec*);
+    int EPSKrylovSchurGetSubcommPairs(SlepcEPS,PetscInt,PetscScalar*,PetscVec);
 
     ctypedef enum SlepcEPSLanczosReorthogType "EPSLanczosReorthogType":
         EPS_LANCZOS_REORTHOG_LOCAL

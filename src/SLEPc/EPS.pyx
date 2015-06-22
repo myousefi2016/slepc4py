@@ -731,7 +731,7 @@ cdef class EPS(Object):
         """
         cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSGetTrueResidual(self.eps, &tval) )
-        return <bint>tval
+        return <bint> tval
 
     def setTrueResidual(self, trueres):
         """
@@ -758,7 +758,7 @@ cdef class EPS(Object):
         """
         cdef PetscBool tval = PETSC_FALSE
         CHKERR( EPSGetTrackAll(self.eps, &tval) )
-        return <bint>tval
+        return <bint> tval
 
     def setTrackAll(self, trackall):
         """
@@ -1104,7 +1104,7 @@ cdef class EPS(Object):
         Notes
         -----
         The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        ``nconv-1`` (see `getConverged()`). Eigenpairs are indexed
         according to the ordering criterion established with
         `setWhichEigenpairs()`.
         """
@@ -1129,7 +1129,7 @@ cdef class EPS(Object):
         Notes
         -----
         The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        ``nconv-1`` (see `getConverged()`). Eigenpairs are indexed
         according to the ordering criterion established with
         `setWhichEigenpairs()`.
         """
@@ -1162,7 +1162,7 @@ cdef class EPS(Object):
         Notes
         -----
         The index ``i`` should be a value between ``0`` and
-        ``nconv-1`` (see `getConverged()`. Eigenpairs are indexed
+        ``nconv-1`` (see `getConverged()`). Eigenpairs are indexed
         according to the ordering criterion established with
         `setWhichEigenpairs()`.
         """
@@ -1345,9 +1345,9 @@ cdef class EPS(Object):
         delayed: boolean
                  True if delayed reorthogonalization is to be used.
         """
-        cdef PetscBool val = PETSC_FALSE
-        CHKERR( EPSArnoldiGetDelayed(self.eps, &val) )
-        return val
+        cdef PetscBool tval = PETSC_FALSE
+        CHKERR( EPSArnoldiGetDelayed(self.eps, &tval) )
+        return <bint> tval
 
     def setLanczosReorthogType(self, reorthog):
         """
@@ -1414,6 +1414,210 @@ cdef class EPS(Object):
         cdef PetscReal val = 0
         CHKERR( EPSKrylovSchurGetRestart(self.eps, &val) )
         return val
+
+    def setKrylovSchurLocking(self, lock):
+        """
+        Choose between locking and non-locking variants of the
+        Krylov-Schur method.
+
+        Parameters
+        ----------
+        lock: bool
+              True if the locking variant must be selected.
+
+        Notes
+        -----
+        The default is to lock converged eigenpairs when the method restarts.
+        This behaviour can be changed so that all directions are kept in the
+        working subspace even if already converged to working accuracy (the
+        non-locking variant).
+        """
+        cdef PetscBool val = lock
+        CHKERR( EPSKrylovSchurSetLocking(self.eps, val) )
+
+    def getKrylovSchurLocking(self):
+        """
+        Gets the locking flag used in the Krylov-Schur method.
+
+        Returns
+        -------
+        lock: bool
+              The locking flag.
+        """
+        cdef PetscBool tval = PETSC_FALSE
+        CHKERR( EPSKrylovSchurGetLocking(self.eps, &tval) )
+        return <bint> tval
+
+    def setKrylovSchurPartitions(self, npart):
+        """
+        Sets the number of partitions for the case of doing spectrum
+        slicing for a computational interval with the communicator split
+        in several sub-communicators.
+
+        Parameters
+        ----------
+        npart: int
+              The number of partitions.
+
+        Notes
+        -----
+        By default, npart=1 so all processes in the communicator participate in
+        the processing of the whole interval. If npart>1 then the interval is
+        divided into npart subintervals, each of them being processed by a
+        subset of processes.
+        """
+        cdef PetscInt val = npart
+        CHKERR( EPSKrylovSchurSetPartitions(self.eps, val) )
+
+    def getKrylovSchurPartitions(self):
+        """
+        Gets the number of partitions of the communicator in case of
+        spectrum slicing.
+
+        Returns
+        -------
+        npart: int
+              The number of partitions.
+        """
+        cdef PetscInt val = 0
+        CHKERR( EPSKrylovSchurGetPartitions(self.eps, &val) )
+        return val
+
+    def setKrylovSchurDetectZeros(self, detect):
+        """
+        Sets a flag to enforce detection of zeros during the factorizations
+        throughout the spectrum slicing computation.
+
+        Parameters
+        ----------
+        detect: bool
+              True if zeros must checked for.
+
+        Notes
+        -----
+        A zero in the factorization indicates that a shift coincides with
+        an eigenvalue.
+
+        This flag is turned off by default, and may be necessary in some cases,
+        especially when several partitions are being used. This feature currently
+        requires an external package for factorizations with support for zero
+        detection, e.g. MUMPS.
+        """
+        cdef PetscBool val = detect
+        CHKERR( EPSKrylovSchurSetDetectZeros(self.eps, val) )
+
+    def getKrylovSchurDetectZeros(self):
+        """
+        Gets the flag that enforces zero detection in spectrum slicing.
+
+        Returns
+        -------
+        detect: bool
+              The zero detection flag.
+        """
+        cdef PetscBool tval = PETSC_FALSE
+        CHKERR( EPSKrylovSchurGetDetectZeros(self.eps, &tval) )
+        return <bint> tval
+
+    def setKrylovSchurDimensions(self, nev=None, ncv=None, mpd=None):
+        """
+        Sets the dimensions used for each subsolve step in case of doing
+        spectrum slicing for a computational interval. The meaning of the
+        parameters is the same as in `setDimensions()`.
+
+        Parameters
+        ----------
+        nev: int, optional
+             Number of eigenvalues to compute.
+        ncv: int, optional
+             Maximum dimension of the subspace to be used by the solver.
+        mpd: int, optional
+             Maximum dimension allowed for the projected problem.
+        """
+        cdef PetscInt ival1 = PETSC_DEFAULT
+        cdef PetscInt ival2 = PETSC_DEFAULT
+        cdef PetscInt ival3 = PETSC_DEFAULT
+        if nev is not None: ival1 = asInt(nev)
+        if ncv is not None: ival2 = asInt(ncv)
+        if mpd is not None: ival3 = asInt(mpd)
+        CHKERR( EPSKrylovSchurSetDimensions(self.eps, ival1, ival2, ival3) )
+
+    def getKrylovSchurDimensions(self):
+        """
+        Gets the dimensions used for each subsolve step in case of doing
+        spectrum slicing for a computational interval.
+
+        Returns
+        -------
+        nev: int
+             Number of eigenvalues to compute.
+        ncv: int
+             Maximum dimension of the subspace to be used by the solver.
+        mpd: int
+             Maximum dimension allowed for the projected problem.
+        """
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        cdef PetscInt ival3 = 0
+        CHKERR( EPSKrylovSchurGetDimensions(self.eps, &ival1, &ival2, &ival3) )
+        return (toInt(ival1), toInt(ival2), toInt(ival3))
+
+    def getKrylovSchurSubcommInfo(self):
+        """
+        Gets information related to the case of doing spectrum slicing
+        for a computational interval with multiple communicators.
+
+        Returns
+        -------
+        k: int
+             Number of the subinterval for the calling process.
+        n: int
+             Number of eigenvalues found in the k-th subinterval.
+        v: Vec
+             A vector owned by processes in the subcommunicator with dimensions
+             compatible for locally computed eigenvectors.
+
+        Notes
+        -----
+        This function is only available for spectrum slicing runs.
+
+        The returned Vec should be destroyed by the user.
+        """
+        cdef PetscInt ival1 = 0
+        cdef PetscInt ival2 = 0
+        cdef Vec vec
+        vec = Vec()
+        CHKERR( EPSKrylovSchurGetSubcommInfo(self.eps, &ival1, &ival2, &vec.vec) )
+        return (toInt(ival1), toInt(ival2), vec)
+
+    def getKrylovSchurSubcommPairs(self, int i, Vec V):
+        """
+        Gets the i-th eigenpair stored internally in the multi-communicator
+        to which the calling process belongs.
+
+        Parameters
+        ----------
+        i: int
+           Index of the solution to be obtained.
+        V: Vec
+           Placeholder for the returned eigenvector.
+
+        Returns
+        -------
+        e: scalar
+           The computed eigenvalue.
+
+        Notes
+        -----
+        The index ``i`` should be a value between ``0`` and ``n-1``,
+        where ``n`` is the number of vectors in the local subinterval,
+        see `getKrylovSchurSubcommInfo()`.
+        """
+        cdef PetscScalar sval = 0
+        cdef PetscVec vec = NULL
+        if V is not None: vec = V.vec
+        CHKERR( EPSKrylovSchurGetSubcommPairs(self.eps, i, &sval, vec) )
+        return toScalar(sval)
 
     #
 
