@@ -24,7 +24,7 @@ class PEPProblemType(object):
 
     - `GENERAL`:      No structure.
     - `HERMITIAN`:    Hermitian structure.
-    - `GYROSCOPY`:    Hamiltonian structure.
+    - `GYROSCOPIC`:   Hamiltonian structure.
     """
     GENERAL    = PEP_GENERAL
     HERMITIAN  = PEP_HERMITIAN
@@ -55,7 +55,6 @@ class PEPWhich(object):
     - `TARGET_MAGNITUDE`:   Closest to target (in magnitude).
     - `TARGET_REAL`:        Real part closest to target.
     - `TARGET_IMAGINARY`:   Imaginary part closest to target.
-    - `ALL`:                All eigenvalues in an interval.
     """
     LARGEST_MAGNITUDE  = PEP_LARGEST_MAGNITUDE
     SMALLEST_MAGNITUDE = PEP_SMALLEST_MAGNITUDE
@@ -437,7 +436,7 @@ cdef class PEP(Object):
         and the associated parameters. 
 
         Parameters
-        -------
+        ----------
         ref: PEP.Refine
             The refinement type.
         npart: int, optional
@@ -835,15 +834,16 @@ cdef class PEP(Object):
         Parameters
         ----------
         i: int
-            Index of the solution to be considered.
+           Index of the solution to be considered.
         etype: `PEP.ErrorType` enumerate
            The error type to compute.
 
         Returns
         -------
         error: real
-            The error bound, computed in various ways from the residual norm
-           ``||P(l)x||_2`` where ``l`` is the eigenvalue and ``x`` is the eigenvector.
+           The error bound, computed in various ways from the
+           residual norm ``||P(l)x||_2`` where ``l`` is the
+           eigenvalue and ``x`` is the eigenvector.
 
         Notes
         -----

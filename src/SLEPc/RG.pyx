@@ -142,7 +142,7 @@ cdef class RG(Object):
         Returns
         -------
         flag: boolean
-              True if the region is equal to the whole complex plane, e.g.,
+             True if the region is equal to the whole complex plane, e.g.,
              an interval region with all four endpoints unbounded or an
              ellipse with infinite radius.
         """

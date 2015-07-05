@@ -345,12 +345,13 @@ cdef class DS(Object):
 
         Notes
         -----
-        Compact storage is used in some DS types such as `HEP` when
-        the matrix is tridiagonal. This flag can be used to indicate
-        whether the user provides the matrix entries via the compact
-        form (the tridiagonal `DS.T`) or the non-compact one (`DS.A`).
+        Compact storage is used in some `DS` types such as
+        `DS.Type.HEP` when the matrix is tridiagonal. This flag
+        can be used to indicate whether the user provides the
+        matrix entries via the compact form (the tridiagonal
+        `DS.MatType.T`) or the non-compact one (`DS.MatType.A`).
 
-        The default is False.
+        The default is ``False``.
         """
         cdef PetscBool val = PETSC_FALSE
         if comp: val = PETSC_TRUE
@@ -387,7 +388,7 @@ cdef class DS(Object):
         that case, (n+1) must be less or equal than the leading
         dimension.
 
-        The default is False.
+        The default is ``False``.
         """
         cdef PetscBool val = PETSC_FALSE
         if ext: val = PETSC_TRUE
@@ -417,14 +418,14 @@ cdef class DS(Object):
 
         Notes
         -----
-        Normally the vectors returned in `DS.X` are eigenvectors of
-        the projected matrix. With this flag activated, `vectors()`
+        Normally the vectors returned in `DS.MatType.X` are eigenvectors
+        of the projected matrix. With this flag activated, `vectors()`
         will return the right singular vector of the smallest singular
         value of matrix At-theta*I, where At is the extended (n+1)xn
         matrix and theta is the Ritz value. This is used in the
         refined Ritz approximation.
 
-        The default is False.
+        The default is ``False``.
         """
         cdef PetscBool val = PETSC_FALSE
         if ref: val = PETSC_TRUE

@@ -536,14 +536,14 @@ cdef class NEP(Object):
         i: int
             Index of the solution to be considered.
         etype: `NEP.ErrorType` enumerate
-           The error type to compute.
+            The error type to compute.
 
         Returns
         -------
         error: real
             The error bound, computed in various ways from the residual norm
-           ``||T(lambda)x||_2`` where ``lambda`` is the eigenvalue and
-           ``x`` is the eigenvector.
+            ``||T(lambda)x||_2`` where ``lambda`` is the eigenvalue and
+            ``x`` is the eigenvector.
         """
         cdef SlepcNEPErrorType et = NEP_ERROR_RELATIVE
         cdef PetscReal rval = 0
@@ -604,7 +604,7 @@ cdef class NEP(Object):
             Coefficient matrices of the split form.
         f: sequence of FN
             Scalar functions of the split form.
-        structure: `Mat.Structure` enumerate, optional
+        structure: `PETSc.Mat.Structure` enumerate, optional
             Structure flag for matrices.
         """
         if isinstance(A, Mat): A = [A]
