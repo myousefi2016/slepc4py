@@ -17,6 +17,11 @@ cdef extern from * nogil:
         PEP_REFINE_SIMPLE
         PEP_REFINE_MULTIPLE
 
+    ctypedef enum SlepcPEPRefineScheme "PEPRefineScheme":
+        PEP_REFINE_SCHEME_EXPLICIT
+        PEP_REFINE_SCHEME_MBE
+        PEP_REFINE_SCHEME_SCHUR
+
     ctypedef enum SlepcPEPErrorType "PEPErrorType":
         PEP_ERROR_ABSOLUTE
         PEP_ERROR_RELATIVE
@@ -102,8 +107,8 @@ cdef extern from * nogil:
 
     int PEPSetConvergenceTest(SlepcPEP,SlepcPEPConv)
     int PEPGetConvergenceTest(SlepcPEP,SlepcPEPConv*)
-    int PEPSetRefine(SlepcPEP,SlepcPEPRefine,PetscInt,PetscReal,PetscInt,PetscBool)
-    int PEPGetRefine(SlepcPEP,SlepcPEPRefine*,PetscInt*,PetscReal*,PetscInt*,PetscBool*)
+    int PEPSetRefine(SlepcPEP,SlepcPEPRefine,PetscInt,PetscReal,PetscInt,SlepcPEPRefineScheme)
+    int PEPGetRefine(SlepcPEP,SlepcPEPRefine*,PetscInt*,PetscReal*,PetscInt*,SlepcPEPRefineScheme*)
 
     int PEPMonitorCancel(SlepcPEP)
     int PEPGetIterationNumber(SlepcPEP,PetscInt*)

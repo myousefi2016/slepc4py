@@ -106,6 +106,18 @@ class PEPRefine(object):
     SIMPLE  = PEP_REFINE_SIMPLE
     MULTIPLE = PEP_REFINE_MULTIPLE
 
+class PEPRefineScheme(object):
+    """
+    Scheme for solving linear systems during iterative refinement
+
+    - `EXPLICIT`:
+    - `MBE`:
+    - `SCHUR`:
+    """
+    EXPLICIT = PEP_REFINE_SCHEME_EXPLICIT
+    MBE      = PEP_REFINE_SCHEME_MBE
+    SCHUR    = PEP_REFINE_SCHEME_SCHUR
+
 class PEPConvergedReason(object):
     """
     PEP convergence reasons
@@ -135,6 +147,7 @@ cdef class PEP(Object):
     Basis           = PEPBasis
     Scale           = PEPScale
     Refine          = PEPRefine
+    RefineScheme    = PEPRefineScheme
     ErrorType       = PEPErrorType
     Conv            = PEPConv
     ConvergedReason = PEPConvergedReason
@@ -419,18 +432,18 @@ cdef class PEP(Object):
             The convergence tolerance.
         its: int
             The maximum number of refinement iterations.
-        schur: bool
-            Whether the Schur complement approach is being used
+        scheme: PEP.RefineScheme
+            Scheme for solving linear systems
         """
         cdef SlepcPEPRefine ref = PEP_REFINE_NONE
         cdef PetscInt npart = 1
         cdef PetscReal tol = PETSC_DEFAULT
         cdef PetscInt its = PETSC_DEFAULT
-        cdef PetscBool schur = PETSC_FALSE
-        CHKERR( PEPGetRefine(self.pep, &ref, &npart, &tol, &its, &schur) )
-        return (ref, toInt(npart), toReal(tol), toInt(its), <bint>schur)
+        cdef SlepcPEPRefineScheme scheme = PEP_REFINE_SCHEME_MBE
+        CHKERR( PEPGetRefine(self.pep, &ref, &npart, &tol, &its, &scheme) )
+        return (ref, toInt(npart), toReal(tol), toInt(its), scheme)
 
-    def setRefine(self, ref, npart=None, tol=None, its=None, schur=None):
+    def setRefine(self, ref, npart=None, tol=None, its=None, scheme=None):
         """
         Sets the refinement strategy used by the PEP object, 
         and the associated parameters. 
@@ -445,19 +458,19 @@ cdef class PEP(Object):
             The convergence tolerance.
         its: int, optional
             The maximum number of refinement iterations.
-        schur: bool, optional
-            Whether the Schur complement approach is being used
+        scheme: PEP.RefineScheme, optional
+            Scheme for linear system solves
         """
         cdef SlepcPEPRefine tref = ref
         cdef PetscInt tnpart = 1
         cdef PetscReal ttol = PETSC_DEFAULT
         cdef PetscInt tits = PETSC_DEFAULT
-        cdef PetscBool tschur = PETSC_FALSE
+        cdef SlepcPEPRefineScheme tscheme = PEP_REFINE_SCHEME_MBE
         if npart is not None: tnpart = asInt(npart)
         if tol is not None: ttol = asReal(tol)
         if its is not None: tits = asInt(its)
-        if schur is not None: tschur = schur
-        CHKERR( PEPSetRefine(self.pep, tref, tnpart, ttol, tits, tschur) )
+        if scheme is not None: tscheme = scheme
+        CHKERR( PEPSetRefine(self.pep, tref, tnpart, ttol, tits, tscheme) )
 
     def getTrackAll(self):
         """
