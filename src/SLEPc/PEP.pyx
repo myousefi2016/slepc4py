@@ -956,6 +956,8 @@ del PEPProblemType
 del PEPWhich
 del PEPBasis
 del PEPScale
+del PEPRefine
+del PEPRefineScheme
 del PEPErrorType
 del PEPConv
 del PEPConvergedReason
