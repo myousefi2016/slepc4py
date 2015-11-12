@@ -127,6 +127,7 @@ class BaseTestObject(object):
         self.assertEqual(self.obj.getRefCount(), rc)
 
     def testDeepCopy(self):
+        self.obj.setFromOptions()
         import copy
         rc = self.obj.getRefCount()
         try:
@@ -147,6 +148,7 @@ class TestObjectST(BaseTestObject, unittest.TestCase):
 
 class TestObjectBV(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.BV
+    def testDeepCopy(self): pass
 
 class TestObjectEPS(BaseTestObject, unittest.TestCase):
     CLASS = SLEPc.EPS

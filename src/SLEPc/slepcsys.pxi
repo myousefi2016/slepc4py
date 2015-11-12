@@ -7,11 +7,28 @@ cdef extern from * :
         PETSC_TRUE,  PETSC_YES,
         PETSC_FALSE, PETSC_NO,
 
+    ctypedef enum  PetscNormType "NormType":
+        PETSC_NORM_1          "NORM_1"
+        PETSC_NORM_2          "NORM_2"
+        PETSC_NORM_1_AND_2    "NORM_1_AND_2"
+        PETSC_NORM_FROBENIUS  "NORM_FROBENIUS"
+        PETSC_NORM_INFINITY   "NORM_INFINITY"
+        PETSC_NORM_MAX        "NORM_MAX"
+
 cdef extern from * nogil:
     int PetscMalloc(size_t,void*)
     int PetscFree(void*)
     int PetscMemcpy(void*,void*,size_t)
     int PetscMemzero(void*,size_t)
+
+cdef extern from * nogil:
+    MPI_Comm PetscObjectComm(PetscObject)
+    int PetscObjectReference(PetscObject)
+    int PetscObjectDestroy(PetscObject*)
+
+cdef extern from * nogil:
+    int MatGetSize(PetscMat,PetscInt*,PetscInt*)
+    int MatGetLocalSize(PetscMat,PetscInt*,PetscInt*)
 
 cdef extern from * nogil:
     enum: SLEPC_VERSION_MAJOR
@@ -24,10 +41,6 @@ cdef extern from * nogil:
     int SlepcInitialize(int*,char***,char[],char[])
     int SlepcFinalize()
     int SlepcInitializeCalled
-
-cdef extern from * nogil:
-    int PetscObjectReference(PetscObject)
-    int PetscObjectDestroy(PetscObject*)
 
 cdef inline int PetscINCREF(PetscObject *obj):
     if obj    == NULL: return 0

@@ -8,11 +8,13 @@ from petsc4py.PETSc import COMM_WORLD
 
 from petsc4py.PETSc cimport MPI_Comm
 from petsc4py.PETSc cimport PetscObject, PetscViewer
+from petsc4py.PETSc cimport PetscRandom
 from petsc4py.PETSc cimport PetscVec, PetscMat
 from petsc4py.PETSc cimport PetscKSP, PetscPC
 
 from petsc4py.PETSc cimport Comm
 from petsc4py.PETSc cimport Object, Viewer
+from petsc4py.PETSc cimport Random
 from petsc4py.PETSc cimport Vec, Mat
 from petsc4py.PETSc cimport KSP, PC
 
