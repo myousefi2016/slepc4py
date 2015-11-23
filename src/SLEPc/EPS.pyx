@@ -1619,8 +1619,35 @@ cdef class EPS(Object):
         CHKERR( EPSKrylovSchurGetSubcommPairs(self.eps, i, &sval, vec) )
         return toScalar(sval)
 
-    #
+    def setKrylovSchurSubintervals(self, subint):
+        """
+        Sets the subinterval boundaries for spectrum slicing with a computational interval.
+        
+        Parameters
+        ----------
+        subint: list of real values specifying subintervals
 
+        Notes
+        -----
+        Logically Collective on EPS
+        This function must be called after setKrylovSchurPartitions(). 
+        For npart partitions, the argument subint must contain npart+1 
+        real values sorted in ascending order: 
+        subint_0, subint_1, ..., subint_npart, 
+        where the first and last values must coincide with the interval 
+        endpoints set with EPSSetInterval().
+        The subintervals are then defined by two consecutive points: 
+        [subint_0,subint_1], [subint_1,subint_2], and so on.
+        """
+        cdef PetscReal *subintarray = NULL
+        cdef Py_ssize_t i = 0, n = len(subint)
+        cdef PetscInt nparts = 0
+        CHKERR( EPSKrylovSchurGetPartitions(self.eps, &nparts) )
+        assert n >= nparts
+        cdef tmp = allocate(n*sizeof(PetscReal),<void**>&subintarray)
+        for i in range(n): subintarray[i] = asReal(subint[i])
+        CHKERR(EPSKrylovSchurSetSubintervals(self.eps, subintarray))
+        
     def setRQCGReset(self, nrest):
         """
         Sets the reset parameter of the RQCG iteration. Every nrest iterations,
