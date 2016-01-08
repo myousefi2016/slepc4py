@@ -99,13 +99,6 @@ cdef extern from * nogil:
 
 # -----------------------------------------------------------------------------
 
-cdef inline PetscMatStructure matstructure(object structure) \
-    except <PetscMatStructure>(-1):
-    if   structure is None:  return MAT_DIFFERENT_NONZERO_PATTERN
-    elif structure is False: return MAT_DIFFERENT_NONZERO_PATTERN
-    elif structure is True:  return MAT_SAME_NONZERO_PATTERN
-    else:                    return structure
-
 cdef inline Mat ref_Mat(PetscMat mat):
     cdef Mat ob = <Mat> Mat()
     ob.mat = mat

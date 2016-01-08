@@ -29,21 +29,6 @@ class STMatMode(object):
     INPLACE = ST_MATMODE_INPLACE
     SHELL   = ST_MATMODE_SHELL
 
-class STMatStructure(object):
-    """
-    - `SAME`: Same non-zero pattern.
-    - `SUBSET`: Subset of non-zero pattern.
-    - `DIFFERENT`: Different non-zero pattern.
-    """
-    # native
-    SAME_NONZERO_PATTERN      = MAT_SAME_NONZERO_PATTERN
-    DIFFERENT_NONZERO_PATTERN = MAT_DIFFERENT_NONZERO_PATTERN
-    SUBSET_NONZERO_PATTERN    = MAT_SUBSET_NONZERO_PATTERN
-    # aliases
-    SAME      = SAME_NZ      = SAME_NONZERO_PATTERN
-    SUBSET    = SUBSET_NZ    = SUBSET_NONZERO_PATTERN
-    DIFFERENT = DIFFERENT_NZ = DIFFERENT_NONZERO_PATTERN
-
 # -----------------------------------------------------------------------------
 
 cdef class ST(Object):
@@ -54,7 +39,6 @@ cdef class ST(Object):
 
     Type         = STType
     MatMode      = STMatMode
-    MatStructure = STMatStructure
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.st
@@ -344,7 +328,7 @@ cdef class ST(Object):
 
     def setMatStructure(self, structure):
         """
-        Sets an internal MatStructure attribute to indicate which is
+        Sets an internal Mat.Structure attribute to indicate which is
         the relation of the sparsity pattern of the two matrices ``A``
         and ``B`` constituting the generalized eigenvalue
         problem. This function has no effect in the case of standard
@@ -352,7 +336,7 @@ cdef class ST(Object):
 
         Parameters
         ----------
-        structure: `ST.MatStructure` enumerate
+        structure: `PETSc.Mat.Structure` enumerate
                    Either same, different, or a subset of the non-zero
                    sparsity pattern.
 
@@ -363,7 +347,7 @@ cdef class ST(Object):
         recommended to set this attribute for efficiency reasons (in
         particular, for internal *AXPY()* matrix operations).
         """
-        cdef PetscMatStructure val = structure
+        cdef PetscMatStructure val = matstructure(structure)
         CHKERR( STSetMatStructure(self.st, val) )
 
     def setKSP(self, KSP ksp not None):
@@ -484,6 +468,5 @@ cdef class ST(Object):
 
 del STType
 del STMatMode
-del STMatStructure
 
 # -----------------------------------------------------------------------------

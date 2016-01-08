@@ -15,6 +15,11 @@ cdef extern from * :
         PETSC_NORM_INFINITY   "NORM_INFINITY"
         PETSC_NORM_MAX        "NORM_MAX"
 
+    ctypedef enum  PetscMatStructure "MatStructure":
+        MAT_SAME_NONZERO_PATTERN      "SAME_NONZERO_PATTERN"
+        MAT_DIFFERENT_NONZERO_PATTERN "DIFFERENT_NONZERO_PATTERN"
+        MAT_SUBSET_NONZERO_PATTERN    "SUBSET_NONZERO_PATTERN"
+
 cdef extern from * nogil:
     int PetscMalloc(size_t,void*)
     int PetscFree(void*)
@@ -41,6 +46,13 @@ cdef extern from * nogil:
     int SlepcInitialize(int*,char***,char[],char[])
     int SlepcFinalize()
     int SlepcInitializeCalled
+
+cdef inline PetscMatStructure matstructure(object structure) \
+    except <PetscMatStructure>(-1):
+    if   structure is None:  return MAT_DIFFERENT_NONZERO_PATTERN
+    elif structure is False: return MAT_DIFFERENT_NONZERO_PATTERN
+    elif structure is True:  return MAT_SAME_NONZERO_PATTERN
+    else:                    return structure
 
 cdef inline int PetscINCREF(PetscObject *obj):
     if obj    == NULL: return 0
