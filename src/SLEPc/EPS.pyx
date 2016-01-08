@@ -1645,6 +1645,55 @@ cdef class EPS(Object):
         PetscINCREF(B.obj)
         return (A, B)
 
+    def updateKrylovSchurSubcommMats(self, s=1.0, a=1.0, Mat Au=None, t=1.0, b=1.0, Mat Bu=None, structure=None, globalup=False):
+        """
+        Update the eigenproblem matrices stored internally in the subcommunicator
+        to which the calling process belongs.
+
+        Parameters
+        ----------
+        s: float (real or complex)
+           Scalar that multiplies the existing A matrix.
+        a: float (real or complex)
+           Scalar used in the axpy operation on A.
+        Au: Mat, optional
+           The matrix used in the axpy operation on A;
+           if not provided, the A matrix is not updated.
+        t: float (real or complex)
+           Scalar that multiplies the existing B matrix.
+        b: float (real or complex)
+           Scalar used in the axpy operation on B.
+        Bu: Mat, optional
+           The matrix used in the axpy operation on B;
+           if not provided, the B matrix is not updated.
+        structure: `PETSc.Mat.Structure` enumerate
+           Either same, different, or a subset of the non-zero sparsity pattern.
+        globalup: bool
+           Whether global matrices must be updated or not.
+
+        Notes
+        -----
+        This function modifies the eigenproblem matrices at subcommunicator level,
+        and optionally updates the global matrices in the parent communicator.
+        The updates are expressed as ``A <-- s*A + a*Au``,  ``B <-- t*B + b*Bu``.
+
+        It is possible to update one of the matrices, or both.
+
+        The matrices `Au` and `Bu` must be equal in all subcommunicators.
+
+        The `str` flag is passed to the `Mat.axpy()` operations to perform the updates.
+
+        If `globalup` is True, communication is carried out to reconstruct the updated
+        matrices in the parent communicator.
+        """
+        cdef PetscMat Amat = NULL
+        if Au is not None: Amat = Au.mat
+        cdef PetscMat Bmat = NULL
+        if Bu is not None: Bmat = Bu.mat
+        cdef PetscMatStructure vstr = matstructure(structure)
+        cdef PetscBool tval = globalup
+        CHKERR( EPSKrylovSchurUpdateSubcommMats(self.eps, s, a, Amat, t, b, Bmat, vstr, tval) )
+
     def setKrylovSchurSubintervals(self, subint):
         """
         Sets the subinterval boundaries for spectrum slicing with a computational interval.
