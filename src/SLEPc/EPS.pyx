@@ -1619,6 +1619,32 @@ cdef class EPS(Object):
         CHKERR( EPSKrylovSchurGetSubcommPairs(self.eps, i, &sval, vec) )
         return toScalar(sval)
 
+    def getKrylovSchurSubcommMats(self):
+        """
+        Gets the eigenproblem matrices stored internally in the subcommunicator
+        to which the calling process belongs.
+
+        Returns
+        -------
+        A: Mat
+           The matrix associated with the eigensystem.
+        B: Mat
+           The second matrix in the case of generalized eigenproblems.
+
+        Notes
+        -----
+        This is the analog of `getOperators()`, but returns the matrices distributed
+        differently (in the subcommunicator rather than in the parent communicator).
+
+        These matrices should not be modified by the user.
+        """
+        cdef Mat A = Mat()
+        cdef Mat B = Mat()
+        CHKERR( EPSKrylovSchurGetSubcommMats(self.eps, &A.mat, &B.mat) )
+        PetscINCREF(A.obj)
+        PetscINCREF(B.obj)
+        return (A, B)
+
     def setKrylovSchurSubintervals(self, subint):
         """
         Sets the subinterval boundaries for spectrum slicing with a computational interval.
