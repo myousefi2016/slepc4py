@@ -1657,15 +1657,13 @@ cdef class EPS(Object):
         a: float (real or complex)
            Scalar used in the axpy operation on A.
         Au: Mat, optional
-           The matrix used in the axpy operation on A;
-           if not provided, the A matrix is not updated.
+           The matrix used in the axpy operation on A.
         t: float (real or complex)
            Scalar that multiplies the existing B matrix.
         b: float (real or complex)
            Scalar used in the axpy operation on B.
         Bu: Mat, optional
-           The matrix used in the axpy operation on B;
-           if not provided, the B matrix is not updated.
+           The matrix used in the axpy operation on B.
         structure: `PETSc.Mat.Structure` enumerate
            Either same, different, or a subset of the non-zero sparsity pattern.
         globalup: bool
