@@ -23,14 +23,11 @@ cdef extern from * nogil:
         NEP_ERROR_RELATIVE
 
     ctypedef enum SlepcNEPConvergedReason "NEPConvergedReason":
-        NEP_CONVERGED_FNORM_ABS
-        NEP_CONVERGED_FNORM_RELATIVE
-        NEP_CONVERGED_SNORM_RELATIVE
-        NEP_DIVERGED_LINEAR_SOLVE
-        NEP_DIVERGED_FUNCTION_COUNT
-        NEP_DIVERGED_MAX_IT
+        NEP_CONVERGED_TOL
+        NEP_CONVERGED_USER
+        NEP_DIVERGED_ITS
         NEP_DIVERGED_BREAKDOWN
-        NEP_DIVERGED_FNORM_NAN
+        NEP_DIVERGED_LINEAR_SOLVE
         NEP_CONVERGED_ITERATING
 
     ctypedef int (*SlepcNEPFunction)(SlepcNEP,
@@ -70,8 +67,8 @@ cdef extern from * nogil:
 
     int NEPSetBV(SlepcNEP,SlepcBV)
     int NEPGetBV(SlepcNEP,SlepcBV*)
-    int NEPSetTolerances(SlepcNEP,PetscReal,PetscReal,PetscReal,PetscInt,PetscInt)
-    int NEPGetTolerances(SlepcNEP,PetscReal*,PetscReal*,PetscReal*,PetscInt*,PetscInt*)
+    int NEPSetTolerances(SlepcNEP,PetscReal,PetscInt)
+    int NEPGetTolerances(SlepcNEP,PetscReal*,PetscInt*)
 
     int NEPSetTrackAll(SlepcNEP,PetscBool)
     int NEPGetTrackAll(SlepcNEP,PetscBool*)

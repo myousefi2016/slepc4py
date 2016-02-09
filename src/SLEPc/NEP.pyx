@@ -40,16 +40,13 @@ class NEPWhich(object):
     TARGET_IMAGINARY   = NEP_TARGET_IMAGINARY
 
 class NEPConvergedReason(object):
-    CONVERGED_FNORM_ABS      = NEP_CONVERGED_FNORM_ABS
-    CONVERGED_FNORM_RELATIVE = NEP_CONVERGED_FNORM_RELATIVE
-    CONVERGED_SNORM_RELATIVE = NEP_CONVERGED_SNORM_RELATIVE
-    DIVERGED_LINEAR_SOLVE    = NEP_DIVERGED_LINEAR_SOLVE
-    DIVERGED_FUNCTION_COUNT  = NEP_DIVERGED_FUNCTION_COUNT
-    DIVERGED_MAX_IT          = NEP_DIVERGED_MAX_IT
-    DIVERGED_BREAKDOWN       = NEP_DIVERGED_BREAKDOWN
-    DIVERGED_FNORM_NAN       = NEP_DIVERGED_FNORM_NAN
-    CONVERGED_ITERATING      = NEP_CONVERGED_ITERATING
-    ITERATING                = NEP_CONVERGED_ITERATING
+    CONVERGED_TOL          = NEP_CONVERGED_TOL
+    CONVERGED_USER         = NEP_CONVERGED_USER
+    DIVERGED_ITS           = NEP_DIVERGED_ITS
+    DIVERGED_BREAKDOWN     = NEP_DIVERGED_BREAKDOWN
+    DIVERGED_LINEAR_SOLVE  = NEP_DIVERGED_LINEAR_SOLVE
+    CONVERGED_ITERATING    = NEP_CONVERGED_ITERATING
+    ITERATING              = NEP_CONVERGED_ITERATING
 
 # -----------------------------------------------------------------------------
 
@@ -220,55 +217,32 @@ cdef class NEP(Object):
 
         Returns
         -------
-        abstol: float
-            The absolute convergence tolerance.
-        rtol: float
-            The relative convergence tolerance.
-        stol: float
-            Convergence tolerance in terms of the norm of the change in the
-            solution between steps, || delta x || < stol*|| x ||.
+        tol: float
+            The convergence tolerance.
         maxit: int
             The maximum number of iterations.
-        maxf: int
-            The maximum number of function evaluations.
         """
-        cdef PetscReal rval1 = 0
-        cdef PetscReal rval2 = 0
-        cdef PetscReal rval3 = 0
-        cdef PetscInt  ival1 = 0
-        cdef PetscInt  ival2 = 0
-        CHKERR( NEPGetTolerances(self.nep, &rval1, &rval2, &rval3, &ival1, &ival2) )
-        return (toReal(rval1), toReal(rval2), toReal(rval3), toInt(ival1), toInt(ival2))
+        cdef PetscReal rval = 0
+        cdef PetscInt  ival = 0
+        CHKERR( NEPGetTolerances(self.nep, &rval, &ival) )
+        return (toReal(rval), toInt(ival))
 
-    def setTolerances(self, abstol=None, rtol=None, stol=None, maxit=None, maxf=None):
+    def setTolerances(self, tol=None, maxit=None):
         """
-        Sets various parameters used in convergence tests.
+        Sets the tolerance and maximum iteration count used in convergence tests.
 
         Parameters
         ----------
-        abstol: float, optional
-            The absolute convergence tolerance.
-        rtol: float, optional
-            The relative convergence tolerance.
-        stol: float, optional
-            Convergence tolerance in terms of the norm of the change in the
-            solution between steps, || delta x || < stol*|| x ||.
+        tol: float, optional
+            The convergence tolerance.
         maxit: int, optional
             The maximum number of iterations.
-        maxf: int, optional
-            The maximum number of function evaluations.
         """
-        cdef PetscReal rval1 = PETSC_DEFAULT
-        cdef PetscReal rval2 = PETSC_DEFAULT
-        cdef PetscReal rval3 = PETSC_DEFAULT
-        cdef PetscInt  ival1 = PETSC_DEFAULT
-        cdef PetscInt  ival2 = PETSC_DEFAULT
-        if abstol is not None: rval1 = asReal(abstol)
-        if rtol   is not None: rval2 = asReal(rtol)
-        if stol   is not None: rval3 = asReal(stol)
-        if maxit  is not None: ival1 = asInt(maxit)
-        if maxf   is not None: ival2 = asInt(maxf)
-        CHKERR( NEPSetTolerances(self.nep, rval1, rval2, rval3, ival1, ival2) )
+        cdef PetscReal rval = PETSC_DEFAULT
+        cdef PetscInt  ival = PETSC_DEFAULT
+        if tol   is not None: rval = asReal(tol)
+        if maxit is not None: ival = asInt(maxit)
+        CHKERR( NEPSetTolerances(self.nep, rval, ival) )
 
     def getLagPreconditioner(self):
         """

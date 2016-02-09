@@ -54,14 +54,16 @@ cdef extern from * nogil:
 
     ctypedef enum SlepcPEPConv "PEPConv":
         PEP_CONV_ABS
-        PEP_CONV_EIG
+        PEP_CONV_REL
         PEP_CONV_NORM
         PEP_CONV_USER
 
     ctypedef enum SlepcPEPConvergedReason "PEPConvergedReason":
         PEP_CONVERGED_TOL
+        PEP_CONVERGED_USER
         PEP_DIVERGED_ITS
         PEP_DIVERGED_BREAKDOWN
+        PEP_DIVERGED_SYMMETRY_LOST
         PEP_CONVERGED_ITERATING
 
     int PEPCreate(MPI_Comm,SlepcPEP*)

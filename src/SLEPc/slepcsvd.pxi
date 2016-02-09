@@ -16,10 +16,11 @@ cdef extern from * nogil:
         SVD_ERROR_RELATIVE
 
     ctypedef enum SlepcSVDConvergedReason "SVDConvergedReason":
-        SVD_CONVERGED_ITERATING
         SVD_CONVERGED_TOL
+        SVD_CONVERGED_USER
         SVD_DIVERGED_ITS
         SVD_DIVERGED_BREAKDOWN
+        SVD_CONVERGED_ITERATING
 
     int SVDCreate(MPI_Comm,SlepcSVD*)
     int SVDView(SlepcSVD,PetscViewer)
