@@ -62,15 +62,17 @@ cdef extern from * nogil:
 
     ctypedef enum SlepcEPSConv "EPSConv":
         EPS_CONV_ABS
-        EPS_CONV_EIG
+        EPS_CONV_REL
         EPS_CONV_NORM
         EPS_CONV_USER
 
     ctypedef enum SlepcEPSConvergedReason "EPSConvergedReason":
-        EPS_CONVERGED_ITERATING
         EPS_CONVERGED_TOL
+        EPS_CONVERGED_USER
         EPS_DIVERGED_ITS
         EPS_DIVERGED_BREAKDOWN
+        EPS_DIVERGED_SYMMETRY_LOST
+        EPS_CONVERGED_ITERATING
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)

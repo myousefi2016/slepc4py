@@ -146,12 +146,12 @@ class EPSConv(object):
     EPS convergence test
 
     - `ABS`:
-    - `EIG`:
+    - `REL`:
     - `NORM`:
     - `USER`:
     """
     ABS  = EPS_CONV_ABS
-    EIG  = EPS_CONV_EIG
+    REL  = EPS_CONV_REL
     NORM = EPS_CONV_NORM
     USER = EPS_CONV_USER
 
@@ -160,15 +160,19 @@ class EPSConvergedReason(object):
     EPS convergence reasons
 
     - `CONVERGED_TOL`:
+    - `CONVERGED_USER`:
     - `DIVERGED_ITS`:
     - `DIVERGED_BREAKDOWN`:
+    - `DIVERGED_SYMMETRY_LOST`:
     - `CONVERGED_ITERATING`:
     """
-    CONVERGED_TOL         = EPS_CONVERGED_TOL
-    DIVERGED_ITS          = EPS_DIVERGED_ITS
-    DIVERGED_BREAKDOWN    = EPS_DIVERGED_BREAKDOWN
-    CONVERGED_ITERATING   = EPS_CONVERGED_ITERATING
-    ITERATING             = EPS_CONVERGED_ITERATING
+    CONVERGED_TOL          = EPS_CONVERGED_TOL
+    CONVERGED_USER         = EPS_CONVERGED_USER
+    DIVERGED_ITS           = EPS_DIVERGED_ITS
+    DIVERGED_BREAKDOWN     = EPS_DIVERGED_BREAKDOWN
+    DIVERGED_SYMMETRY_LOST = EPS_DIVERGED_SYMMETRY_LOST
+    CONVERGED_ITERATING    = EPS_CONVERGED_ITERATING
+    ITERATING              = EPS_CONVERGED_ITERATING
 
 class EPSPowerShiftType(object):
     """
@@ -701,7 +705,7 @@ cdef class EPS(Object):
             The method used to compute the error estimate 
             used in the convergence test. 
         """
-        cdef SlepcEPSConv conv = EPS_CONV_EIG
+        cdef SlepcEPSConv conv = EPS_CONV_REL
         CHKERR( EPSGetConvergenceTest(self.eps, &conv) )
         return conv
 

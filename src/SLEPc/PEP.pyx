@@ -85,14 +85,14 @@ class PEPConv(object):
     PEP convergence test
 
     - `ABS`:
-    - `EIG`:
+    - `REL`:
     - `NORM`:
     - `USER`:
     """
-    ABS  = EPS_CONV_ABS
-    EIG  = EPS_CONV_EIG
-    NORM = EPS_CONV_NORM
-    USER = EPS_CONV_USER
+    ABS  = PEP_CONV_ABS
+    REL  = PEP_CONV_REL
+    NORM = PEP_CONV_NORM
+    USER = PEP_CONV_USER
 
 class PEPRefine(object):
     """
@@ -123,15 +123,19 @@ class PEPConvergedReason(object):
     PEP convergence reasons
 
     - `CONVERGED_TOL`:
+    - `CONVERGED_USER`:
     - `DIVERGED_ITS`:
     - `DIVERGED_BREAKDOWN`:
+    - `DIVERGED_SYMMETRY_LOST`:
     - `CONVERGED_ITERATING`:
     """
-    CONVERGED_TOL       = PEP_CONVERGED_TOL
-    DIVERGED_ITS        = PEP_DIVERGED_ITS
-    DIVERGED_BREAKDOWN  = PEP_DIVERGED_BREAKDOWN
-    CONVERGED_ITERATING = PEP_CONVERGED_ITERATING
-    ITERATING           = PEP_CONVERGED_ITERATING
+    CONVERGED_TOL          = PEP_CONVERGED_TOL
+    CONVERGED_USER         = PEP_CONVERGED_USER
+    DIVERGED_ITS           = PEP_DIVERGED_ITS
+    DIVERGED_BREAKDOWN     = PEP_DIVERGED_BREAKDOWN
+    DIVERGED_SYMMETRY_LOST = PEP_DIVERGED_SYMMETRY_LOST
+    CONVERGED_ITERATING    = PEP_CONVERGED_ITERATING
+    ITERATING              = PEP_CONVERGED_ITERATING
 
 # -----------------------------------------------------------------------------
 
@@ -399,7 +403,7 @@ cdef class PEP(Object):
             The method used to compute the error estimate 
             used in the convergence test. 
         """
-        cdef SlepcPEPConv conv = PEP_CONV_EIG
+        cdef SlepcPEPConv conv = PEP_CONV_REL
         CHKERR( PEPGetConvergenceTest(self.pep, &conv) )
         return conv
 
