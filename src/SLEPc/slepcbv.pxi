@@ -53,8 +53,6 @@ cdef extern from * nogil:
     int BVRestoreColumn(SlepcBV,PetscInt,PetscVec*)
 
     int BVDot(SlepcBV,SlepcBV,PetscMat)
-    int BVAXPY(SlepcBV,PetscScalar,SlepcBV)
-    int BVDot(SlepcBV,SlepcBV,PetscMat)
     int BVDotVec(SlepcBV,PetscVec,PetscScalar*)
 
     int BVMatProject(SlepcBV,PetscMat,SlepcBV,PetscMat)

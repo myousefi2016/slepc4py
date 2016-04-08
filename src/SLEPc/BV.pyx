@@ -580,22 +580,6 @@ cdef class BV(Object):
         CHKERR( BVDot(X.bv, Y.bv, M.mat) )
         return M
 
-    def AXPY(self, alpha, BV X not None):
-        """
-        Computes Y = Y + alpha X, where Y is this BV.
-
-        Parameters
-        ----------
-        alpha: float
-            scalar
-
-        Notes
-        -----
-        In-place operation.
-        """
-        cdef PetscScalar sval = asScalar(alpha)
-        CHKERR( BVAXPY(self.bv, sval, X.bv) )
-
     def matProject(self, Mat A, BV Y not None):
         """
         Computes the projection of a matrix onto a subspace.
