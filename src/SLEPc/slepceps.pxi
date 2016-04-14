@@ -165,6 +165,8 @@ cdef extern from * nogil:
     int EPSKrylovSchurGetDimensions(SlepcEPS,PetscInt*,PetscInt*,PetscInt*);
     int EPSKrylovSchurGetSubcommInfo(SlepcEPS,PetscInt*,PetscInt*,PetscVec*);
     int EPSKrylovSchurGetSubcommPairs(SlepcEPS,PetscInt,PetscScalar*,PetscVec);
+    int EPSKrylovSchurGetSubcommMats(SlepcEPS,PetscMat*,PetscMat*);
+    int EPSKrylovSchurUpdateSubcommMats(SlepcEPS,PetscScalar,PetscScalar,PetscMat,PetscScalar,PetscScalar,PetscMat,PetscMatStructure,PetscBool);
     int EPSKrylovSchurSetSubintervals(SlepcEPS,PetscReal*);
 
     ctypedef enum SlepcEPSLanczosReorthogType "EPSLanczosReorthogType":
