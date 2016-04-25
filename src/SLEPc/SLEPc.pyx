@@ -174,8 +174,8 @@ cdef int initialize(object args) except -1:
     CHKERR( SlepcInitialize(NULL, NULL, NULL, NULL) )
     # register finalization function
     if Py_AtExit(finalize) < 0:
-        PySys_WriteStderr("warning: could not register"
-                          "SlepcFinalize() with Py_AtExit()", 0)
+        PySys_WriteStderr("warning: could not register %s with Py_AtExit()",
+                          "SlepcFinalize()")
     return 1 # and we are done, enjoy !!
 
 from petsc4py.PETSc cimport PyPetscType_Register
