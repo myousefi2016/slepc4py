@@ -38,7 +38,7 @@ cdef extern from * nogil:
     int BVSetOrthogonalization(SlepcBV,SlepcBVOrthogType,SlepcBVOrthogRefineType,PetscReal,SlepcBVOrthogBlockType)
     int BVGetOrthogonalization(SlepcBV,SlepcBVOrthogType*,SlepcBVOrthogRefineType*,PetscReal*,SlepcBVOrthogBlockType*)
 
-    int BVSetRandom(SlepcBV,PetscRandom)
+    int BVSetRandom(SlepcBV)
 
     int BVSetMatrix(SlepcBV,PetscMat,PetscBool)
     int BVGetMatrix(SlepcBV,PetscMat*,PetscBool*)

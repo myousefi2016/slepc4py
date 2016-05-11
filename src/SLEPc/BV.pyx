@@ -782,22 +782,15 @@ cdef class BV(Object):
         CHKERR( BVNorm(self.bv, ntype, &norm) )
         return toReal(norm)
 
-    def setRandom(self, Random random=None):
+    def setRandom(self):
         """
         Set the active columns of BV to random numbers.
-
-        Parameters
-        ----------
-        random: Random or None.
-            The random number context created with PETSc.Random.create()
-            or if None one will be created internally.
 
         Notes
         -----
         All active columns (except the leading ones) are modified.
         """
-        cdef PetscRandom rnd = NULL if random is None else random.rnd
-        CHKERR( BVSetRandom(self.bv, rnd) )
+        CHKERR( BVSetRandom(self.bv) )
 
     def orthogonalizeVec(self, Vec v not None):
         """
