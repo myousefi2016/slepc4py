@@ -75,10 +75,10 @@ cdef extern from * nogil:
 
     int NEPSetDimensions(SlepcNEP,PetscInt,PetscInt,PetscInt)
     int NEPGetDimensions(SlepcNEP,PetscInt*,PetscInt*,PetscInt*)
-    int NEPSetLagPreconditioner(SlepcNEP,PetscInt)
-    int NEPGetLagPreconditioner(SlepcNEP,PetscInt*)
-    int NEPSetConstCorrectionTol(SlepcNEP,PetscBool)
-    int NEPGetConstCorrectionTol(SlepcNEP,PetscBool*)
+    int NEPRIISetLagPreconditioner(SlepcNEP,PetscInt)
+    int NEPRIIGetLagPreconditioner(SlepcNEP,PetscInt*)
+    int NEPRIISetConstCorrectionTol(SlepcNEP,PetscBool)
+    int NEPRIIGetConstCorrectionTol(SlepcNEP,PetscBool*)
 
     int NEPGetConverged(SlepcNEP,PetscInt*)
     int NEPGetEigenpair(SlepcNEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)

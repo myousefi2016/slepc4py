@@ -244,7 +244,7 @@ cdef class NEP(Object):
         if maxit is not None: ival = asInt(maxit)
         CHKERR( NEPSetTolerances(self.nep, rval, ival) )
 
-    def getLagPreconditioner(self):
+    def getRIILagPreconditioner(self):
         """
         Indicates how often the preconditioner is rebuilt.
 
@@ -254,10 +254,10 @@ cdef class NEP(Object):
             The lag parameter.
         """
         cdef PetscInt ival = 0
-        CHKERR( NEPGetLagPreconditioner(self.nep, &ival) )
+        CHKERR( NEPRIIGetLagPreconditioner(self.nep, &ival) )
         return ival
 
-    def setLagPreconditioner(self, lag):
+    def setRIILagPreconditioner(self, lag):
         """
         Determines when the preconditioner is rebuilt in the
         nonlinear solve.
@@ -270,7 +270,7 @@ cdef class NEP(Object):
             the Jacobian is built, etc.
         """
         cdef PetscInt ival = lag
-        CHKERR( NEPSetLagPreconditioner(self.nep, ival) )
+        CHKERR( NEPRIISetLagPreconditioner(self.nep, ival) )
 
     def getTrackAll(self):
         """
