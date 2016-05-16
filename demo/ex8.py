@@ -90,7 +90,6 @@ nep.setSplitOperator([A, Id, B], [f2, f1, f3], PETSc.Mat.Structure.SUBSET)
 # Customize options
 nep.setTolerances(tol=1e-9)
 nep.setDimensions(1)
-nep.setLagPreconditioner(0)
 nep.setFromOptions()
 
 # Solve the problem
