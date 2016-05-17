@@ -91,6 +91,20 @@ class MyPDE(object):
         u.axpy(-1.0,y)
         return u.norm()
 
+def FixSign(x):
+    # Force the eigenfunction to be real and positive, since
+    # some eigensolvers may return the eigenvector multiplied
+    # by a complex number of modulus one.
+    comm = x.getComm()
+    rank = comm.getRank()
+    n = 1 if rank == 0 else 0
+    aux = PETSc.Vec().createMPI((n, PETSc.DECIDE), comm=comm)
+    if rank == 0: aux[0] = x[0]
+    aux.assemble()
+    x0 = aux.sum()
+    sign = x0/abs(x0)
+    x.scale(sign)
+
 opts = PETSc.Options()
 n = opts.getInt('n', 128)
 kappa = opts.getReal('kappa', 1.0)
@@ -142,8 +156,9 @@ if nconv > 0:
   Print("----------------- ------------------ ------------------")
   for i in range(nconv):
     k = nep.getEigenpair(i, x)
+    FixSign(x)
     res = nep.computeError(i)
-    error = pde.checkSolution(k.real,x)
+    error = pde.checkSolution(k.real, x)
     if k.imag != 0.0:
       Print( " %9f%+9f j %12g     %12g" % (k.real, k.imag, res, error) )
     else:
