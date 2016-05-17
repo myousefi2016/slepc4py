@@ -1716,6 +1716,9 @@ cdef class EPS(Object):
         The subintervals are then defined by two consecutive points: 
         [subint_0,subint_1], [subint_1,subint_2], and so on.
         """
+        cdef PetscBool match = PETSC_FALSE
+        CHKERR( PetscObjectTypeCompare(<PetscObject>self.eps, EPSKRYLOVSCHUR, &match) )
+        if match == PETSC_FALSE: return
         cdef PetscReal *subintarray = NULL
         cdef Py_ssize_t i = 0, n = len(subint)
         cdef PetscInt nparts = 0

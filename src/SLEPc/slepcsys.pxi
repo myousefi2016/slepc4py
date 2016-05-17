@@ -30,6 +30,7 @@ cdef extern from * nogil:
     MPI_Comm PetscObjectComm(PetscObject)
     int PetscObjectReference(PetscObject)
     int PetscObjectDestroy(PetscObject*)
+    int PetscObjectTypeCompare(PetscObject,char[],PetscBool*)
 
 cdef extern from * nogil:
     int MatGetSize(PetscMat,PetscInt*,PetscInt*)
