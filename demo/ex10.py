@@ -225,10 +225,9 @@ def project_reduced_to_full_space(alpha, bv):
     scatter, Wr = PETSc.Scatter.toAll(alpha)
     scatter.begin(alpha, Wr, PETSc.InsertMode.INSERT, PETSc.ScatterMode.FORWARD)
     scatter.end(alpha, Wr, PETSc.InsertMode.INSERT, PETSc.ScatterMode.FORWARD)
-    PODcoeff = Wr.getArray()
+    PODcoeff = Wr.getArray(readonly=1)
 
-    bv.multVec(1.,0.,uPOD, PODcoeff)
-
+    bv.multVec(1., 0., uPOD, PODcoeff)
 
     return uPOD
 

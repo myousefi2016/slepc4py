@@ -34,8 +34,8 @@ class Laplacian2D(object):
 
     def mult(self, A, x, y):
         m, n = self.m, self.n
-        xx = x[...].reshape(m,n)
-        yy = y[...].reshape(m,n)
+        xx = x.getArray(readonly=1).reshape(m,n)
+        yy = y.getArray(readonly=0).reshape(m,n)
         laplace2d(self.U, xx, yy)
 
 def construct_operator(m, n):
