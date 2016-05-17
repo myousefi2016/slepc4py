@@ -8,8 +8,6 @@
 
 .. _SLEPc:        http://slepc.upv.es
 
-.. _TAO:          http://www.mcs.anl.gov/tao/
-
 .. _Python:       http://www.python.org
 
 .. _NumPy:        http://www.numpy.org
@@ -19,12 +17,6 @@
 .. _petsc4py:     http://bitbucket.org/petsc/petsc4py
 
 .. _slepc4py:     http://bitbucket.org/slepc/slepc4py
-
-.. _tao4py:       http://bitbucket.org/dalcinl/tao4py
-
-.. _CIMEC:        http://www.cimec.org.ar
-
-.. _UPV:          http://www.upv.es
 
 .. Local Variables:
 .. mode: rst
