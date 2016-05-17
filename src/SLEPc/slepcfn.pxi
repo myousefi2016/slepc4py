@@ -7,6 +7,7 @@ cdef extern from * nogil:
     SlepcFNType FNLOG
     SlepcFNType FNPHI
     SlepcFNType FNSQRT
+    SlepcFNType FNINVSQRT
 
     ctypedef enum SlepcFNCombineType "FNCombineType":
         FN_COMBINE_ADD

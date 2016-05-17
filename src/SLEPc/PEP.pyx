@@ -30,18 +30,6 @@ class PEPProblemType(object):
     HERMITIAN  = PEP_HERMITIAN
     GYROSCOPIC = PEP_GYROSCOPIC
 
-class PEPErrorType(object):
-    """
-    PEP error type to assess accuracy of computed solutions
-
-    - `ABSOLUTE`:  Absolute error.
-    - `RELATIVE`:  Relative error.
-    - `BACKWARD`:  Backward error.
-    """
-    ABSOLUTE = PEP_ERROR_ABSOLUTE
-    RELATIVE = PEP_ERROR_RELATIVE
-    BACKWARD = PEP_ERROR_BACKWARD
-
 class PEPWhich(object):
     """
     PEP desired part of spectrum
@@ -55,6 +43,7 @@ class PEPWhich(object):
     - `TARGET_MAGNITUDE`:   Closest to target (in magnitude).
     - `TARGET_REAL`:        Real part closest to target.
     - `TARGET_IMAGINARY`:   Imaginary part closest to target.
+    - `USER`:               User-defined criterion.
     """
     LARGEST_MAGNITUDE  = PEP_LARGEST_MAGNITUDE
     SMALLEST_MAGNITUDE = PEP_SMALLEST_MAGNITUDE
@@ -65,6 +54,7 @@ class PEPWhich(object):
     TARGET_MAGNITUDE   = PEP_TARGET_MAGNITUDE
     TARGET_REAL        = PEP_TARGET_REAL
     TARGET_IMAGINARY   = PEP_TARGET_IMAGINARY
+    USER               = PEP_WHICH_USER
 
 class PEPBasis(object):
     MONOMIAL   = PEP_BASIS_MONOMIAL
@@ -75,10 +65,69 @@ class PEPBasis(object):
     HERMITE    = PEP_BASIS_HERMITE
 
 class PEPScale(object):
+    """
+    PEP scaling strategy
+
+    - `NONE`:     No scaling.
+    - `SCALAR`:   Parameter scaling.
+    - `DIAGONAL`: Diagonal scaling.
+    - `BOTH`:     Both parameter and diagonal scaling.
+    """
     NONE     = PEP_SCALE_NONE
     SCALAR   = PEP_SCALE_SCALAR
     DIAGONAL = PEP_SCALE_DIAGONAL
     BOTH     = PEP_SCALE_BOTH
+
+class PEPRefine(object):
+    """
+    PEP refinement strategy
+
+    - `NONE`:     No refinement.
+    - `SIMPLE`:   Refine eigenpairs one by one.
+    - `MULTIPLE`: Refine all eigenpairs simultaneously (invariant pair).
+    """
+    NONE     = PEP_REFINE_NONE
+    SIMPLE   = PEP_REFINE_SIMPLE
+    MULTIPLE = PEP_REFINE_MULTIPLE
+
+class PEPRefineScheme(object):
+    """
+    Scheme for solving linear systems during iterative refinement
+
+    - `SCHUR`:    Schur complement.
+    - `MBE`:      Mixed block elimination.
+    - `EXPLICIT`: Build the explicit matrix.
+    """
+    SCHUR    = PEP_REFINE_SCHEME_SCHUR
+    MBE      = PEP_REFINE_SCHEME_MBE
+    EXPLICIT = PEP_REFINE_SCHEME_EXPLICIT
+
+class PEPExtract(object):
+    """
+    Extraction strategy used to obtain eigenvectors of the PEP from the
+    eigenvectors of the linearization
+
+    - `NONE`:       Use the first block.
+    - `NORM`:       Use the first or last block depending on norm of H.
+    - `RESIDUAL`:   Use the block with smallest residual.
+    - `STRUCTURED`: Combine all blocks in a certain way.
+    """
+    NONE       = PEP_EXTRACT_NONE
+    NORM       = PEP_EXTRACT_NORM
+    RESIDUAL   = PEP_EXTRACT_RESIDUAL
+    STRUCTURED = PEP_EXTRACT_STRUCTURED
+
+class PEPErrorType(object):
+    """
+    PEP error type to assess accuracy of computed solutions
+
+    - `ABSOLUTE`:  Absolute error.
+    - `RELATIVE`:  Relative error.
+    - `BACKWARD`:  Backward error.
+    """
+    ABSOLUTE = PEP_ERROR_ABSOLUTE
+    RELATIVE = PEP_ERROR_RELATIVE
+    BACKWARD = PEP_ERROR_BACKWARD
 
 class PEPConv(object):
     """
@@ -93,30 +142,6 @@ class PEPConv(object):
     REL  = PEP_CONV_REL
     NORM = PEP_CONV_NORM
     USER = PEP_CONV_USER
-
-class PEPRefine(object):
-    """
-    PEP refinement strategy
-
-    - `NONE`:
-    - `SIMPLE`:
-    - `MULTIPLE`:
-    """
-    NONE  = PEP_REFINE_NONE
-    SIMPLE  = PEP_REFINE_SIMPLE
-    MULTIPLE = PEP_REFINE_MULTIPLE
-
-class PEPRefineScheme(object):
-    """
-    Scheme for solving linear systems during iterative refinement
-
-    - `EXPLICIT`:
-    - `MBE`:
-    - `SCHUR`:
-    """
-    EXPLICIT = PEP_REFINE_SCHEME_EXPLICIT
-    MBE      = PEP_REFINE_SCHEME_MBE
-    SCHUR    = PEP_REFINE_SCHEME_SCHUR
 
 class PEPConvergedReason(object):
     """
@@ -152,6 +177,7 @@ cdef class PEP(Object):
     Scale           = PEPScale
     Refine          = PEPRefine
     RefineScheme    = PEPRefineScheme
+    Extract         = PEPExtract
     ErrorType       = PEPErrorType
     Conv            = PEPConv
     ConvergedReason = PEPConvergedReason
@@ -962,6 +988,7 @@ del PEPBasis
 del PEPScale
 del PEPRefine
 del PEPRefineScheme
+del PEPExtract
 del PEPErrorType
 del PEPConv
 del PEPConvergedReason

@@ -6,6 +6,7 @@ cdef extern from * nogil:
     SlepcNEPType NEPNARNOLDI
     SlepcNEPType NEPCISS
     SlepcNEPType NEPINTERPOL
+    SlepcNEPType NEPNLEIGS
 
     ctypedef enum SlepcNEPWhich "NEPWhich":
         NEP_LARGEST_MAGNITUDE
@@ -17,10 +18,23 @@ cdef extern from * nogil:
         NEP_TARGET_MAGNITUDE
         NEP_TARGET_REAL
         NEP_TARGET_IMAGINARY
+        NEP_ALL
+        NEP_WHICH_USER
 
     ctypedef enum SlepcNEPErrorType "NEPErrorType":
         NEP_ERROR_ABSOLUTE
         NEP_ERROR_RELATIVE
+        NEP_ERROR_BACKWARD
+
+    ctypedef enum SlepcNEPRefine "NEPRefine":
+        NEP_REFINE_NONE
+        NEP_REFINE_SIMPLE
+        NEP_REFINE_MULTIPLE
+
+    ctypedef enum SlepcNEPRefineScheme "NEPRefineScheme":
+        NEP_REFINE_SCHEME_SCHUR
+        NEP_REFINE_SCHEME_MBE
+        NEP_REFINE_SCHEME_EXPLICIT
 
     ctypedef enum SlepcNEPConvergedReason "NEPConvergedReason":
         NEP_CONVERGED_TOL

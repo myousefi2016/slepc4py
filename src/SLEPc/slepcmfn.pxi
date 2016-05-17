@@ -2,9 +2,11 @@ cdef extern from * nogil:
 
     ctypedef char* SlepcMFNType "const char*"
     SlepcMFNType MFNKRYLOV
+    SlepcMFNType MFNEXPOKIT
 
     ctypedef enum SlepcMFNConvergedReason "MFNConvergedReason":
         MFN_CONVERGED_TOL
+        MFN_CONVERGED_ITS
         MFN_DIVERGED_ITS
         MFN_DIVERGED_BREAKDOWN
         MFN_CONVERGED_ITERATING

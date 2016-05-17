@@ -11,12 +11,14 @@ class NEPType(object):
     - `NARNOLDI`: Nonlinear Arnoldi.
     - `CISS`:     Contour integral spectrum slice.
     - `INTERPOL`: Polynomial interpolation.
+    - `NLEIGS`:   Fully rational Krylov method for nonlinear eigenproblems.
     """
     RII      = S_(NEPRII)
     SLP      = S_(NEPSLP)
     NARNOLDI = S_(NEPNARNOLDI)
     CISS     = S_(NEPCISS)
     INTERPOL = S_(NEPINTERPOL)
+    NLEIGS   = S_(NEPNLEIGS)
 
 class NEPErrorType(object):
     """
@@ -24,9 +26,11 @@ class NEPErrorType(object):
 
     - `ABSOLUTE`:  Absolute error.
     - `RELATIVE`:  Relative error.
+    - `BACKWARD`:  Backward error.
     """
     ABSOLUTE = NEP_ERROR_ABSOLUTE
     RELATIVE = NEP_ERROR_RELATIVE
+    BACKWARD = NEP_ERROR_BACKWARD
 
 class NEPWhich(object):
     LARGEST_MAGNITUDE  = NEP_LARGEST_MAGNITUDE
@@ -38,6 +42,8 @@ class NEPWhich(object):
     TARGET_MAGNITUDE   = NEP_TARGET_MAGNITUDE
     TARGET_REAL        = NEP_TARGET_REAL
     TARGET_IMAGINARY   = NEP_TARGET_IMAGINARY
+    ALL                = NEP_ALL
+    USER               = NEP_WHICH_USER
 
 class NEPConvergedReason(object):
     CONVERGED_TOL          = NEP_CONVERGED_TOL
@@ -47,6 +53,30 @@ class NEPConvergedReason(object):
     DIVERGED_LINEAR_SOLVE  = NEP_DIVERGED_LINEAR_SOLVE
     CONVERGED_ITERATING    = NEP_CONVERGED_ITERATING
     ITERATING              = NEP_CONVERGED_ITERATING
+
+class NEPRefine(object):
+    """
+    NEP refinement strategy
+
+    - `NONE`:     No refinement.
+    - `SIMPLE`:   Refine eigenpairs one by one.
+    - `MULTIPLE`: Refine all eigenpairs simultaneously (invariant pair).
+    """
+    NONE     = NEP_REFINE_NONE
+    SIMPLE   = NEP_REFINE_SIMPLE
+    MULTIPLE = NEP_REFINE_MULTIPLE
+
+class NEPRefineScheme(object):
+    """
+    Scheme for solving linear systems during iterative refinement
+
+    - `SCHUR`:    Schur complement.
+    - `MBE`:      Mixed block elimination.
+    - `EXPLICIT`: Build the explicit matrix.
+    """
+    SCHUR    = NEP_REFINE_SCHEME_SCHUR
+    MBE      = NEP_REFINE_SCHEME_MBE
+    EXPLICIT = NEP_REFINE_SCHEME_EXPLICIT
 
 # -----------------------------------------------------------------------------
 
@@ -60,6 +90,8 @@ cdef class NEP(Object):
     ErrorType       = NEPErrorType
     Which           = NEPWhich
     ConvergedReason = NEPConvergedReason
+    Refine          = NEPRefine
+    RefineScheme    = NEPRefineScheme
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.nep
@@ -598,8 +630,10 @@ cdef class NEP(Object):
 # -----------------------------------------------------------------------------
 
 del NEPType
-del NEPWhich
 del NEPErrorType
+del NEPWhich
 del NEPConvergedReason
+del NEPRefine
+del NEPRefineScheme
 
 # -----------------------------------------------------------------------------

@@ -1,13 +1,24 @@
 # -----------------------------------------------------------------------------
 
 class MFNType(object):
+    """
+    MFN type
+
+    Action of a matrix function on a vector.
+
+    - `KRYLOV`:  Restarted Krylov solver.
+    - `EXPOKIT`: Implementation of the method in Expokit.
+    """
     KRYLOV   = S_(MFNKRYLOV)
+    EXPOKIT  = S_(MFNEXPOKIT)
 
 class MFNConvergedReason(object):
     CONVERGED_TOL       = MFN_CONVERGED_TOL
+    CONVERGED_ITS       = MFN_CONVERGED_ITS
     DIVERGED_ITS        = MFN_DIVERGED_ITS
     DIVERGED_BREAKDOWN  = MFN_DIVERGED_BREAKDOWN
     CONVERGED_ITERATING = MFN_CONVERGED_ITERATING
+    ITERATING           = MFN_CONVERGED_ITERATING
 
 # -----------------------------------------------------------------------------
 

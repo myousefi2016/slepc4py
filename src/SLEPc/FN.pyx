@@ -10,6 +10,7 @@ class FNType(object):
     LOG      = S_(FNLOG)
     PHI      = S_(FNPHI)
     SQRT     = S_(FNSQRT)
+    INVSQRT  = S_(FNINVSQRT)
 
 class FNCombineType(object):
     """
@@ -33,7 +34,8 @@ cdef class FN(Object):
     FN
     """
 
-    Type = FNType
+    Type        = FNType
+    CombineType = FNCombineType
 
     def __cinit__(self):
         self.obj = <PetscObject*> &self.fn

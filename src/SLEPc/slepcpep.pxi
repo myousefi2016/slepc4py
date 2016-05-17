@@ -17,6 +17,12 @@ cdef extern from * nogil:
         PEP_REFINE_SIMPLE
         PEP_REFINE_MULTIPLE
 
+    ctypedef enum SlepcPEPExtract "PEPExtract":
+        PEP_EXTRACT_NONE
+        PEP_EXTRACT_NORM
+        PEP_EXTRACT_RESIDUAL
+        PEP_EXTRACT_STRUCTURED
+
     ctypedef enum SlepcPEPRefineScheme "PEPRefineScheme":
         PEP_REFINE_SCHEME_EXPLICIT
         PEP_REFINE_SCHEME_MBE
@@ -37,6 +43,7 @@ cdef extern from * nogil:
         PEP_TARGET_MAGNITUDE
         PEP_TARGET_REAL
         PEP_TARGET_IMAGINARY
+        PEP_WHICH_USER
 
     ctypedef enum SlepcPEPBasis "PEPBasis":
         PEP_BASIS_MONOMIAL
