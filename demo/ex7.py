@@ -114,7 +114,6 @@ nep.setJacobian(pde.formJacobian, J)
 
 nep.setTolerances(tol=1e-9)
 nep.setDimensions(1)
-nep.setLagPreconditioner(0)
 nep.setFromOptions()
 
 # Solve the problem
