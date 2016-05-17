@@ -85,7 +85,7 @@ class MyPDE(object):
         h = self.h
         for i in range(Istart,Iend):
             x = (i+1)*h
-            u[i-Istart] = sin(nu*x);
+            u[i] = sin(nu*x);
         u.assemble()
         u.normalize()
         u.axpy(-1.0,y)
