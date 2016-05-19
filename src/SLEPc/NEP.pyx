@@ -399,6 +399,31 @@ cdef class NEP(Object):
         """
         CHKERR( NEPSetBV(self.nep, bv.bv) )
 
+    def getRG(self):
+        """
+        Obtain the region object associated to the eigensolver.
+
+        Returns
+        -------
+        rg: RG
+            The region context.
+        """
+        cdef RG rg = RG()
+        CHKERR( NEPGetRG(self.nep, &rg.rg) )
+        PetscINCREF(rg.obj)
+        return rg
+
+    def setRG(self, RG rg not None):
+        """
+        Associates a region object to the eigensolver.
+
+        Parameters
+        ----------
+        rg: RG
+            The region context.
+        """
+        CHKERR( NEPSetRG(self.nep, rg.rg) )
+
     #
 
     def setInitialSpace(self, space):

@@ -700,6 +700,31 @@ cdef class PEP(Object):
         """
         CHKERR( PEPSetBV(self.pep, bv.bv) )
 
+    def getRG(self):
+        """
+        Obtain the region object associated to the eigensolver.
+
+        Returns
+        -------
+        rg: RG
+            The region context.
+        """
+        cdef RG rg = RG()
+        CHKERR( PEPGetRG(self.pep, &rg.rg) )
+        PetscINCREF(rg.obj)
+        return rg
+
+    def setRG(self, RG rg not None):
+        """
+        Associates a region object to the eigensolver.
+
+        Parameters
+        ----------
+        rg: RG
+            The region context.
+        """
+        CHKERR( PEPSetRG(self.pep, rg.rg) )
+
     def getOperators(self):
         """
         Gets the matrices associated with the eigenvalue problem.

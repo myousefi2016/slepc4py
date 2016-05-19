@@ -917,6 +917,31 @@ cdef class EPS(Object):
         """
         CHKERR( EPSSetDS(self.eps, ds.ds) )
 
+    def getRG(self):
+        """
+        Obtain the region object associated to the eigensolver.
+
+        Returns
+        -------
+        rg: RG
+            The region context.
+        """
+        cdef RG rg = RG()
+        CHKERR( EPSGetRG(self.eps, &rg.rg) )
+        PetscINCREF(rg.obj)
+        return rg
+
+    def setRG(self, RG rg not None):
+        """
+        Associates a region object to the eigensolver.
+
+        Parameters
+        ----------
+        rg: RG
+            The region context.
+        """
+        CHKERR( EPSSetRG(self.eps, rg.rg) )
+
     def getOperators(self):
         """
         Gets the matrices associated with the eigenvalue problem.

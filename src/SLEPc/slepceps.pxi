@@ -111,6 +111,8 @@ cdef extern from * nogil:
     int EPSGetDS(SlepcEPS,SlepcDS*)
     int EPSSetST(SlepcEPS,SlepcST)
     int EPSGetST(SlepcEPS,SlepcST*)
+    int EPSSetRG(SlepcEPS,SlepcRG)
+    int EPSGetRG(SlepcEPS,SlepcRG*)
 
     int EPSSetOperators(SlepcEPS,PetscMat,PetscMat)
     int EPSGetOperators(SlepcEPS,PetscMat*,PetscMat*)
