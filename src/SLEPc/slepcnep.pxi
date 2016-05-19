@@ -97,6 +97,7 @@ cdef extern from * nogil:
     int NEPGetConverged(SlepcNEP,PetscInt*)
     int NEPGetEigenpair(SlepcNEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int NEPComputeError(SlepcNEP,PetscInt,SlepcNEPErrorType,PetscReal*)
+    int NEPErrorView(SlepcNEP,SlepcNEPErrorType,PetscViewer)
     int NEPGetErrorEstimate(SlepcNEP,PetscInt,PetscReal*)
 
     int NEPMonitorCancel(SlepcNEP)

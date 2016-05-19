@@ -142,6 +142,7 @@ cdef extern from * nogil:
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeError(SlepcEPS,PetscInt,SlepcEPSErrorType,PetscReal*)
+    int EPSErrorView(SlepcEPS,SlepcEPSErrorType,PetscViewer)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT

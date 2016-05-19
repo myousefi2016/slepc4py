@@ -1271,6 +1271,33 @@ cdef class EPS(Object):
         CHKERR( EPSComputeError(self.eps, i, et, &rval) )
         return toReal(rval)
 
+    def errorView(self, etype=None, Viewer viewer=None):
+        """
+        Displays the errors associated with the computed solution
+        (as well as the eigenvalues).
+
+        Parameters
+        ----------
+        etype: `EPS.ErrorType` enumerate, optional
+           The error type to compute.
+        viewer: Viewer, optional.
+                Visualization context; if not provided, the standard
+                output is used.
+
+        Notes
+        -----
+        By default, this function checks the error of all eigenpairs and prints
+        the eigenvalues if all of them are below the requested tolerance.
+        If the viewer has format ``ASCII_INFO_DETAIL`` then a table with
+        eigenvalues and corresponding errors is printed.
+
+        """
+        cdef SlepcEPSErrorType et = EPS_ERROR_RELATIVE
+        if etype is not None: et = etype
+        cdef PetscViewer vwr = NULL
+        if viewer is not None: vwr = viewer.vwr
+        CHKERR( EPSErrorView(self.eps, et, vwr) )
+
     #
 
     def setPowerShiftType(self, shift):

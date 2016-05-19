@@ -59,6 +59,7 @@ cdef extern from * nogil:
     int SVDGetConverged(SlepcSVD,PetscInt*)
     int SVDGetSingularTriplet(SlepcSVD,PetscInt,PetscReal*,PetscVec,PetscVec)
     int SVDComputeError(SlepcSVD,PetscInt,SlepcSVDErrorType,PetscReal*)
+    int SVDErrorView(SlepcSVD,SlepcSVDErrorType,PetscViewer)
 
     int SVDCrossSetEPS(SlepcSVD,SlepcEPS)
     int SVDCrossGetEPS(SlepcSVD,SlepcEPS*)

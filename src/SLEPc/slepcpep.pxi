@@ -112,6 +112,7 @@ cdef extern from * nogil:
     int PEPGetConverged(SlepcPEP,PetscInt*)
     int PEPGetEigenpair(SlepcPEP,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int PEPComputeError(SlepcPEP,PetscInt,SlepcPEPErrorType,PetscReal*)
+    int PEPErrorView(SlepcPEP,SlepcPEPErrorType,PetscViewer)
     int PEPGetErrorEstimate(SlepcPEP,PetscInt,PetscReal*)
 
     int PEPSetConvergenceTest(SlepcPEP,SlepcPEPConv)
