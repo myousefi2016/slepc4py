@@ -623,7 +623,7 @@ cdef class BV(Object):
             The result.
 
         Notes
-        ----
+        -----
         Only active columns (excluding the leading ones) are processed.
 
         It is possible to choose whether the computation is done column by column
@@ -745,7 +745,7 @@ cdef class BV(Object):
         The norm of V[j] is computed (NORM_1, NORM_2, or NORM_INFINITY).
 
         If a non-standard inner product has been specified with BVSetMatrix(),
-        then the returned value is sqrt(V[j]'*B*V[j]), where B is the inner
+        then the returned value is ``sqrt(V[j]'* B*V[j])``, where B is the inner
         product matrix (argument 'type' is ignored).
         """
         cdef PetscNormType ntype = PETSC_NORM_2
@@ -834,7 +834,7 @@ cdef class BV(Object):
 
         Notes
         -----
-        The output satisfies V0 = V*R (where V0 represent the input V) and V'*V = I.
+        The output satisfies ``V0 = V*R`` (where V0 represent the input V) and ``V'*V = I``.
         """
         if kargs: self.setOrthogonalization(**kargs)
         cdef PetscMat Rmat = NULL if R is None else R.mat
