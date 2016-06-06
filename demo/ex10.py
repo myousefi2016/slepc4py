@@ -292,7 +292,7 @@ def main():
     # Compute the L2 and Linf norm of the error
     error = uex.copy()
     error.axpy(-1,uPOD)
-    errorL2 = math.sqrt(error.dot(error))
+    errorL2 = math.sqrt(error.dot(error).real)
     print('The L2-norm of the error is: '+str(errorL2))
 
     print("NORMAL END")

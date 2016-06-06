@@ -45,6 +45,7 @@ def main():
     # Solver object
     E = SLEPc.EPS().create()
     E.setOperators(A)
+    E.setProblemType(SLEPc.EPS.ProblemType.HEP)
     E.setType(SLEPc.EPS.Type.CISS)
 
     # Define region of interest
