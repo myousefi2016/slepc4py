@@ -334,7 +334,7 @@ cdef class BV(Object):
         indef: bool, optional
                Whether the matrix is indefinite
         """
-        cdef PetscMat m = NULL if mat is None else mat.mat
+        cdef PetscMat m = <PetscMat>NULL if mat is None else mat.mat
         cdef PetscBool tval = PETSC_TRUE if indef else PETSC_FALSE
         CHKERR( BVSetMatrix(self.bv, m, tval) )
 
@@ -488,14 +488,14 @@ cdef class BV(Object):
         """
         l, k = self.getActiveColumns()
         cdef PetscScalar* mval = NULL
-        cdef tmp = allocate(<size_t>(k - l)*sizeof(PetscScalar),<void**>&mval)
+        cdef tmp = allocate(<size_t>(k - l)*sizeof(PetscScalar), <void**>&mval)
 
         CHKERR( BVDotVec(self.bv, v.vec, mval) )
 
         v = Vec().create(COMM_SELF)
         v.setType('seq')
-        v.setSizes((DECIDE,k-l))
-        v.setArray([mval[i] for i in range(0, k - l)])
+        v.setSizes((DECIDE, k-l))
+        v.setArray([toScalar(mval[i]) for i in range(0, k - l)])
         v.ghostUpdate()
 
         return v
@@ -604,7 +604,7 @@ cdef class BV(Object):
         CHKERR( BVGetActiveColumns(Y.bv, NULL, &ky) )
         CHKERR( BVGetActiveColumns(X.bv, NULL, &kx) )
         cdef Mat M = Mat().createDense((ky, kx), comm=COMM_SELF).setUp()
-        cdef PetscMat Amat = NULL if A is None else A.mat
+        cdef PetscMat Amat = <PetscMat>NULL if A is None else A.mat
         CHKERR( BVMatProject(X.bv, Amat, Y.bv, M.mat) )
         return M
 
@@ -837,7 +837,7 @@ cdef class BV(Object):
         The output satisfies ``V0 = V*R`` (where V0 represent the input V) and ``V'*V = I``.
         """
         if kargs: self.setOrthogonalization(**kargs)
-        cdef PetscMat Rmat = NULL if R is None else R.mat
+        cdef PetscMat Rmat = <PetscMat>NULL if R is None else R.mat
         CHKERR( BVOrthogonalize(self.bv, Rmat) )
 
 # -----------------------------------------------------------------------------
