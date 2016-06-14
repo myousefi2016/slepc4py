@@ -1041,6 +1041,8 @@ cdef class EPS(Object):
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
         CHKERR( EPSSetInitialSpace(self.eps, <PetscInt>ns, vs) )
 
+    # --- convergence ---
+
     def setStoppingTest(self, stopping, args=None, kargs=None):
         """
         Sets a function to decide when to stop the outer iteration of the eigensolver.
@@ -1054,13 +1056,34 @@ cdef class EPS(Object):
             self.set_attr('__stopping__', None)
             CHKERR( EPSSetStoppingTestFunction(self.eps, EPSStoppingBasic, NULL, NULL) )
 
-    #
+    # --- monitoring ---
+
+    def setMonitor(self, monitor, args=None, kargs=None):
+        """
+        Appends a monitor function to the list of monitors.
+        """
+        if monitor is None: return
+        cdef object monitorlist = self.get_attr('__monitor__')
+        if monitorlist is None:
+            monitorlist = []
+            self.set_attr('__monitor__', monitorlist)
+            CHKERR( EPSMonitorSet(self.eps, EPS_Monitor, NULL, NULL) )
+        if args is None: args = ()
+        if kargs is None: kargs = {}
+        monitorlist.append((monitor, args, kargs))
+
+    def getMonitor(self):
+        """
+        Gets the list of monitor functions.
+        """
+        return self.get_attr('__monitor__')
 
     def cancelMonitor(self):
         """
         Clears all monitors for an EPS object.
         """
         CHKERR( EPSMonitorCancel(self.eps) )
+        self.set_attr('__monitor__', None)
 
     #
 

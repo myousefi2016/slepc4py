@@ -33,8 +33,14 @@ E = SLEPc.EPS(); E.create()
 
 E.setOperators(A)
 E.setProblemType(SLEPc.EPS.ProblemType.HEP)
-E.setFromOptions()
 
+history = []
+def monitor(eps, its, nconv, eig, err):
+    history.append(err[nconv])
+    #print(its, rnorm)
+E.setMonitor(monitor)
+
+E.setFromOptions()
 E.solve()
 
 Print = PETSc.Sys.Print

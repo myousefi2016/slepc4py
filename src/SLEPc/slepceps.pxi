@@ -83,6 +83,14 @@ cdef extern from * nogil:
                                              PetscInt,
                                              SlepcEPSConvergedReason*,
                                              void*) except PETSC_ERR_PYTHON
+    ctypedef int (*SlepcEPSMonitorFunction)(SlepcEPS,
+                                            PetscInt,
+                                            PetscInt,
+                                            PetscScalar*,
+                                            PetscScalar*,
+                                            PetscReal*,
+                                            PetscInt,
+                                            void*) except PETSC_ERR_PYTHON
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)
@@ -158,6 +166,10 @@ cdef extern from * nogil:
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeError(SlepcEPS,PetscInt,SlepcEPSErrorType,PetscReal*)
     int EPSErrorView(SlepcEPS,SlepcEPSErrorType,PetscViewer)
+
+    int EPSMonitorSet(SlepcEPS,SlepcEPSMonitorFunction,void*,SlepcEPSCtxDel)
+    int EPSMonitorCancel(SlepcEPS)
+    int EPSMonitor(SlepcEPS,PetscInt,PetscInt,PetscScalar*,PetscScalar*,PetscReal*,PetscInt)
 
     ctypedef enum SlepcEPSPowerShiftType "EPSPowerShiftType":
         EPS_POWER_SHIFT_CONSTANT
@@ -269,7 +281,26 @@ cdef int EPS_Stopping(
     elif reason is False: r[0] = EPS_CONVERGED_ITERATING
     elif reason is True:  r[0] = EPS_CONVERGED_USER
     else:                 r[0] = reason
-    return 0
 
 # -----------------------------------------------------------------------------
 
+cdef int EPS_Monitor(
+    SlepcEPS    eps,
+    PetscInt    its,
+    PetscInt    nconv,
+    PetscScalar *eigr,
+    PetscScalar *eigi,
+    PetscReal   *errest,
+    PetscInt    nest,
+    void        *ctx,
+    ) except PETSC_ERR_PYTHON with gil:
+    cdef EPS Eps = ref_EPS(eps)
+    cdef object monitorlist = Eps.get_attr('__monitor__')
+    if monitorlist is None: return 0
+    cdef object eig = [toComplex(eigr[i], eigi[i]) for i in range(nest)]
+    cdef object err = [toReal(errest[i]) for i in range(nest)]
+    for (monitor, args, kargs) in monitorlist:
+        monitor(Eps, toInt(its), toInt(nconv), eig, err, *args, **kargs)
+    return 0
+
+# -----------------------------------------------------------------------------
