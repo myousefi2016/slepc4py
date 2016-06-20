@@ -1041,6 +1041,16 @@ cdef class EPS(Object):
         for i in range(ns): vs[i] = (<Vec?>space[i]).vec
         CHKERR( EPSSetInitialSpace(self.eps, <PetscInt>ns, vs) )
 
+    def setStoppingTest(self, stopping, args=None, kargs=None):
+        """
+        Sets a function to decide when to stop the outer iteration of the eigensolver.
+        """
+        if stopping is None: return
+        if args is None: args = ()
+        if kargs is None: kargs = {}
+        self.set_attr('__stopping__', (stopping, args, kargs))
+        CHKERR( EPSSetStoppingTestFunction(self.eps, EPS_Stop, NULL, NULL) )
+
     #
 
     def cancelMonitor(self):

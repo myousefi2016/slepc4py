@@ -74,6 +74,16 @@ cdef extern from * nogil:
         EPS_DIVERGED_SYMMETRY_LOST
         EPS_CONVERGED_ITERATING
 
+    ctypedef int (*SlepcEPSCtxDel)(void*)
+
+    ctypedef int (*SlepcEPSStoppingTestFunction)(SlepcEPS,
+                                            PetscInt,
+                                            PetscInt,
+                                            PetscInt,
+                                            PetscInt,
+                                            SlepcEPSConvergedReason*,
+                                            void*) except PETSC_ERR_PYTHON
+
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)
     int EPSReset(SlepcEPS)
@@ -141,6 +151,8 @@ cdef extern from * nogil:
     int EPSGetEigenvector(SlepcEPS,PetscInt,PetscVec,PetscVec)
     int EPSGetEigenpair(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
+
+    int EPSSetStoppingTestFunction(SlepcEPS,SlepcEPSStoppingTestFunction,void*,SlepcEPSCtxDel);
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeError(SlepcEPS,PetscInt,SlepcEPSErrorType,PetscReal*)
@@ -229,3 +241,35 @@ cdef extern from * nogil:
 cdef extern from * nogil:
     int VecDuplicate(PetscVec,PetscVec*)
     int MatCreateVecs(PetscMat,PetscVec*,PetscVec*)
+
+# -----------------------------------------------------------------------------
+
+cdef inline EPS ref_EPS(SlepcEPS eps):
+    cdef EPS ob = <EPS> EPS()
+    ob.eps = eps
+    PetscINCREF(ob.obj)
+    return ob
+
+# -----------------------------------------------------------------------------
+
+cdef int EPS_Stop(
+    SlepcEPS                eps,
+    PetscInt                its,
+    PetscInt                max_it,
+    PetscInt                nconv,
+    PetscInt                nev,
+    SlepcEPSConvergedReason *r,
+    void                    *ctx,
+    ) except PETSC_ERR_PYTHON with gil:
+    cdef EPS Eps = ref_EPS(eps)
+    (stopping, args, kargs) = Eps.get_attr('__stopping__')
+    if stopping is None: return 0
+    reason = stopping(Eps, toInt(its), toInt(max_it), toInt(nconv), toInt(nev), *args, **kargs)
+    if   reason is None:  r[0] = EPS_CONVERGED_ITERATING
+    elif reason is False: r[0] = EPS_CONVERGED_ITERATING
+    elif reason is True:  r[0] = EPS_CONVERGED_USER
+    else:                 r[0] = reason
+    return 0
+
+# -----------------------------------------------------------------------------
+
