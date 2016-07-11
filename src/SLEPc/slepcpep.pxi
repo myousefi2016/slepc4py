@@ -128,6 +128,8 @@ cdef extern from * nogil:
     int PEPSetInitialSpace(SlepcPEP,PetscInt,PetscVec*)
     int PEPSetWhichEigenpairs(SlepcPEP,SlepcPEPWhich)
     int PEPGetWhichEigenpairs(SlepcPEP,SlepcPEPWhich*)
+    int PEPSetTarget(SlepcPEP,PetscScalar)
+    int PEPGetTarget(SlepcPEP,PetscScalar*)
     int PEPGetConvergedReason(SlepcPEP,SlepcPEPConvergedReason*)
 
     int PEPLinearSetCompanionForm(SlepcPEP,PetscInt)

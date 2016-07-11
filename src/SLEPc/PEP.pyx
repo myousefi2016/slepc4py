@@ -383,6 +383,41 @@ cdef class PEP(Object):
         cdef SlepcPEPWhich val = which
         CHKERR( PEPSetWhichEigenpairs(self.pep, val) )
 
+    def getTarget(self):
+        """
+        Gets the value of the target.
+
+        Returns
+        -------
+        target: float (real or complex)
+                The value of the target.
+
+        Notes
+        -----
+        If the target was not set by the user, then zero is returned.
+        """
+        cdef PetscScalar sval = 0
+        CHKERR( PEPGetTarget(self.pep, &sval) )
+        return toScalar(sval)
+
+    def setTarget(self, target):
+        """
+        Sets the value of the target.
+
+        Parameters
+        ----------
+        target: float (real or complex)
+                The value of the target.
+
+        Notes
+        -----
+        The target is a scalar value used to determine the portion of
+        the spectrum of interest. It is used in combination with
+        `setWhichEigenpairs()`.
+        """
+        cdef PetscScalar sval = asScalar(target)
+        CHKERR( PEPSetTarget(self.pep, sval) )
+
     def getTolerances(self):
         """
         Gets the tolerance and maximum iteration count used by the
