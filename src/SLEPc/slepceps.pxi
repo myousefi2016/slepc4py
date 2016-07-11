@@ -76,13 +76,13 @@ cdef extern from * nogil:
 
     ctypedef int (*SlepcEPSCtxDel)(void*)
 
-    ctypedef int (*SlepcEPSStoppingTestFunction)(SlepcEPS,
-                                            PetscInt,
-                                            PetscInt,
-                                            PetscInt,
-                                            PetscInt,
-                                            SlepcEPSConvergedReason*,
-                                            void*) except PETSC_ERR_PYTHON
+    ctypedef int (*SlepcEPSStoppingFunction)(SlepcEPS,
+                                             PetscInt,
+                                             PetscInt,
+                                             PetscInt,
+                                             PetscInt,
+                                             SlepcEPSConvergedReason*,
+                                             void*) except PETSC_ERR_PYTHON
 
     int EPSView(SlepcEPS,PetscViewer)
     int EPSDestroy(SlepcEPS*)
@@ -152,7 +152,8 @@ cdef extern from * nogil:
     int EPSGetEigenpair(SlepcEPS,PetscInt,PetscScalar*,PetscScalar*,PetscVec,PetscVec)
     int EPSGetInvariantSubspace(SlepcEPS,PetscVec*)
 
-    int EPSSetStoppingTestFunction(SlepcEPS,SlepcEPSStoppingTestFunction,void*,SlepcEPSCtxDel);
+    int EPSSetStoppingTestFunction(SlepcEPS,SlepcEPSStoppingFunction,void*,SlepcEPSCtxDel);
+    int EPSStoppingBasic(SlepcEPS,PetscInt,PetscInt,PetscInt,PetscInt,SlepcEPSConvergedReason*,void*) except PETSC_ERR_PYTHON
 
     int EPSGetErrorEstimate(SlepcEPS,PetscInt,PetscReal*)
     int EPSComputeError(SlepcEPS,PetscInt,SlepcEPSErrorType,PetscReal*)
@@ -252,7 +253,7 @@ cdef inline EPS ref_EPS(SlepcEPS eps):
 
 # -----------------------------------------------------------------------------
 
-cdef int EPS_Stop(
+cdef int EPS_Stopping(
     SlepcEPS                eps,
     PetscInt                its,
     PetscInt                max_it,
@@ -263,7 +264,6 @@ cdef int EPS_Stop(
     ) except PETSC_ERR_PYTHON with gil:
     cdef EPS Eps = ref_EPS(eps)
     (stopping, args, kargs) = Eps.get_attr('__stopping__')
-    if stopping is None: return 0
     reason = stopping(Eps, toInt(its), toInt(max_it), toInt(nconv), toInt(nev), *args, **kargs)
     if   reason is None:  r[0] = EPS_CONVERGED_ITERATING
     elif reason is False: r[0] = EPS_CONVERGED_ITERATING
