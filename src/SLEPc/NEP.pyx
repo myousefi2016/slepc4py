@@ -536,7 +536,7 @@ cdef class NEP(Object):
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
         CHKERR( NEPGetEigenpair(self.nep, i, &sval1, &sval2, vecr, veci) )
-        return complex(toScalar(sval1), toScalar(sval2))
+        return toComplex(sval1, sval2)
 
     def getErrorEstimate(self, int i):
         """

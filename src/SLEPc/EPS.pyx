@@ -1153,7 +1153,7 @@ cdef class EPS(Object):
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
         CHKERR( EPSGetEigenvalue(self.eps, i, &sval1, &sval2) )
-        return complex(toScalar(sval1), toScalar(sval2))
+        return toComplex(sval1, sval2)
 
     def getEigenvector(self, int i, Vec Vr not None, Vec Vi=None):
         """
@@ -1215,7 +1215,7 @@ cdef class EPS(Object):
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
         CHKERR( EPSGetEigenpair(self.eps, i, &sval1, &sval2, vecr, veci) )
-        return complex(toScalar(sval1), toScalar(sval2))
+        return toComplex(sval1, sval2)
 
     def getInvariantSubspace(self):
         """

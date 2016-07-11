@@ -108,6 +108,9 @@ cdef inline object toScalar(PetscScalar value):
 cdef inline PetscScalar asScalar(object value) except*:
     return PyPetscScalar_AsPetscScalar(value)
 
+cdef inline object toComplex(PetscScalar rvalue, PetscScalar ivalue):
+    return complex(toScalar(rvalue),toScalar(ivalue))
+
 # -----------------------------------------------------------------------------
 
 cdef extern from "string.h"  nogil:

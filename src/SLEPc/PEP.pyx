@@ -873,7 +873,7 @@ cdef class PEP(Object):
         if Vr is not None: vecr = Vr.vec
         if Vi is not None: veci = Vi.vec
         CHKERR( PEPGetEigenpair(self.pep, i, &sval1, &sval2, vecr, veci) )
-        return complex(toScalar(sval1), toScalar(sval2))
+        return toComplex(sval1, sval2)
 
     def getErrorEstimate(self, int i):
         """
