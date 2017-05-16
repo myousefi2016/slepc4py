@@ -1,3 +1,6 @@
+try: range = xrange
+except: pass
+
 import sys, slepc4py
 slepc4py.init(sys.argv)
 
@@ -17,7 +20,7 @@ A.setUp()
 
 rstart, rend = A.getOwnershipRange()
 
-for i in xrange(rstart, rend):
+for i in range(rstart, rend):
   if i==0:
     for j in range(n):
       A[0,j] = 1.0
