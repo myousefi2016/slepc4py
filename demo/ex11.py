@@ -1,3 +1,6 @@
+try: range = xrange
+except: pass
+
 import sys, slepc4py
 slepc4py.init(sys.argv)
 
@@ -23,7 +26,7 @@ def construct_operator(m, n):
     offdx = -1.0*hy/hx
     offdy = -1.0*hx/hy
     Istart, Iend = A.getOwnershipRange()
-    for I in xrange(Istart, Iend) :
+    for I in range(Istart, Iend) :
         A[I,I] = diagv
         i = I//n    # map row number to
         j = I - i*n # grid coordinates

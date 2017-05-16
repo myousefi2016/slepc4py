@@ -37,6 +37,9 @@ Elisa Schenone <elisa.schenone@uni.lu>
 Jack S. Hale <jack.hale@uni.lu>
 """
 
+try: range = xrange
+except: pass
+
 import sys, slepc4py
 slepc4py.init(sys.argv)
 
@@ -62,7 +65,7 @@ def construct_operator(m):
     diagv = 2.0/hx
     offdx = -1.0/hx
     Istart, Iend = A.getOwnershipRange()
-    for i in xrange(Istart, Iend):
+    for i in range(Istart, Iend):
         if i != 0 and i != (m - 1):
             A[i, i] = diagv
             if i > 1: A[i, i - 1] = offdx
@@ -91,7 +94,7 @@ def set_problem_rhs(m):
     diagv = hx/3
     offdx = hx/6
     Istart, Iend = M.getOwnershipRange()
-    for i in xrange(Istart, Iend):
+    for i in range(Istart, Iend):
         if i != 0 and i != (m - 1):
             M[i, i] = 2*diagv
         else:
@@ -106,7 +109,7 @@ def set_problem_rhs(m):
     mu = x_0 + (x_f - x_0)*random.random()
     sigma = 0.1**2
     uex, f = M.getVecs()
-    for j in xrange(Istart, Iend):
+    for j in range(Istart, Iend):
         value = 2/sigma * math.exp(-(hx*j - mu)**2/sigma) * (1 - 2/sigma * (hx*j - mu)**2 )
         f.setValue(j, value)
         value = math.exp(-(hx*j - mu)**2/sigma)
@@ -171,7 +174,7 @@ def construct_snapshot_matrix(A, N, m):
     sigma = 0.1**2
     for i in range(N):
         mu = x_0 + (x_f - x_0)*random.random()
-        for j in xrange(Istart, Iend):
+        for j in range(Istart, Iend):
             value = math.exp(-(hx*j - mu)**2/sigma)
             snapshots.setValue(j, i, value)
     snapshots.assemble()

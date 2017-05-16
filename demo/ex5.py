@@ -1,3 +1,4 @@
+
 import sys, slepc4py
 slepc4py.init(sys.argv)
 
@@ -20,7 +21,7 @@ def construct_operators(m,n):
     K.setUp()
     Istart, Iend = K.getOwnershipRange()
     for I in range(Istart,Iend):
-        v = -1.0; i = I/n; j = I-i*n;
+        v = -1.0; i = I//n; j = I-i*n;
         if i>0:
             J=I-n; K[I,J] = v
         if i<m-1:
