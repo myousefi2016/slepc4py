@@ -11,6 +11,11 @@ cdef extern from * nogil:
         MFN_DIVERGED_BREAKDOWN
         MFN_CONVERGED_ITERATING
 
+    ctypedef enum SlepcFunction "SlepcFunction":
+        SLEPC_FUNCTION_NONE
+        SLEPC_FUNCTION_EXP
+        SLEPC_FUNCTION_LAST
+
     int MFNCreate(MPI_Comm,SlepcMFN*)
     int MFNDestroy(SlepcMFN*)
     int MFNReset(SlepcMFN)

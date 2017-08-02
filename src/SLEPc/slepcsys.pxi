@@ -67,8 +67,5 @@ cdef inline int SlepcCLEAR(PetscObject* obj):
     tmp = obj[0]; obj[0] = NULL
     return PetscObjectDestroy(&tmp)
 
-cdef extern from * nogil:
-    ctypedef enum SlepcFunction "SlepcFunction":
-        SLEPC_FUNCTION_NONE
-        SLEPC_FUNCTION_EXP
-        SLEPC_FUNCTION_LAST
+cdef inline PetscViewer def_Viewer(Viewer viewer) except NULL:
+   return viewer.vwr if viewer is not None else <PetscViewer>NULL

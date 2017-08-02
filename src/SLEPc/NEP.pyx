@@ -107,8 +107,7 @@ cdef class NEP(Object):
             Visualization context; if not provided, the standard
             output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( NEPView(self.nep, vwr) )
 
     def destroy(self):
@@ -388,7 +387,7 @@ cdef class NEP(Object):
         PetscINCREF(bv.obj)
         return bv
 
-    def setBV(self, BV bv not None):
+    def setBV(self, BV bv):
         """
         Associates a basis vectors object to the eigensolver.
 
@@ -413,7 +412,7 @@ cdef class NEP(Object):
         PetscINCREF(rg.obj)
         return rg
 
-    def setRG(self, RG rg not None):
+    def setRG(self, RG rg):
         """
         Associates a region object to the eigensolver.
 
@@ -531,10 +530,8 @@ cdef class NEP(Object):
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Vr is not None: vecr = Vr.vec
-        if Vi is not None: veci = Vi.vec
+        cdef PetscVec vecr = Vr.vec if Vr is not None else <PetscVec>NULL
+        cdef PetscVec veci = Vi.vec if Vi is not None else <PetscVec>NULL
         CHKERR( NEPGetEigenpair(self.nep, i, &sval1, &sval2, vecr, veci) )
         return toComplex(sval1, sval2)
 
@@ -605,8 +602,7 @@ cdef class NEP(Object):
         """
         cdef SlepcNEPErrorType et = NEP_ERROR_RELATIVE
         if etype is not None: et = etype
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( NEPErrorView(self.nep, et, vwr) )
 
     def setFunction(self, function, Mat F, Mat P=None, args=None, kargs=None):
@@ -623,10 +619,8 @@ cdef class NEP(Object):
         P: Mat
             preconditioner matrix (usually same as the Function)
         """
-        cdef PetscMat Fmat=NULL
-        if F is not None: Fmat = F.mat
-        cdef PetscMat Pmat=Fmat
-        if P is not None: Pmat = P.mat
+        cdef PetscMat Fmat = F.mat if F is not None else <PetscMat>NULL
+        cdef PetscMat Pmat = P.mat if P is not None else Fmat
         CHKERR( NEPSetFunction(self.nep, Fmat, Pmat, NEP_Function, NULL) )
         if args is None: args = ()
         if kargs is None: kargs = {}
@@ -644,8 +638,7 @@ cdef class NEP(Object):
         J: Mat
             Jacobian matrix
         """
-        cdef PetscMat Jmat=NULL
-        if J is not None: Jmat = J.mat
+        cdef PetscMat Jmat = J.mat if J is not None else <PetscMat>NULL
         CHKERR( NEPSetJacobian(self.nep, Jmat, NEP_Jacobian, NULL) )
         if args is None: args = ()
         if kargs is None: kargs = {}

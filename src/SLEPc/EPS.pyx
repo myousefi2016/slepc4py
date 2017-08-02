@@ -238,8 +238,7 @@ cdef class EPS(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( EPSView(self.eps, vwr) )
 
     def destroy(self):
@@ -855,7 +854,7 @@ cdef class EPS(Object):
         PetscINCREF(st.obj)
         return st
 
-    def setST(self, ST st not None):
+    def setST(self, ST st):
         """
         Associates a spectral transformation object to the
         eigensolver.
@@ -881,7 +880,7 @@ cdef class EPS(Object):
         PetscINCREF(bv.obj)
         return bv
 
-    def setBV(self, BV bv not None):
+    def setBV(self, BV bv):
         """
         Associates a basis vectors object to the eigensolver.
 
@@ -906,7 +905,7 @@ cdef class EPS(Object):
         PetscINCREF(ds.obj)
         return ds
 
-    def setDS(self, DS ds not None):
+    def setDS(self, DS ds):
         """
         Associates a direct solver object to the eigensolver.
 
@@ -931,7 +930,7 @@ cdef class EPS(Object):
         PetscINCREF(rg.obj)
         return rg
 
-    def setRG(self, RG rg not None):
+    def setRG(self, RG rg):
         """
         Associates a region object to the eigensolver.
 
@@ -960,7 +959,7 @@ cdef class EPS(Object):
         PetscINCREF(B.obj)
         return (A, B)
 
-    def setOperators(self, Mat A not None, Mat B=None):
+    def setOperators(self, Mat A, Mat B=None):
         """
         Sets the matrices associated with the eigenvalue problem.
 
@@ -972,8 +971,7 @@ cdef class EPS(Object):
            The second matrix in the case of generalized eigenproblems;
            if not provided, a standard eigenproblem is assumed.
         """
-        cdef PetscMat Bmat = NULL
-        if B is not None: Bmat = B.mat
+        cdef PetscMat Bmat = B.mat if B is not None else <PetscMat>NULL
         CHKERR( EPSSetOperators(self.eps, A.mat, Bmat) )
 
     def setDeflationSpace(self, space):
@@ -1178,7 +1176,7 @@ cdef class EPS(Object):
         CHKERR( EPSGetEigenvalue(self.eps, i, &sval1, &sval2) )
         return toComplex(sval1, sval2)
 
-    def getEigenvector(self, int i, Vec Vr not None, Vec Vi=None):
+    def getEigenvector(self, int i, Vec Vr, Vec Vi=None):
         """
         Gets the i-th eigenvector as computed by `solve()`.
 
@@ -1198,10 +1196,8 @@ cdef class EPS(Object):
         according to the ordering criterion established with
         `setWhichEigenpairs()`.
         """
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Vr is not None: vecr = Vr.vec
-        if Vi is not None: veci = Vi.vec
+        cdef PetscVec vecr = Vr.vec
+        cdef PetscVec veci = Vi.vec if Vi is not None else <PetscVec>NULL
         CHKERR( EPSGetEigenvector(self.eps, i, vecr, veci) )
 
     def getEigenpair(self, int i, Vec Vr=None, Vec Vi=None):
@@ -1233,10 +1229,8 @@ cdef class EPS(Object):
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Vr is not None: vecr = Vr.vec
-        if Vi is not None: veci = Vi.vec
+        cdef PetscVec vecr = Vr.vec if Vr is not None else <PetscVec>NULL
+        cdef PetscVec veci = Vi.vec if Vi is not None else <PetscVec>NULL
         CHKERR( EPSGetEigenpair(self.eps, i, &sval1, &sval2, vecr, veci) )
         return toComplex(sval1, sval2)
 
@@ -1355,8 +1349,7 @@ cdef class EPS(Object):
         """
         cdef SlepcEPSErrorType et = EPS_ERROR_RELATIVE
         if etype is not None: et = etype
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( EPSErrorView(self.eps, et, vwr) )
 
     #
@@ -1706,8 +1699,7 @@ cdef class EPS(Object):
         see `getKrylovSchurSubcommInfo()`.
         """
         cdef PetscScalar sval = 0
-        cdef PetscVec vec = NULL
-        if V is not None: vec = V.vec
+        cdef PetscVec vec = V.vec if V is not None else <PetscVec>NULL
         CHKERR( EPSKrylovSchurGetSubcommPairs(self.eps, i, &sval, vec) )
         return toScalar(sval)
 
@@ -1776,10 +1768,8 @@ cdef class EPS(Object):
         If `globalup` is True, communication is carried out to reconstruct the updated
         matrices in the parent communicator.
         """
-        cdef PetscMat Amat = NULL
-        if Au is not None: Amat = Au.mat
-        cdef PetscMat Bmat = NULL
-        if Bu is not None: Bmat = Bu.mat
+        cdef PetscMat Amat = Au.mat if Au is not None else <PetscMat>NULL
+        cdef PetscMat Bmat = Bu.mat if Bu is not None else <PetscMat>NULL
         cdef PetscMatStructure vstr = matstructure(structure)
         cdef PetscBool tval = globalup
         CHKERR( EPSKrylovSchurUpdateSubcommMats(self.eps, s, a, Amat, t, b, Bmat, vstr, tval) )

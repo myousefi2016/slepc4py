@@ -70,8 +70,7 @@ cdef class BV(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( BVView(self.bv, vwr) )
 
     def destroy(self):
@@ -162,7 +161,7 @@ cdef class BV(Object):
         BV_Sizes(sizes, &n, &N)
         CHKERR( BVSetSizes(self.bv, n, N, ival) )
 
-    def setSizesFromVec(self, Vec w not None, m):
+    def setSizesFromVec(self, Vec w, m):
         """
         Sets the local and global sizes, and the number of columns. Local and
         global sizes are specified indirectly by passing a template vector.
@@ -323,13 +322,13 @@ cdef class BV(Object):
         PetscINCREF(mat.obj)
         return mat, <bint>indef
 
-    def setMatrix(self, Mat mat, bint indef):
+    def setMatrix(self, Mat mat or None, bint indef):
         """
         Sets the bilinear form to be used for inner products.
 
         Parameters
         ----------
-        mat:  Mat, optional
+        mat:  Mat or None
               The matrix of the inner product.
         indef: bool, optional
                Whether the matrix is indefinite
@@ -338,7 +337,7 @@ cdef class BV(Object):
         cdef PetscBool tval = PETSC_TRUE if indef else PETSC_FALSE
         CHKERR( BVSetMatrix(self.bv, m, tval) )
 
-    def applyMatrix(self, Vec x not None, Vec y not None):
+    def applyMatrix(self, Vec x, Vec y):
         """
         Multiplies a vector with the matrix associated to the bilinear
         form.
@@ -415,7 +414,7 @@ cdef class BV(Object):
         cdef PetscScalar sval = asScalar(alpha)
         CHKERR( BVScale(self.bv, sval) )
 
-    def insertVec(self, int j, Vec w not None):
+    def insertVec(self, int j, Vec w):
         """
         Insert a vector into the specified column.
 
@@ -428,7 +427,7 @@ cdef class BV(Object):
         """
         CHKERR( BVInsertVec(self.bv, j, w.vec) )
 
-    def insertVecs(self, int s, W not None, bint orth):
+    def insertVecs(self, int s, W, bint orth):
         """
         Insert a set of vectors into specified columns.
 
@@ -464,7 +463,7 @@ cdef class BV(Object):
         CHKERR( BVInsertVecs(self.bv, <PetscInt>s, &m, ws, tval) )
         return toInt(m)
 
-    def dotVec(self, Vec v not None):
+    def dotVec(self, Vec v):
         """
         Computes multiple dot products of a vector against all the column
         vectors of a BV.
@@ -523,7 +522,7 @@ cdef class BV(Object):
         CHKERR( BVGetColumn(self.bv, j, &v.vec) )
         return v
 
-    def restoreColumn(self, int j, Vec v not None):
+    def restoreColumn(self, int j, Vec v):
         """
         Restore a column obtained with BVGetColumn().
 
@@ -541,7 +540,7 @@ cdef class BV(Object):
         """
         CHKERR( BVRestoreColumn(self.bv, j, &v.vec) )
 
-    def dot(self, BV Y not None):
+    def dot(self, BV Y):
         """
         Computes the 'block-dot' product of two basis vectors objects.
             M = Y^H*X (m_ij = y_i^H x_j) or M = Y^H*B*X
@@ -580,7 +579,7 @@ cdef class BV(Object):
         CHKERR( BVDot(X.bv, Y.bv, M.mat) )
         return M
 
-    def matProject(self, Mat A, BV Y not None):
+    def matProject(self, Mat A or None, BV Y):
         """
         Computes the projection of a matrix onto a subspace.
 
@@ -600,15 +599,15 @@ cdef class BV(Object):
             Projection of the matrix A onto the subspace.
         """
         cdef BV X = self
-        cdef PetscInt ky=0, kx=0
-        CHKERR( BVGetActiveColumns(Y.bv, NULL, &ky) )
+        cdef PetscInt  kx=0, ky=0
         CHKERR( BVGetActiveColumns(X.bv, NULL, &kx) )
-        cdef Mat M = Mat().createDense((ky, kx), comm=COMM_SELF).setUp()
+        CHKERR( BVGetActiveColumns(Y.bv, NULL, &ky) )
         cdef PetscMat Amat = <PetscMat>NULL if A is None else A.mat
+        cdef Mat M = Mat().createDense((ky, kx), comm=COMM_SELF).setUp()
         CHKERR( BVMatProject(X.bv, Amat, Y.bv, M.mat) )
         return M
 
-    def matMult(self, Mat A not None, BV Y=None):
+    def matMult(self, Mat A, BV Y=None):
         """
         Computes the matrix-vector product for each column, Y = A*V.
 
@@ -656,7 +655,7 @@ cdef class BV(Object):
         CHKERR( BVMatMult(self.bv, A.mat, Y.bv) )
         return Y
 
-    def matMultHermitianTranspose(self, Mat A not None, BV Y=None):
+    def matMultHermitianTranspose(self, Mat A, BV Y=None):
         """
         Computes the matrix-vector product with the conjugate transpose of a
         matrix for each column, Y=A^H*V.
@@ -700,7 +699,7 @@ cdef class BV(Object):
         CHKERR( BVMatMultHermitianTranspose(self.bv, A.mat, Y.bv) )
         return Y
 
-    def multVec(self, alpha, beta, Vec y not None, q):
+    def multVec(self, alpha, beta, Vec y, q):
         """
         Computes y = beta*y + alpha*X*q.
 
@@ -792,7 +791,7 @@ cdef class BV(Object):
         """
         CHKERR( BVSetRandom(self.bv) )
 
-    def orthogonalizeVec(self, Vec v not None):
+    def orthogonalizeVec(self, Vec v):
         """
         Orthogonalize a vector with respect to a set of vectors.
 
@@ -829,7 +828,7 @@ cdef class BV(Object):
 
         Parameters
         ----------
-        R: Mat or None
+        R: Mat, optional
             A sequential dense matrix.
 
         Notes

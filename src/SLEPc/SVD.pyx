@@ -80,8 +80,7 @@ cdef class SVD(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( SVDView(self.svd, vwr) )
 
     def destroy(self):
@@ -402,7 +401,7 @@ cdef class SVD(Object):
         PetscINCREF(U.obj)
         return (V,U)
 
-    def setBV(self, BV V not None,BV U=None):
+    def setBV(self, BV V,BV U=None):
         """
         Associates basis vectors objects to the SVD solver.
 
@@ -414,8 +413,7 @@ cdef class SVD(Object):
             The basis vectors context for left singular vectors.
         """
         cdef SlepcBV VBV = V.bv
-        cdef SlepcBV UBV = NULL
-        if U is not None: UBV = U.bv
+        cdef SlepcBV UBV = U.bv if U is not None else <SlepcBV>NULL
         CHKERR( SVDSetBV(self.svd, VBV, UBV) )
 
     def getOperator(self):
@@ -432,7 +430,7 @@ cdef class SVD(Object):
         PetscINCREF(A.obj)
         return A
 
-    def setOperator(self, Mat A not None):
+    def setOperator(self, Mat A):
         """
         Sets the matrix associated with the singular value problem.
 
@@ -562,7 +560,7 @@ cdef class SVD(Object):
         CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, NULL, NULL) )
         return toReal(rval)
 
-    def getVectors(self, int i, Vec U not None, Vec V not None):
+    def getVectors(self, int i, Vec U, Vec V):
         """
         Gets the i-th left and right singular vectors as computed by
         `solve()`.
@@ -614,10 +612,8 @@ cdef class SVD(Object):
         `setWhichSingularTriplets()`.
         """
         cdef PetscReal rval = 0
-        cdef PetscVec Uvec = NULL
-        cdef PetscVec Vvec = NULL
-        if U is not None: Uvec = U.vec
-        if V is not None: Vvec = V.vec
+        cdef PetscVec Uvec = U.vec if U is not None else <PetscVec>NULL
+        cdef PetscVec Vvec = V.vec if V is not None else <PetscVec>NULL
         CHKERR( SVDGetSingularTriplet(self.svd, i, &rval, Uvec, Vvec) )
         return toReal(rval)
 
@@ -678,13 +674,12 @@ cdef class SVD(Object):
         """
         cdef SlepcSVDErrorType et = SVD_ERROR_RELATIVE
         if etype is not None: et = etype
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( SVDErrorView(self.svd, et, vwr) )
 
     #
 
-    def setCrossEPS(self, EPS eps not None):
+    def setCrossEPS(self, EPS eps):
         """
         Associate an eigensolver object (`EPS`) to the singular value
         solver.
@@ -711,7 +706,7 @@ cdef class SVD(Object):
         PetscINCREF(eps.obj)
         return eps
 
-    def setCyclicEPS(self, EPS eps not None):
+    def setCyclicEPS(self, EPS eps):
         """
         Associate an eigensolver object (`EPS`) to the singular value
         solver.

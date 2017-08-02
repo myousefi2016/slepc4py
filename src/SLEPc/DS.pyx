@@ -83,8 +83,7 @@ cdef class DS(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( DSView(self.ds, vwr) )
 
     def destroy(self):

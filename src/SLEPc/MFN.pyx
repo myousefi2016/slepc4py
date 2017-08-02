@@ -45,8 +45,7 @@ cdef class MFN(Object):
             Visualization context; if not provided, the standard
             output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( MFNView(self.mfn, vwr) )
 
     def destroy(self):
@@ -230,7 +229,7 @@ cdef class MFN(Object):
         PetscINCREF(fn.obj)
         return fn
 
-    def setFN(self, FN fn not None):
+    def setFN(self, FN fn):
         """
         Associates a math function object to the MFN object.
 
@@ -255,7 +254,7 @@ cdef class MFN(Object):
         PetscINCREF(bv.obj)
         return bv
 
-    def setBV(self, BV bv not None):
+    def setBV(self, BV bv):
         """
         Associates a basis vector object to the MFN object.
 
@@ -280,7 +279,7 @@ cdef class MFN(Object):
         PetscINCREF(A.obj)
         return A
 
-    def setOperator(self, Mat A not None):
+    def setOperator(self, Mat A):
         """
         Sets the matrix associated with the MFN object.
 
@@ -308,7 +307,7 @@ cdef class MFN(Object):
         """
         CHKERR( MFNSetUp(self.mfn) )
 
-    def solve(self, Vec b not None, Vec x not None):
+    def solve(self, Vec b, Vec x):
         """
         Solves the matrix function problem. Given a vector b, the
         vector x = f(alpha*A)*b is returned.

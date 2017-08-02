@@ -51,8 +51,7 @@ cdef class FN(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( FNView(self.fn, vwr) )
 
     def destroy(self):
@@ -223,7 +222,7 @@ cdef class FN(Object):
 
     #
 
-    def setRationalNumerator(self, alpha not None):
+    def setRationalNumerator(self, alpha):
         """
         Sets the coefficients of the numerator of the rational function.
 
@@ -237,7 +236,7 @@ cdef class FN(Object):
         cdef object tmp1 = iarray_s(alpha, &na, &a)
         CHKERR( FNRationalSetNumerator(self.fn, na, a) )
 
-    def setRationalDenominator(self, alpha not None):
+    def setRationalDenominator(self, alpha):
         """
         Sets the coefficients of the denominator of the rational function.
 

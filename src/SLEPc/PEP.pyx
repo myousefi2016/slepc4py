@@ -196,8 +196,7 @@ cdef class PEP(Object):
             Visualization context; if not provided, the standard
             output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( PEPView(self.pep, vwr) )
 
     def destroy(self):
@@ -622,7 +621,7 @@ cdef class PEP(Object):
         PetscINCREF(st.obj)
         return st
 
-    def setST(self, ST st not None):
+    def setST(self, ST st):
         """
         Associates a spectral transformation object to the
         eigensolver.
@@ -724,7 +723,7 @@ cdef class PEP(Object):
         PetscINCREF(bv.obj)
         return bv
 
-    def setBV(self, BV bv not None):
+    def setBV(self, BV bv):
         """
         Associates a basis vectors object to the eigensolver.
 
@@ -749,7 +748,7 @@ cdef class PEP(Object):
         PetscINCREF(rg.obj)
         return rg
 
-    def setRG(self, RG rg not None):
+    def setRG(self, RG rg):
         """
         Associates a region object to the eigensolver.
 
@@ -903,10 +902,8 @@ cdef class PEP(Object):
         """
         cdef PetscScalar sval1 = 0
         cdef PetscScalar sval2 = 0
-        cdef PetscVec vecr = NULL
-        cdef PetscVec veci = NULL
-        if Vr is not None: vecr = Vr.vec
-        if Vi is not None: veci = Vi.vec
+        cdef PetscVec vecr = Vr.vec if Vr is not None else <PetscVec>NULL
+        cdef PetscVec veci = Vi.vec if Vi is not None else <PetscVec>NULL
         CHKERR( PEPGetEigenpair(self.pep, i, &sval1, &sval2, vecr, veci) )
         return toComplex(sval1, sval2)
 
@@ -982,13 +979,12 @@ cdef class PEP(Object):
         """
         cdef SlepcPEPErrorType et = PEP_ERROR_RELATIVE
         if etype is not None: et = etype
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( PEPErrorView(self.pep, et, vwr) )
 
     #
 
-    def setLinearEPS(self, EPS eps not None):
+    def setLinearEPS(self, EPS eps):
         """
         Associate an eigensolver object (EPS) to the polynomial eigenvalue solver.
 
@@ -1014,7 +1010,7 @@ cdef class PEP(Object):
         PetscINCREF(eps.obj)
         return eps
         
-    def setLinearCompanionForm(self, cform not None):
+    def setLinearCompanionForm(self, int cform):
         """
         Choose between the two companion forms available for the linearization of
         a quadratic eigenproblem.
@@ -1040,7 +1036,7 @@ cdef class PEP(Object):
         CHKERR( PEPLinearGetCompanionForm(self.pep, &cform) )
         return cform
         
-    def setLinearExplicitMatrix(self, flag not None):
+    def setLinearExplicitMatrix(self, flag):
         """
         Indicate if the matrices A and B for the linearization of the problem
         must be built explicitly.

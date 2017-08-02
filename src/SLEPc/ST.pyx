@@ -54,8 +54,7 @@ cdef class ST(Object):
                 Visualization context; if not provided, the standard
                 output is used.
         """
-        cdef PetscViewer vwr = NULL
-        if viewer is not None: vwr = viewer.vwr
+        cdef PetscViewer vwr = def_Viewer(viewer)
         CHKERR( STView(self.st, vwr) )
 
     def destroy(self):
@@ -350,7 +349,7 @@ cdef class ST(Object):
         cdef PetscMatStructure val = matstructure(structure)
         CHKERR( STSetMatStructure(self.st, val) )
 
-    def setKSP(self, KSP ksp not None):
+    def setKSP(self, KSP ksp):
         """
         Sets the KSP object associated with the spectral
         transformation.
@@ -391,7 +390,7 @@ cdef class ST(Object):
         """
         CHKERR( STSetUp(self.st) )
 
-    def apply(self, Vec x not None, Vec y not None):
+    def apply(self, Vec x, Vec y):
         """
         Applies the spectral transformation operator to a vector, for
         instance ``(A - sB)^-1 B`` in the case of the shift-and-invert
@@ -406,7 +405,7 @@ cdef class ST(Object):
         """
         CHKERR( STApply(self.st, x.vec, y.vec) )
 
-    def applyTranspose(self, Vec x not None, Vec y not None):
+    def applyTranspose(self, Vec x, Vec y):
         """
         Applies the transpose of the operator to a vector, for
         instance ``B^T(A - sB)^-T`` in the case of the
